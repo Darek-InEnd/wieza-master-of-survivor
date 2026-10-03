@@ -6,9 +6,14 @@
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "orientation": "portrait-primary",
+  "orientation": "any",
   "background_color": "#0b0c10",
   "theme_color": "#0b0c10",
+  "id": "./",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
   "icons": [
     {
       "src": "./icons/icon-192.png",
@@ -29,9 +34,20 @@
       "purpose": "maskable"
     }
   ],
-  "id": "./",
-  "display_override": [
-    "window-controls-overlay",
-    "standalone"
+  "screenshots": [
+    {
+      "src": "./screenshots/desktop.png",
+      "sizes": "1047x701",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Wieża — ekran główny na komputerze"
+    },
+    {
+      "src": "./screenshots/mobile.png",
+      "sizes": "750x1348",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Wieża — ekran główny na urządzeniu mobilnym"
+    }
   ]
 }
