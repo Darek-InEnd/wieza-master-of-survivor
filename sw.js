@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wieza-pwa-0.127-test-pwa8';
+const CACHE_NAME = 'wieza-pwa-0.127-portraits';
 const APP_SHELL = [
   './',
   './index.html',
