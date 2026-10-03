@@ -1548,6 +1548,9 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
   if(h.gender==="Męska" && h.race==="Indii" && h.heroClass==="Wojownik") {
     src=INDIA_WARRIOR_PORTRAITS[star];
     alt=`Portret wojownika z Indii, ${star} gwiazdek`;
+  } else if(h.gender==="Męska" && h.race==="Indii" && h.heroClass==="Obrońca" && h.isTrainer) {
+    src=INDIA_DEFENDER_TRAINER_MALE_PORTRAITS[star];
+    alt=`Portret indyjskiego obrońcy-trenera, ${star} gwiazdek`;
   } else if(h.gender==="Męska" && h.race==="Indii" && h.heroClass==="Obrońca") {
     src=INDIA_DEFENDER_PORTRAITS[star];
     alt=`Portret obrońcy z Indii, ${star} gwiazdek`;
@@ -1560,8 +1563,6 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
   } else if(h.gender==="Żeńska" && h.race==="Grekii" && h.heroClass==="Mag" && h.role==="Support") {
     src=GREECE_MAGE_SUPPORT_FEMALE_PORTRAITS[star];
     alt=`Portret greckiej magini Support, ${star} gwiazdek`;
-  } else if(h.gender==="Męska" && h.race==="Indii" && h.heroClass==="Obrońca" && h.isTrainer) {
-    src=INDIA_DEFENDER_TRAINER_MALE_PORTRAITS[star];
     alt=`Portret indyjskiego obrońcy-trenera, ${star} gwiazdek`;
   } else if(h.gender==="Żeńska" && h.race==="Celtów" && h.heroClass==="Łucznik") {
     src=CELT_LUCZNIK_FEMALE_PORTRAITS[star];
