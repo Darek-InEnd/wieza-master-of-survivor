@@ -568,10 +568,25 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// PWA-3: sprawdzamy aktualizację Service Workera po wejściu do aplikacji
-// oraz po powrocie z tła. Nie przeładowujemy automatycznie gry.
+// PWA-4: sprawdzamy aktualizację Service Workera po wejściu do aplikacji
+// oraz po powrocie z tła. Po przejęciu strony przez NOWĄ wersję SW
+// aplikacja odświeża się automatycznie — bez ręcznego F5.
 if ('serviceWorker' in navigator) {
   let pwaRegistration = null;
+  let hadController = !!navigator.serviceWorker.controller;
+  let autoReloadedForUpdate = false;
+
+  navigator.serviceWorker.addEventListener('controllerchange', function () {
+    // Nie przeładowuj pierwszego przejęcia strony przez SW po instalacji.
+    // Odśwież tylko wtedy, gdy strona była już kontrolowana przez starszy SW
+    // i została przejęta przez nowy SW po aktualizacji.
+    if (hadController && !autoReloadedForUpdate) {
+      autoReloadedForUpdate = true;
+      window.location.reload();
+    }
+    hadController = true;
+  });
+
   const checkPwaUpdate = function () {
     if (pwaRegistration && navigator.onLine) {
       pwaRegistration.update().catch(function () {});
