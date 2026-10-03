@@ -561,28 +561,32 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 
 <script>
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('./sw.js', {updateViaCache: 'none'}).catch(function (error) {
-      console.warn('PWA Service Worker registration failed:', error);
-    });
-  });
-}
-
-// PWA-3: sprawdzamy aktualizację Service Workera po wejściu do aplikacji
-// oraz po powrocie z tła. Nie przeładowujemy automatycznie gry.
-if ('serviceWorker' in navigator) {
+  const PWA_BUILD = '0.127-fix3';
   let pwaRegistration = null;
-  const checkPwaUpdate = function () {
-    if (pwaRegistration && navigator.onLine) {
-      pwaRegistration.update().catch(function () {});
+  let hadController = !!navigator.serviceWorker.controller;
+  let reloadedForThisUpdate = false;
+  function reloadAfterPwaUpdate() {
+    if (hadController && !reloadedForThisUpdate) {
+      reloadedForThisUpdate = true;
+      window.location.reload();
     }
-  };
-  navigator.serviceWorker.ready.then(function (registration) {
-    pwaRegistration = registration;
-    checkPwaUpdate();
-  }).catch(function () {});
-  document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'visible') checkPwaUpdate();
+    hadController = true;
+  }
+  navigator.serviceWorker.addEventListener('controllerchange', reloadAfterPwaUpdate);
+  navigator.serviceWorker.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'TOWER_SW_UPDATED') reloadAfterPwaUpdate();
+  });
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js?build=' + encodeURIComponent(PWA_BUILD), {updateViaCache:'none'})
+      .then(function(registration) {
+        pwaRegistration = registration;
+        registration.update().catch(function(){});
+        window.setTimeout(function(){ registration.update().catch(function(){}); }, 2000);
+      })
+      .catch(function(error) { console.warn('PWA Service Worker registration failed:', error); });
+  });
+  document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'visible' && pwaRegistration && navigator.onLine) pwaRegistration.update().catch(function(){});
   });
 }
 </script>
@@ -1530,10 +1534,25 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
   if(!h) return `<div class="hero-v2-portrait">${fallback}</div>`;
   const star=Math.max(1,Math.min(7,Number(h.stars)||1));
   let src=null, alt="";
-  if(h.gender==="Męska" && h.race==="Indii" && h.heroClass==="Wojownik") {
+  const norm = v => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+  const raceNorm = norm(h.race);
+  const genderNorm = norm(h.gender);
+  const classNorm = norm(h.heroClass);
+  const formerClassNorm = norm(h.trainerFormerClass);
+  const isIndia = raceNorm === 'indii' || raceNorm === 'indie' || raceNorm.includes('indi');
+  const isMale = genderNorm === 'meska' || genderNorm === 'mezczyzna' || genderNorm.startsWith('mes');
+  const isDefender = classNorm === 'obronca' || formerClassNorm === 'obronca';
+  const isTrainer = h.isTrainer===true || h.isTrainer==='true' || !!h.trainerFormerClass;
+  // Trenerzy zachowują swoją dawną klasę w trainerFormerClass.
+  // Uwzględniamy także starsze zapisy, w których race mogła występować jako "Indie".
+  const isIndiaDefenderTrainer = isMale && isIndia && isDefender && isTrainer;
+  if(isMale && isIndia && classNorm==="wojownik") {
     src=INDIA_WARRIOR_PORTRAITS[star];
     alt=`Portret wojownika z Indii, ${star} gwiazdek`;
-  } else if(h.gender==="Męska" && h.race==="Indii" && h.heroClass==="Obrońca") {
+  } else if(isIndiaDefenderTrainer) {
+    src=INDIA_DEFENDER_TRAINER_MALE_PORTRAITS[star];
+    alt=`Portret indyjskiego obrońcy-trenera, ${star} gwiazdek`;
+  } else if(isMale && isIndia && classNorm==="obronca") {
     src=INDIA_DEFENDER_PORTRAITS[star];
     alt=`Portret obrońcy z Indii, ${star} gwiazdek`;
   } else if(h.gender==="Męska" && h.race==="Arabii" && h.heroClass==="Mag") {
@@ -1545,9 +1564,6 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
   } else if(h.gender==="Żeńska" && h.race==="Grekii" && h.heroClass==="Mag" && h.role==="Support") {
     src=GREECE_MAGE_SUPPORT_FEMALE_PORTRAITS[star];
     alt=`Portret greckiej magini Support, ${star} gwiazdek`;
-  } else if(h.gender==="Męska" && h.race==="Indii" && h.heroClass==="Obrońca" && h.isTrainer) {
-    src=INDIA_DEFENDER_TRAINER_MALE_PORTRAITS[star];
-    alt=`Portret indyjskiego obrońcy-trenera, ${star} gwiazdek`;
   } else if(h.gender==="Żeńska" && h.race==="Celtów" && h.heroClass==="Łucznik") {
     src=CELT_LUCZNIK_FEMALE_PORTRAITS[star];
     alt=`Portret łuczniczki z Celtów, ${star} gwiazdek`;
@@ -1565,7 +1581,7 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
     alt=`Portret łotra-trenera z Nordów, ${star} gwiazdek`;
   }
   if(!src) return `<div class="hero-v2-portrait">${fallback}</div>`;
-  return `<img class="hero-v2-portrait${h.race==='Grekii'&&h.heroClass==='Łotrzyk'&&h.gender==='Żeńska'?' greece-portrait':''}${h.race==='Grekii'&&h.heroClass==='Mag'&&h.gender==='Żeńska'&&h.role==='Support'?' greece-mage-support-portrait':''}${h.race==='Celtów'&&h.heroClass==='Łucznik'&&h.gender==='Żeńska'?' celt-portrait':''}${h.race==='Indii'&&h.heroClass==='Obrońca'&&h.gender==='Męska'&&h.isTrainer?' india-defender-trainer-portrait':''}${h.race==='Azteków'&&h.heroClass==='Wojownik'&&h.gender==='Męska'?' aztec-portrait':''}${h.race==='Arabii'&&h.heroClass==='Łotrzyk'&&h.gender==='Żeńska'?' arabia-rogue-portrait':''}${h.race==='Celtów'&&h.heroClass==='Mag'&&h.gender==='Męska'&&h.isTrainer?' celt-mage-trainer-portrait':''}${h.race==='Nordów'&&h.heroClass==='Łotrzyk'&&h.gender==='Męska'&&h.isTrainer?' nord-rogue-trainer-portrait':''}" src="${src}" alt="${alt}">`;
+  return `<img class="hero-v2-portrait${h.race==='Grekii'&&h.heroClass==='Łotrzyk'&&h.gender==='Żeńska'?' greece-portrait':''}${h.race==='Grekii'&&h.heroClass==='Mag'&&h.gender==='Żeńska'&&h.role==='Support'?' greece-mage-support-portrait':''}${h.race==='Celtów'&&h.heroClass==='Łucznik'&&h.gender==='Żeńska'?' celt-portrait':''}${isIndiaDefenderTrainer?' india-defender-trainer-portrait':''}${h.race==='Azteków'&&h.heroClass==='Wojownik'&&h.gender==='Męska'?' aztec-portrait':''}${h.race==='Arabii'&&h.heroClass==='Łotrzyk'&&h.gender==='Żeńska'?' arabia-rogue-portrait':''}${h.race==='Celtów'&&h.heroClass==='Mag'&&h.gender==='Męska'&&h.isTrainer?' celt-mage-trainer-portrait':''}${h.race==='Nordów'&&h.heroClass==='Łotrzyk'&&h.gender==='Męska'&&h.isTrainer?' nord-rogue-trainer-portrait':''}" src="${src}" alt="${alt}">`;
 }
 // Portrety MAGA z ARABII, mężczyzna, 1★–7★.
 // Źródło: dostarczony arkusz graficzny. Liczba gwiazdek nadrukowana przy każdym

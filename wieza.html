@@ -561,50 +561,32 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 
 <script>
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('./sw.js?build=0.127-fix2', {updateViaCache: 'none'}).catch(function (error) {
-      console.warn('PWA Service Worker registration failed:', error);
-    });
-  });
-}
-
-// PWA-4: sprawdzamy aktualizację Service Workera po wejściu do aplikacji
-// oraz po powrocie z tła. Po przejęciu strony przez NOWĄ wersję SW
-// aplikacja odświeża się automatycznie — bez ręcznego F5.
-if ('serviceWorker' in navigator) {
+  const PWA_BUILD = '0.127-fix3';
   let pwaRegistration = null;
   let hadController = !!navigator.serviceWorker.controller;
-  let autoReloadedForUpdate = false;
-
-  const reloadOnceForPwaUpdate = function () {
-    if (hadController && !autoReloadedForUpdate) {
-      autoReloadedForUpdate = true;
+  let reloadedForThisUpdate = false;
+  function reloadAfterPwaUpdate() {
+    if (hadController && !reloadedForThisUpdate) {
+      reloadedForThisUpdate = true;
       window.location.reload();
     }
     hadController = true;
-  };
-
-  navigator.serviceWorker.addEventListener('controllerchange', reloadOnceForPwaUpdate);
-  navigator.serviceWorker.addEventListener('message', function (event) {
-    if (event.data && event.data.type === 'TOWER_SW_UPDATED') {
-      reloadOnceForPwaUpdate();
-    }
+  }
+  navigator.serviceWorker.addEventListener('controllerchange', reloadAfterPwaUpdate);
+  navigator.serviceWorker.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'TOWER_SW_UPDATED') reloadAfterPwaUpdate();
   });
-
-  const checkPwaUpdate = function () {
-    if (pwaRegistration && navigator.onLine) {
-      pwaRegistration.update().catch(function () {});
-    }
-  };
-  navigator.serviceWorker.ready.then(function (registration) {
-    pwaRegistration = registration;
-    checkPwaUpdate();
-    // Drugi test po chwili łapie aktualizacje, które GitHub Pages/Chrome
-    // udostępnią dopiero po pierwszym wejściu do aplikacji.
-    window.setTimeout(checkPwaUpdate, 1500);
-  }).catch(function () {});
-  document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'visible') checkPwaUpdate();
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js?build=' + encodeURIComponent(PWA_BUILD), {updateViaCache:'none'})
+      .then(function(registration) {
+        pwaRegistration = registration;
+        registration.update().catch(function(){});
+        window.setTimeout(function(){ registration.update().catch(function(){}); }, 2000);
+      })
+      .catch(function(error) { console.warn('PWA Service Worker registration failed:', error); });
+  });
+  document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'visible' && pwaRegistration && navigator.onLine) pwaRegistration.update().catch(function(){});
   });
 }
 </script>
@@ -1552,19 +1534,25 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
   if(!h) return `<div class="hero-v2-portrait">${fallback}</div>`;
   const star=Math.max(1,Math.min(7,Number(h.stars)||1));
   let src=null, alt="";
+  const norm = v => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+  const raceNorm = norm(h.race);
+  const genderNorm = norm(h.gender);
+  const classNorm = norm(h.heroClass);
+  const formerClassNorm = norm(h.trainerFormerClass);
+  const isIndia = raceNorm === 'indii' || raceNorm === 'indie' || raceNorm.includes('indi');
+  const isMale = genderNorm === 'meska' || genderNorm === 'mezczyzna' || genderNorm.startsWith('mes');
+  const isDefender = classNorm === 'obronca' || formerClassNorm === 'obronca';
+  const isTrainer = h.isTrainer===true || h.isTrainer==='true' || !!h.trainerFormerClass;
   // Trenerzy zachowują swoją dawną klasę w trainerFormerClass.
   // Uwzględniamy także starsze zapisy, w których race mogła występować jako "Indie".
-  const isIndia = h.race==="Indii" || h.race==="Indie";
-  const isIndiaDefenderTrainer = h.gender==="Męska" && isIndia &&
-    (h.heroClass==="Obrońca" || h.trainerFormerClass==="Obrońca") &&
-    (h.isTrainer===true || h.isTrainer==="true" || !!h.trainerFormerClass);
-  if(h.gender==="Męska" && isIndia && h.heroClass==="Wojownik") {
+  const isIndiaDefenderTrainer = isMale && isIndia && isDefender && isTrainer;
+  if(isMale && isIndia && classNorm==="wojownik") {
     src=INDIA_WARRIOR_PORTRAITS[star];
     alt=`Portret wojownika z Indii, ${star} gwiazdek`;
   } else if(isIndiaDefenderTrainer) {
     src=INDIA_DEFENDER_TRAINER_MALE_PORTRAITS[star];
     alt=`Portret indyjskiego obrońcy-trenera, ${star} gwiazdek`;
-  } else if(h.gender==="Męska" && isIndia && h.heroClass==="Obrońca") {
+  } else if(isMale && isIndia && classNorm==="obronca") {
     src=INDIA_DEFENDER_PORTRAITS[star];
     alt=`Portret obrońcy z Indii, ${star} gwiazdek`;
   } else if(h.gender==="Męska" && h.race==="Arabii" && h.heroClass==="Mag") {
