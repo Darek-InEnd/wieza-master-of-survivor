@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wieza-pwa-0.127-auto-refresh';
+const CACHE_NAME = 'wieza-pwa-0.127-india-defender-trainer';
 const APP_SHELL = [
   './',
   './index.html',
