@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wieza-pwa-0.127-india-defender-trainer';
+const CACHE_NAME = 'wieza-pwa-0.127-india-defender-trainer-fix1';
 const APP_SHELL = [
   './',
   './index.html',
