@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wieza-pwa-0.127-india-defender-trainer-fix1';
+const CACHE_NAME = 'wieza-pwa-0.127-india-defender-trainer-fix2';
 const APP_SHELL = [
   './',
   './index.html',
@@ -27,7 +27,12 @@ self.addEventListener('activate', event => {
     caches.keys().then(keys => Promise.all(
       keys.filter(key => key.startsWith('wieza-pwa-') && key !== CACHE_NAME)
         .map(key => caches.delete(key))
-    )).then(() => self.clients.claim())
+    ))
+    .then(() => self.clients.claim())
+    .then(() => self.clients.matchAll({type:'window', includeUncontrolled:true}))
+    .then(clients => clients.forEach(client => {
+      client.postMessage({type:'TOWER_SW_UPDATED', cache:CACHE_NAME});
+    }))
   );
 });
 
