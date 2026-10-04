@@ -71,7 +71,7 @@
         .badge-done { color: var(--danger); }
         .badge-ready { color: var(--success); }
         .mission-info-panel { background: #050608; border: 1px solid #45a29e; padding: 10px; border-radius: 6px; margin-bottom: 10px; }
-        #battle-visual-panel .battle-header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}.battle-stage{display:grid;grid-template-columns:1fr 1fr;gap:10px}.battle-side{background:#08090b;border:1px solid #333;border-radius:8px;padding:8px}.battle-side h4{margin:0 0 7px;color:#d6ae62}.battle-unit{position:relative;padding:6px 5px;margin:5px 0;border-radius:6px;background:#111318;border:1px solid #292c33;transition:.25s}.battle-unit.active{border-color:#d6ae62;box-shadow:0 0 10px rgba(214,174,98,.22)}.battle-unit.dead{opacity:.38;filter:grayscale(.7)}.battle-unit .unit-top{display:flex;justify-content:space-between;gap:5px;font-size:.82em}.battle-hp{height:7px;background:#24262b;border-radius:5px;overflow:hidden;margin-top:4px}.battle-hp>span{display:block;height:100%;background:currentColor;transition:width .45s ease}.battle-hp.hero{color:#55c98a}.battle-hp.enemy{color:#d85b5b}.battle-last-action{margin-top:8px;padding:7px;border:1px solid #3a3125;border-radius:6px;background:#100d09;min-height:34px;text-align:center;color:#ddd}.battle-damage{font-weight:bold;font-size:1.05em}.battle-round{font-size:.9em;color:#aaa}.battle-speed{font-size:.75em;color:#888}@media(max-width:650px){.battle-stage{grid-template-columns:1fr}}
+        #battle-visual-panel .battle-header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}.battle-stage{display:grid;grid-template-columns:1fr 1fr;gap:10px}.battle-side{background:#08090b;border:1px solid #333;border-radius:8px;padding:8px}.battle-side h4{margin:0 0 7px;color:#d6ae62}.battle-unit{position:relative;display:block;box-sizing:border-box;min-width:0;width:100%;padding:6px 5px;margin:5px 0;border-radius:6px;background:#111318;border:1px solid #292c33;transition:.25s}.battle-unit.active{border-color:#d6ae62;box-shadow:0 0 10px rgba(214,174,98,.22)}.battle-unit.dead{opacity:.38;filter:grayscale(.7)}.battle-unit .unit-top{display:flex;align-items:center;width:100%;min-width:0;box-sizing:border-box;gap:5px;font-size:.82em}.battle-unit .unit-top b{display:block;min-width:0;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.battle-unit .unit-hp{display:block;flex:0 0 auto;white-space:nowrap;margin-left:auto;padding-left:8px}.battle-hp{display:block;width:100%;box-sizing:border-box;height:7px;background:#24262b;border-radius:5px;overflow:hidden;margin-top:5px;clear:both}.battle-hp>span{display:block;height:100%;background:currentColor;transition:width .45s ease}.battle-hp.hero{color:#55c98a}.battle-hp.enemy{color:#d85b5b}.battle-last-action{margin-top:8px;padding:7px;border:1px solid #3a3125;border-radius:6px;background:#100d09;min-height:34px;text-align:center;color:#ddd}.battle-damage{font-weight:bold;font-size:1.05em}.battle-round{font-size:.9em;color:#aaa}.battle-speed{font-size:.75em;color:#888}@media(max-width:650px){.battle-stage{grid-template-columns:1fr}}
         #log-box { height: 140px; overflow-y: auto; background: #050608; border: 1px solid #333; padding: 8px; border-radius: 6px; font-family: monospace; font-size: .85em; margin-bottom: 10px; }
         .log-entry { margin-bottom: 4px; }
         .log-danger { color: var(--danger); }
@@ -144,7 +144,7 @@
 .bestiary-card{position:relative;background:#0d1115;border:1px solid #3e3428;border-radius:7px;padding:8px;min-height:145px}
 .bestiary-card.unknown{border-color:#29251f}
 .bestiary-portrait{width:82px;height:82px;float:left;margin:0 9px 7px 0;border-radius:6px;overflow:hidden;border:1px solid #70502c;background:#17120f;display:flex;align-items:center;justify-content:center;font-size:30px;color:#6d6254}
-.bestiary-portrait img{width:100%;height:100%;object-fit:cover;display:block;image-rendering:auto}
+.bestiary-portrait img{width:100%;height:100%;object-fit:cover;display:block;image-rendering:auto}.bestiary-portrait.portrait-missing::before{content:"?";font-size:30px;color:#6d6254}
 .bestiary-name{font-weight:bold;color:#ead9b8;font-size:1em;min-height:20px}
 .bestiary-tier{float:right;color:#d6ae62;font-size:.72em}
 .bestiary-badge{display:inline-block;margin-top:3px;padding:2px 6px;border-radius:10px;background:#29231c;color:#bfae94;font-size:.68em}
@@ -590,7 +590,7 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 <script>
 /* Prosty mechanizm aktualizacji PWA: sprawdzenie SW przy starcie + automatyczne przeładowanie po przejęciu aplikacji przez nowy SW. */
 if ('serviceWorker' in navigator) {
-  const PWA_BUILD = '0.127-portrait-base';
+  const PWA_BUILD = '0.128.1-bestiary-fix';
   let registration = null;
   let reloadDone = false;
   const hadController = !!navigator.serviceWorker.controller;
@@ -1069,7 +1069,7 @@ const ENEMY_PORTRAITS = {
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.128';
+const GAME_VERSION = '0.128.1';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -6324,8 +6324,7 @@ const escapeHtml=battleEsc;
 function updateBattleVisual(party,enemies,round,activeId,lastAction,phase='final'){
  const c=document.getElementById('battle-visual-panel'); if(!c)return;
  const pct=u=>Math.max(0,Math.min(100,(Number(u.hp)||0)/Math.max(1,Number(u.maxHp)||1)*100));
- const unit=(u,hero)=>`<div class="battle-unit ${u.isAlive&&u.hp>0&&u.id===activeId?'active':''} ${u.hp<=0?'dead':''}
-   ${u.isAlive&&u.hp>0?'':'title="Pokonany"'}><div class="unit-top"><b>${hero?'🧙 ':'👹 '}${battleEsc(u.name)}</b><span>${Math.max(0,Math.floor(u.hp||0))}/${Math.floor(u.maxHp||0)}</span></div><div class="battle-hp ${hero?'hero':'enemy'}"><span style="width:${pct(u)}%"></span></div></div>`;
+ const unit=(u,hero)=>{ const active=u.isAlive&&u.hp>0&&u.id===activeId; const dead=!(u.isAlive&&u.hp>0); return `<div class="battle-unit ${active?'active':''} ${dead?'dead':''}"${dead?' title="Pokonany"':''}><div class="unit-top"><b>${hero?'🧙 ':'👹 '}${battleEsc(u.name)}</b><span class="unit-hp">${Math.max(0,Math.floor(u.hp||0))}/${Math.floor(u.maxHp||0)}</span></div><div class="battle-hp ${hero?'hero':'enemy'}"><span style="width:${pct(u)}%"></span></div></div>`; };
  c.style.display='block';
  c.innerHTML=`<div class="battle-header"><b>⚔️ ${phase==='entry'?'STRAŻ WEJŚCIA':'WALKA PIĘTRA'}</b><span class="battle-round">Tura ${round}</span></div><div class="battle-stage"><div class="battle-side"><h4>👥 Twoja drużyna</h4>${party.map(u=>unit(u,true)).join('')}</div><div class="battle-side"><h4>☠️ Wrogowie</h4>${enemies.map(u=>unit(u,false)).join('')}</div></div><div class="battle-last-action">${lastAction||'Walka się rozpoczyna...'}<div class="battle-speed">⏱️ Akcja po akcji — obserwuj przebieg starcia</div></div>`;
 }
@@ -7222,7 +7221,7 @@ function renderBestiary(){
       const e=getBestiaryEntry({race:r.name,name:u.name});
       const known=e.encounters>0;
       const portrait=known&&ENEMY_PORTRAITS[`${r.name}::${u.name}`]
-        ? `<div class="bestiary-portrait"><img src="${ENEMY_PORTRAITS[`${r.name}::${u.name}`]}" alt="${battleEsc(u.name)}"></div>`
+        ? `<div class="bestiary-portrait"><img src="${ENEMY_PORTRAITS[`${r.name}::${u.name}`]}" alt="" loading="eager" onerror="this.onerror=null;this.removeAttribute('src');this.classList.add('portrait-load-failed');this.parentElement.classList.add('portrait-missing');"></div>`
         : `<div class="bestiary-portrait">?</div>`;
       const name=known?u.name:'???';
       const raceText=known?battleEsc(r.name):'???';
