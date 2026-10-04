@@ -127,6 +127,34 @@
         .status-badge.cc { background: #4a2a0a; color: #ffaa66; }
         .status-badge.special { background: #2a0a4a; color: #cc66ff; }
         #dossier-panel { background: #050608; border: 1px solid var(--gold); padding: 10px; border-radius: 6px; margin-bottom: 10px; max-height: 200px; overflow-y: auto; }
+
+/* === BESTIARIUSZ PRZECIWNIKÓW === */
+.bestiary-toolbar{display:flex;gap:6px;flex-wrap:wrap;background:#120e0b;border:1px solid #70502c;border-radius:7px;padding:8px;margin-bottom:10px}
+.bestiary-toolbar input{flex:1;min-width:180px;margin:0}
+.bestiary-toolbar button.active{border-color:#d1a752;background:linear-gradient(#806033,#4f381d);color:#fff1cc}
+.bestiary-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px}
+.bestiary-stat{background:#120e0b;border:1px solid #3e2c1d;border-radius:6px;padding:8px;text-align:center}
+.bestiary-stat b{display:block;color:#e0b65a;font-size:1.15em}
+.bestiary-stat span{font-size:.72em;color:#999}
+.bestiary-race{background:#121920;border:1px solid #70502c;border-radius:7px;margin-bottom:8px;overflow:hidden}
+.bestiary-race-head{padding:9px 11px;background:linear-gradient(145deg,#30231b,#211813);cursor:pointer}
+.bestiary-race-head strong{color:#e1bd73}
+.bestiary-race-head small{color:#999}
+.bestiary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:8px;padding:9px}
+.bestiary-card{position:relative;background:#0d1115;border:1px solid #3e3428;border-radius:7px;padding:8px;min-height:145px}
+.bestiary-card.unknown{border-color:#29251f}
+.bestiary-portrait{width:82px;height:82px;float:left;margin:0 9px 7px 0;border-radius:6px;overflow:hidden;border:1px solid #70502c;background:#17120f;display:flex;align-items:center;justify-content:center;font-size:30px;color:#6d6254}
+.bestiary-portrait img{width:100%;height:100%;object-fit:cover;display:block;image-rendering:auto}
+.bestiary-name{font-weight:bold;color:#ead9b8;font-size:1em;min-height:20px}
+.bestiary-tier{float:right;color:#d6ae62;font-size:.72em}
+.bestiary-badge{display:inline-block;margin-top:3px;padding:2px 6px;border-radius:10px;background:#29231c;color:#bfae94;font-size:.68em}
+.bestiary-badge.boss{color:#ffe5a1;border:1px solid #8b7130}
+.bestiary-meta{clear:both;color:#aaa;font-size:.76em;line-height:1.45;margin-top:7px}
+.bestiary-row{display:flex;justify-content:space-between;gap:8px;border-top:1px solid #24211d;padding-top:3px;margin-top:3px}
+.bestiary-row b{color:#d8c5a2}
+.bestiary-deaths{color:#d66b63!important}
+@media(max-width:650px){.bestiary-stats{grid-template-columns:repeat(2,1fr)}.bestiary-grid{grid-template-columns:1fr}.bestiary-portrait{width:76px;height:76px}}
+
         #party-cp-details { background: #121920; padding: 8px; border-radius: 6px; margin-bottom: 10px; border: 1px solid #45a29e; }
         
 .hero-weapon-preview{margin-top:6px;padding:7px 9px;background:linear-gradient(135deg,#15110c,#0a0907);border:1px solid #806331;border-radius:6px;box-shadow:inset 0 0 10px rgba(0,0,0,.35)}
@@ -560,33 +588,33 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 </style>
 
 <script>
+/* Prosty mechanizm aktualizacji PWA: sprawdzenie SW przy starcie + automatyczne przeładowanie po przejęciu aplikacji przez nowy SW. */
 if ('serviceWorker' in navigator) {
-  const PWA_BUILD = '0.127-fix3';
-  let pwaRegistration = null;
-  let hadController = !!navigator.serviceWorker.controller;
-  let reloadedForThisUpdate = false;
-  function reloadAfterPwaUpdate() {
-    if (hadController && !reloadedForThisUpdate) {
-      reloadedForThisUpdate = true;
+  const PWA_BUILD = '0.127-portrait-base';
+  let registration = null;
+  let reloadDone = false;
+  const hadController = !!navigator.serviceWorker.controller;
+
+  navigator.serviceWorker.addEventListener('controllerchange', function () {
+    if (hadController && !reloadDone) {
+      reloadDone = true;
       window.location.reload();
     }
-    hadController = true;
-  }
-  navigator.serviceWorker.addEventListener('controllerchange', reloadAfterPwaUpdate);
-  navigator.serviceWorker.addEventListener('message', function(event) {
-    if (event.data && event.data.type === 'TOWER_SW_UPDATED') reloadAfterPwaUpdate();
   });
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('./sw.js?build=' + encodeURIComponent(PWA_BUILD), {updateViaCache:'none'})
-      .then(function(registration) {
-        pwaRegistration = registration;
-        registration.update().catch(function(){});
-        window.setTimeout(function(){ registration.update().catch(function(){}); }, 2000);
+
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./sw.js?build=' + encodeURIComponent(PWA_BUILD), { updateViaCache: 'none' })
+      .then(function (reg) {
+        registration = reg;
+        return reg.update();
       })
-      .catch(function(error) { console.warn('PWA Service Worker registration failed:', error); });
+      .catch(function () {});
   });
-  document.addEventListener('visibilitychange', function() {
-    if (document.visibilityState === 'visible' && pwaRegistration && navigator.onLine) pwaRegistration.update().catch(function(){});
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible' && registration && navigator.onLine) {
+      registration.update().catch(function () {});
+    }
   });
 }
 </script>
@@ -650,6 +678,7 @@ if ('serviceWorker' in navigator) {
             <button class="tab-btn" data-tower-action="switchTab" data-tab="inventory">📦 Magazyn</button>
             <button class="tab-btn" data-tower-action="switchTab" data-tab="fallen">💀 Polegli</button>
             <button class="tab-btn" data-tower-action="switchTab" data-tab="dossier">📋 Dossier</button>
+            <button class="tab-btn" data-tower-action="switchTab" data-tab="bestiary">📖 Bestiariusz</button>
             <button class="tab-btn" data-tower-action="openTowerDiscoveries">🔎 Odkrycia Wieży</button>
         </div>
         <div id="tab-roster" class="tab-content active">
@@ -775,6 +804,12 @@ if ('serviceWorker' in navigator) {
             <p style="font-size:.85em;color:#aaa;text-align:center;margin-bottom:10px;">Informacje wywiadowcze o bossach na kolejnych piętrach.</p>
             <div id="dossier-panel"></div>
         </div>
+        <div id="tab-bestiary" class="tab-content">
+            <h3>📖 Bestiariusz</h3>
+            <p style="font-size:.85em;color:#aaa;text-align:center;margin-bottom:10px;">Przeciwnicy są odkrywani dopiero podczas rzeczywistych spotkań w Wieży. Nieznane rasy pozostają ukryte.</p>
+            <div id="bestiary-panel"></div>
+        </div>
+
         <h3>Dziennik Operacji</h3>
         <div id="log-box"></div>
     </div>
@@ -1025,11 +1060,16 @@ const BESTIARY = [
     ]
   }
 ];
+// Portrety przeciwników — ujawniane dopiero po faktycznym spotkaniu w walce.
+const ENEMY_PORTRAITS = {
+  'Jötunnie::Mroźny Osłonik': './enemy-portraits/jotunn_mrozny_oslonik_tier1.png'
+};
+
 
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.127';
+const GAME_VERSION = '0.128';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -3364,7 +3404,7 @@ function startNewGame(slot) {
     lastFreeSummonTime:0,
     sanctuaryName:null, sanctuaryNameLocked:false,
     resources:{ wood:0, stone:0, gold:0, steel:0, leather:0 }, starStones:0, evolutionState:{},
-    base:{}, missionSchedule:{}, bossIntel:{}, inventory:[], fallenHeroes:[], teams:[], milestonesSeen:{}
+    base:{}, missionSchedule:{}, bossIntel:{}, inventory:[], fallenHeroes:[], teams:[], milestonesSeen:{}, bestiary:{}
   });
   Object.keys(BUILDINGS).forEach(k=>{ state.base[k]=1; });
   if(!saveGame()){
@@ -4122,6 +4162,8 @@ function normalizeState(s) {
     });
   }
   
+  s.bestiary=s.bestiary&&typeof s.bestiary==='object'&&!Array.isArray(s.bestiary)?s.bestiary:{};
+  Object.keys(s.bestiary).forEach(k=>{const e=s.bestiary[k];if(!e||typeof e!=='object'){delete s.bestiary[k];return;}e.encounters=Math.max(0,Number(e.encounters)||0);e.defeated=Math.max(0,Number(e.defeated)||0);e.heroDeaths=Math.max(0,Number(e.heroDeaths)||0);e.firstFloor=Number.isFinite(Number(e.firstFloor))&&Number(e.firstFloor)>=1?Math.floor(Number(e.firstFloor)):null;});
   if (!Array.isArray(s.fallenHeroes)) s.fallenHeroes = [];
   s.heroes.forEach(h=>{
     if(h.inventory && Array.isArray(h.inventory) && h.inventory.length) {
@@ -5987,10 +6029,12 @@ function recordFallenHero(hero,floor,killerName) {
   if(!Array.isArray(state.fallenHeroes))state.fallenHeroes=[];
   if(state.fallenHeroes.some(f=>f.id===hero.id))return;
   hero.isTrainer=false;
+  const finalKiller=killerName||"Nieznany wróg";
+  recordEnemyHeroDeath(finalKiller);
   state.fallenHeroes.push({
     id:hero.id, name:hero.name, heroClass:hero.heroClass||"Brak",
     subclass:hero.subclass||null, level:hero.level, stars:hero.stars,
-    floor:floor, killer:killerName||"Nieznany wróg", diedAt:Date.now()
+    floor:floor, killer:finalKiller, diedAt:Date.now()
   });
   saveGame();
 }
@@ -6500,6 +6544,8 @@ function startBattleCombat(phase='final') {
       if(explorationEffects.enemyAtk) log(`🧭 Efekt eksploracji: wrogowie ${explorationEffects.enemyAtk>0?'+':'−'}${Math.round(Math.abs(explorationEffects.enemyAtk)*100)}% obrażeń.`,'warn');
     }
     const enemies=isEntry ? buildFloorEntryEnemies(floor,type) : buildEnemies(floor,type);
+    enemies.forEach(enemy=>recordEnemyEncounter(enemy,floor));
+    saveGame();
     let round=1;
     let battleLastAction=battleActionText("⚔️", "Starcie się rozpoczyna");
     document.getElementById('btn-start-mission').style.display='none';
@@ -6661,7 +6707,7 @@ function startBattleCombat(phase='final') {
         baseAtk=Math.max(1,Math.floor(baseAtk));
         const skillCtx={baseAtk,floor,deadCount};
         if(!h._identityFirstHitUsed){ const fh=getHeroIdentityMods(h).firstHitDamage||1; if(fh!==1)skillCtx.baseAtk*=fh; h._identityFirstHitUsed=true; }
-        if(useHeroActiveSkill(h,target,aliveParty,enemies,skillCtx)){deadCount=skillCtx.deadCount; const actionTarget=target||{name:skillCtx.supportActionTarget||'drużyna',hp:0,maxHp:0}; battleLastAction=battleActionText('✨', `${h.name} używa ${skillCtx.supportActionLabel||'umiejętności'}`, `${actionTarget.name}${actionTarget.maxHp?`: ${Math.max(0,Math.floor(actionTarget.hp))}/${Math.floor(actionTarget.maxHp)} HP`:''}`); updateBattleVisual(party,enemies,round,h.id,battleLastAction,phase); await battleVisualPause(900); if(target&&target.hp<=0){recordSoulKill(h);log(`💥 <b>${target.name}</b> pokonany przez umiejętność!`,'success');}continue;}
+        if(useHeroActiveSkill(h,target,aliveParty,enemies,skillCtx)){deadCount=skillCtx.deadCount; const actionTarget=target||{name:skillCtx.supportActionTarget||'drużyna',hp:0,maxHp:0}; battleLastAction=battleActionText('✨', `${h.name} używa ${skillCtx.supportActionLabel||'umiejętności'}`, `${actionTarget.name}${actionTarget.maxHp?`: ${Math.max(0,Math.floor(actionTarget.hp))}/${Math.floor(actionTarget.maxHp)} HP`:''}`); updateBattleVisual(party,enemies,round,h.id,battleLastAction,phase); await battleVisualPause(900); if(target&&target.hp<=0){recordSoulKill(h);recordEnemyDefeat(target,floor);log(`💥 <b>${target.name}</b> pokonany przez umiejętność!`,'success');}continue;}
         const attackType=getAttackTypeFromHero(h);
         const isMagic=(attackType==="magical"||["fire","ice","lightning","dark","holy","earth","water","air"].includes(attackType));
         let defense=isMagic?target.mdef:target.def;
@@ -6717,7 +6763,7 @@ function startBattleCombat(phase='final') {
         if(defAbilityResult.log) log(defAbilityResult.log);
         
         target.hp=Math.max(0,target.hp-dmg);
-        if(target.hp<=0)recordSoulKill(h);
+        if(target.hp<=0){recordSoulKill(h);recordEnemyDefeat(target,floor);}
         const reflected = defAbilityResult.reflectDamage || 0;
         if (reflected > 0 && h.isAlive) {
           h.hp = Math.max(0, h.hp - reflected);
@@ -7063,6 +7109,7 @@ function switchTab(name,event) {
   if(event?.target)event.target.classList.add('active');
   if(name==='fallen')renderFallenHeroes();
   if(name==='dossier')renderDossier();
+  if(name==='bestiary')renderBestiary();
   if(name==='inventory')renderInventory();
   if(name==='workshop')renderWorkshop();
   if(name==='teams'){ renderTeamSelects(); renderTeamsList(); }
@@ -7079,6 +7126,128 @@ function renderFallenHeroes() {
   html+='</div>';
   container.innerHTML=html;
 }
+
+function getBestiaryKey(enemy){
+  if(!enemy || !enemy.race || !enemy.name) return null;
+  return `${enemy.race}::${enemy.name}`;
+}
+function ensureBestiaryState(){
+  if(!state) return null;
+  if(!state.bestiary || typeof state.bestiary!=='object' || Array.isArray(state.bestiary)) state.bestiary={};
+  return state.bestiary;
+}
+function getBestiaryEntry(enemy){
+  const key=getBestiaryKey(enemy);
+  if(!key) return null;
+  const b=ensureBestiaryState();
+  if(!b[key] || typeof b[key]!=='object') b[key]={encounters:0,defeated:0,heroDeaths:0,firstFloor:null};
+  const e=b[key];
+  e.encounters=Math.max(0,Number(e.encounters)||0);
+  e.defeated=Math.max(0,Number(e.defeated)||0);
+  e.heroDeaths=Math.max(0,Number(e.heroDeaths)||0);
+  e.firstFloor=Number.isFinite(Number(e.firstFloor))&&Number(e.firstFloor)>=1?Math.floor(Number(e.firstFloor)):null;
+  return e;
+}
+function recordEnemyEncounter(enemy,floor){
+  const e=getBestiaryEntry(enemy);
+  if(!e) return;
+  e.encounters++;
+  if(!e.firstFloor) e.firstFloor=Math.max(1,Math.floor(Number(floor)||1));
+}
+function recordEnemyDefeat(enemy,floor){
+  if(!enemy || enemy._bestiaryDefeatRecorded) return;
+  enemy._bestiaryDefeatRecorded=true;
+  const e=getBestiaryEntry(enemy);
+  if(e) e.defeated++;
+}
+function recordEnemyHeroDeath(killerName){
+  if(!killerName || killerName==='Nieznany wróg' || killerName==='efekty statusowe' || killerName==='konsekwencja taktyczna — pozostawiony za drużyną') return;
+  const fakeEnemy={race:null,name:killerName};
+  const race=BESTIARY.find(r=>r.units.some(u=>u.name===killerName));
+  if(!race) return;
+  fakeEnemy.race=race.name;
+  const e=getBestiaryEntry(fakeEnemy);
+  if(e) e.heroDeaths++;
+}
+function getBestiaryRaceRange(raceName){
+  const order=Array.isArray(state?.raceOrder)?state.raceOrder:[];
+  const idx=order.findIndex(i=>BESTIARY[i]?.name===raceName);
+  if(idx<0) return '???';
+  return `${idx*5+1}–${idx*5+5}`;
+}
+function getBestiaryUnit(raceName,unitName){
+  const race=BESTIARY.find(r=>r.name===raceName);
+  return race ? race.units.find(u=>u.name===unitName) : null;
+}
+function renderBestiary(){
+  const container=document.getElementById('bestiary-panel'); if(!container||!state)return;
+  ensureBestiaryState();
+  const filter=container.dataset.filter||'all';
+  const query=(container.dataset.query||'').trim().toLowerCase();
+  let total=0,discovered=0,encounters=0,defeated=0,heroDeaths=0;
+  BESTIARY.forEach(r=>r.units.forEach(u=>{
+    total++;
+    const e=getBestiaryEntry({race:r.name,name:u.name});
+    if(e.encounters>0) discovered++;
+    encounters+=e.encounters; defeated+=e.defeated; heroDeaths+=e.heroDeaths;
+  }));
+  let html=`<div class="bestiary-toolbar">
+    <button class="${filter==='all'?'active':''}" data-bestiary-filter="all">Wszyscy</button>
+    <button class="${filter==='discovered'?'active':''}" data-bestiary-filter="discovered">Odkryci</button>
+    <button class="${filter==='boss'?'active':''}" data-bestiary-filter="boss">Bossowie</button>
+    <input id="bestiary-search" value="${battleEsc(container.dataset.query||'')}" placeholder="🔎 Szukaj odkrytych przeciwników...">
+  </div>
+  <div class="bestiary-stats">
+    <div class="bestiary-stat"><b>${discovered}/${total}</b><span>odkrytych</span></div>
+    <div class="bestiary-stat"><b>${encounters}</b><span>spotkań</span></div>
+    <div class="bestiary-stat"><b>${defeated}</b><span>pokonanych</span></div>
+    <div class="bestiary-stat"><b>${heroDeaths}</b><span>zabici bohaterowie</span></div>
+  </div>`;
+
+  BESTIARY.forEach(r=>{
+    const raceKnown=r.units.some(u=>getBestiaryEntry({race:r.name,name:u.name}).encounters>0);
+    let units=r.units.filter(u=>{
+      const e=getBestiaryEntry({race:r.name,name:u.name});
+      const known=e.encounters>0;
+      if(filter==='discovered'&&!known)return false;
+      if(filter==='boss'&&u.type!=='boss')return false;
+      if(query && !(known && (u.name.toLowerCase().includes(query)||r.name.toLowerCase().includes(query))))return false;
+      return true;
+    });
+    if(!units.length)return;
+    const raceTitle=raceKnown?r.name:'???';
+    const raceTag=raceKnown?`${battleEsc(r.tag)} · piętra ${getBestiaryRaceRange(r.name)}`:'Nieznana rasa · zakres nieodkryty';
+    html+=`<section class="bestiary-race"><div class="bestiary-race-head" onclick="this.nextElementSibling.hidden=!this.nextElementSibling.hidden"><strong>${battleEsc(raceTitle)}</strong><br><small>${raceTag} · ${units.length} wpisów</small></div><div class="bestiary-grid">`;
+    units.forEach(u=>{
+      const e=getBestiaryEntry({race:r.name,name:u.name});
+      const known=e.encounters>0;
+      const portrait=known&&ENEMY_PORTRAITS[`${r.name}::${u.name}`]
+        ? `<div class="bestiary-portrait"><img src="${ENEMY_PORTRAITS[`${r.name}::${u.name}`]}" alt="${battleEsc(u.name)}"></div>`
+        : `<div class="bestiary-portrait">?</div>`;
+      const name=known?u.name:'???';
+      const raceText=known?battleEsc(r.name):'???';
+      const rangeText=known?getBestiaryRaceRange(r.name):'???';
+      const first=known&&e.firstFloor?`${e.firstFloor}. piętro`:'???';
+      html+=`<article class="bestiary-card ${known?'':'unknown'}">
+        ${portrait}<span class="bestiary-tier">${u.type==='boss'?'BOSS':({strażnik:'TIER 1',strzelec:'TIER 2',mag:'TIER 3',wojownik:'TIER 4'}[u.type]||u.type)}</span>
+        <div class="bestiary-name">${battleEsc(name)}</div>
+        <span class="bestiary-badge ${u.type==='boss'?'boss':''}">${u.type==='boss'?'👑 Boss':'⚔️ Przeciwnik'}</span>
+        <div class="bestiary-meta">Rasa: ${raceText}<br>Występuje: <b>${rangeText}</b>
+          <div class="bestiary-row"><span>Pierwsze spotkanie</span><b>${first}</b></div>
+          <div class="bestiary-row"><span>Spotkania</span><b>${e.encounters}</b></div>
+          <div class="bestiary-row"><span>Pokonano</span><b>${e.defeated}</b></div>
+          <div class="bestiary-row"><span>Zabici bohaterowie</span><b class="bestiary-deaths">${e.heroDeaths}</b></div>
+        </div></article>`;
+    });
+    html+='</div></section>';
+  });
+  html+='';
+  container.innerHTML=html||'<div style="color:#999;text-align:center;padding:15px;">Brak wpisów dla wybranego filtra.</div>';
+  container.querySelectorAll('[data-bestiary-filter]').forEach(btn=>btn.addEventListener('click',()=>{container.dataset.filter=btn.dataset.bestiaryFilter;renderBestiary();}));
+  const search=document.getElementById('bestiary-search');
+  if(search) search.addEventListener('input',()=>{container.dataset.query=search.value;renderBestiary();const s=document.getElementById('bestiary-search');if(s){s.focus();s.setSelectionRange(s.value.length,s.value.length);}});
+}
+
 function renderDossier() {
   const container=document.getElementById('dossier-panel'); if(!container)return;
   let html='';
