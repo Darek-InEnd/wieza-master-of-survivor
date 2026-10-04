@@ -1,4 +1,4 @@
-const BUILD_ID = '0.128-bestiary';
+const BUILD_ID = '0.128.1-bestiary-fix';
 const CACHE_NAME = 'wieza-pwa-' + BUILD_ID;
 const APP_SHELL = ['./','./index.html','./wieza.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/icon-maskable-512.png','./screenshots/desktop.png','./screenshots/mobile.png','./enemy-portraits/jotunn_mrozny_oslonik_tier1.png'];
 
@@ -30,11 +30,15 @@ self.addEventListener('fetch', event => {
         .then(response => {
           if (response && response.ok) {
             const copy = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put('./index.html', copy)).catch(() => {});
+            const cacheKey = isNavigation ? new URL(event.request.url).pathname : event.request.url;
+            caches.open(CACHE_NAME).then(cache => cache.put(cacheKey, copy)).catch(() => {});
           }
           return response;
         })
-        .catch(() => caches.match('./index.html'))
+        .catch(() => {
+          const path = new URL(event.request.url).pathname;
+          return caches.match(path).then(cached => cached || caches.match('./index.html'));
+        })
     );
     return;
   }
