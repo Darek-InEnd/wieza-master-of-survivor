@@ -590,7 +590,7 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 <script>
 /* Prosty mechanizm aktualizacji PWA: sprawdzenie SW przy starcie + automatyczne przeładowanie po przejęciu aplikacji przez nowy SW. */
 if ('serviceWorker' in navigator) {
-  const PWA_BUILD = '0.128.1-bestiary-fix';
+  const PWA_BUILD = '0.128.2-bestiary-fix';
   let registration = null;
   let reloadDone = false;
   const hadController = !!navigator.serviceWorker.controller;
@@ -1062,14 +1062,17 @@ const BESTIARY = [
 ];
 // Portrety przeciwników — ujawniane dopiero po faktycznym spotkaniu w walce.
 const ENEMY_PORTRAITS = {
-  'Jötunnie::Mroźny Osłonik': './enemy-portraits/jotunn_mrozny_oslonik_tier1.png'
+  'Jötunnie::Mroźny Osłonik': 'enemy-portraits/jotunn_mrozny_oslonik_tier1.png'
 };
-
+function getEnemyPortraitUrl(path){
+  if(!path)return '';
+  try{return new URL(path, document.baseURI).href;}catch(e){return path;}
+}
 
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.128.1';
+const GAME_VERSION = '0.128.3';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -7220,8 +7223,12 @@ function renderBestiary(){
     units.forEach(u=>{
       const e=getBestiaryEntry({race:r.name,name:u.name});
       const known=e.encounters>0;
-      const portrait=known&&ENEMY_PORTRAITS[`${r.name}::${u.name}`]
-        ? `<div class="bestiary-portrait"><img src="${ENEMY_PORTRAITS[`${r.name}::${u.name}`]}" alt="" loading="eager" onerror="this.onerror=null;this.removeAttribute('src');this.classList.add('portrait-load-failed');this.parentElement.classList.add('portrait-missing');"></div>`
+      const portraitKey=`${r.name}::${u.name}`;
+      const portraitSrc=ENEMY_PORTRAITS[portraitKey];
+      const portraitFallback=ENEMY_PORTRAIT_FALLBACKS[portraitKey]||'';
+      const portraitUrl=known&&portraitSrc?getEnemyPortraitUrl(portraitSrc):'';
+      const portrait=portraitUrl
+        ? `<div class="bestiary-portrait"><img src="${portraitUrl}" alt="" loading="eager" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('portrait-missing');"></div>`
         : `<div class="bestiary-portrait">?</div>`;
       const name=known?u.name:'???';
       const raceText=known?battleEsc(r.name):'???';

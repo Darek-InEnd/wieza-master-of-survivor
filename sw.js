@@ -1,4 +1,4 @@
-const BUILD_ID = '0.128.1-bestiary-fix';
+const BUILD_ID = '0.128.3-bestiary-portrait-fix';
 const CACHE_NAME = 'wieza-pwa-' + BUILD_ID;
 const APP_SHELL = ['./','./index.html','./wieza.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/icon-maskable-512.png','./screenshots/desktop.png','./screenshots/mobile.png','./enemy-portraits/jotunn_mrozny_oslonik_tier1.png'];
 
@@ -23,6 +23,20 @@ self.addEventListener('fetch', event => {
 
   const isNavigation = event.request.mode === 'navigate';
   const isAppDocument = url.pathname.endsWith('/') || url.pathname.endsWith('/index.html') || url.pathname.endsWith('/wieza.html');
+  const isEnemyPortrait = url.pathname.includes('/enemy-portraits/');
+
+  if (isEnemyPortrait) {
+    event.respondWith(
+      caches.match(event.request).then(cached => cached || fetch(new Request(event.request, { cache: 'no-store' })).then(response => {
+        if (response && response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy)).catch(() => {});
+        }
+        return response;
+      }))
+    );
+    return;
+  }
 
   if (isNavigation || isAppDocument) {
     event.respondWith(
