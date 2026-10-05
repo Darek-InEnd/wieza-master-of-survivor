@@ -1062,14 +1062,14 @@ const BESTIARY = [
 ];
 // Portrety przeciwników — ujawniane dopiero po faktycznym spotkaniu w walce.
 const ENEMY_PORTRAITS = {
-  'Jötunnie::Mroźny Osłonik': 'enemy-portraits/jotunn_mrozny_oslonik_tier1.png?v=0.128.9',
-  'Jötunnie::Ciskacz Gromów': 'enemy-portraits/tytani_ciskacz_gromow_tier2.png?v=0.128.9',
-  'Jötunnie::Rzucacz Głazów': 'enemy-portraits/tytani_rzucacz_glazow_tier2.png?v=0.128.9',
-  'Jötunnie::Runotwórca Mrozu': 'enemy-portraits/tytani_runotworca_mrozu_tier3.png?v=0.128.9',
-  'Jötunnie::Lodowy Zgniatacz': 'enemy-portraits/tytani_lodowy_zgniatacz_tier4.png?v=0.128.9',
-  'Jötunnie::Król Zmarzliny': 'enemy-portraits/tytani_krol_zmarzliny_boss.png?v=0.128.9',
-  'Jötunnie::Ymir': 'enemy-portraits/tytani_ymir_boss.png?v=0.128.9',
-  'Jötunnie::Runiczny Jötunn': 'enemy-portraits/tytani_runiczny_jotunn_boss.png?v=0.128.9'
+  'Jötunnie::Mroźny Osłonik': 'enemy-portraits/jotunn_mrozny_oslonik_tier1.png?v=0.129.0',
+  'Jötunnie::Ciskacz Gromów': 'enemy-portraits/jotunn_ciskacz_gromow_tier2.png?v=0.129.0',
+  'Jötunnie::Rzucacz Głazów': 'enemy-portraits/jotunn_rzucacz_glazow_tier2.png?v=0.129.0',
+  'Jötunnie::Runotwórca Mrozu': 'enemy-portraits/jotunn_runotworca_mrozu_tier3.png?v=0.129.0',
+  'Jötunnie::Lodowy Zgniatacz': 'enemy-portraits/jotunn_lodowy_zgniatacz_tier4.png?v=0.129.0',
+  'Jötunnie::Król Zmarzliny': 'enemy-portraits/jotunn_krol_zmarzliny_boss.png?v=0.129.0',
+  'Jötunnie::Ymir': 'enemy-portraits/jotunn_ymir_boss.png?v=0.129.0',
+  'Jötunnie::Runiczny Jötunn': 'enemy-portraits/jotunn_runiczny_jotunn_boss.png?v=0.129.0'
 };
 function getEnemyPortraitUrl(path){
   if(!path)return '';
@@ -1079,7 +1079,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.128.9';
+const GAME_VERSION = '0.129.0';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -5815,6 +5815,7 @@ function buildEnemies(floor, type, countOverride=null) {
         _mitigD: D_edef,
         _heroMitigD: D_hdef,
         boss: true,
+        isAlive: true,
         ability: bossData.ability,
         weaknesses: bossData.weaknesses,
         race: race.name,
@@ -5843,6 +5844,7 @@ function buildEnemies(floor, type, countOverride=null) {
           _mitigD: D_edef,
           _heroMitigD: D_hdef,
           boss: false,
+          isAlive: true,
           ability: u.ability,
           weaknesses: u.weaknesses,
           race: race.name,
@@ -5864,6 +5866,7 @@ function buildEnemies(floor, type, countOverride=null) {
         _mitigD: D_edef,
         _heroMitigD: D_hdef,
         boss: true,
+        isAlive: true,
         ability: { name: "Potężny Cios", effect: "stun", value: 0.3 },
         weaknesses: [],
         race: race.name,
@@ -5908,6 +5911,7 @@ function buildEnemies(floor, type, countOverride=null) {
         _mitigD: D_edef,
         _heroMitigD: D_hdef,
         boss: false,
+        isAlive: true,
         ability: u.ability || null,
         weaknesses: u.weaknesses || [],
         race: race.name,

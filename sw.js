@@ -1,6 +1,6 @@
-const BUILD_ID = '0.128.9-jotunn-mrozny-oslonik';
+const BUILD_ID = '0.129.0-jotunn-portraits-and-battle-fix';
 const CACHE_NAME = 'wieza-pwa-' + BUILD_ID;
-const APP_SHELL = ['./','./index.html','./wieza.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/icon-maskable-512.png','./screenshots/desktop.png','./screenshots/mobile.png','./enemy-portraits/jotunn_mrozny_oslonik_tier1.png?v=0.128.9','./enemy-portraits/tytani_ciskacz_gromow_tier2.png?v=0.128.9','./enemy-portraits/tytani_rzucacz_glazow_tier2.png?v=0.128.9','./enemy-portraits/tytani_runotworca_mrozu_tier3.png?v=0.128.9','./enemy-portraits/tytani_lodowy_zgniatacz_tier4.png?v=0.128.9','./enemy-portraits/tytani_krol_zmarzliny_boss.png?v=0.128.9','./enemy-portraits/tytani_ymir_boss.png?v=0.128.9','./enemy-portraits/tytani_runiczny_jotunn_boss.png?v=0.128.9'];
+const APP_SHELL = ['./','./index.html','./wieza.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/icon-maskable-512.png','./screenshots/desktop.png','./screenshots/mobile.png','./enemy-portraits/jotunn_mrozny_oslonik_tier1.png?v=0.129.0','./enemy-portraits/jotunn_ciskacz_gromow_tier2.png?v=0.129.0','./enemy-portraits/jotunn_rzucacz_glazow_tier2.png?v=0.129.0','./enemy-portraits/jotunn_runotworca_mrozu_tier3.png?v=0.129.0','./enemy-portraits/jotunn_lodowy_zgniatacz_tier4.png?v=0.129.0','./enemy-portraits/jotunn_krol_zmarzliny_boss.png?v=0.129.0','./enemy-portraits/jotunn_ymir_boss.png?v=0.129.0','./enemy-portraits/jotunn_runiczny_jotunn_boss.png?v=0.129.0'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
