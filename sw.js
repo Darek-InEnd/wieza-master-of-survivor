@@ -1,4 +1,4 @@
-const BUILD_ID = '0.128.3-bestiary-portrait-fix';
+const BUILD_ID = '0.128.4-bestiary-render-fix';
 const CACHE_NAME = 'wieza-pwa-' + BUILD_ID;
 const APP_SHELL = ['./','./index.html','./wieza.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/icon-maskable-512.png','./screenshots/desktop.png','./screenshots/mobile.png','./enemy-portraits/jotunn_mrozny_oslonik_tier1.png'];
 
