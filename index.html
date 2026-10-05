@@ -590,7 +590,7 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 <script>
 /* Prosty mechanizm aktualizacji PWA: sprawdzenie SW przy starcie + automatyczne przeładowanie po przejęciu aplikacji przez nowy SW. */
 if ('serviceWorker' in navigator) {
-  const PWA_BUILD = '0.128.2-bestiary-fix';
+  const PWA_BUILD = '0.128.5-bestiary-race-known';
   let registration = null;
   let reloadDone = false;
   const hadController = !!navigator.serviceWorker.controller;
@@ -1062,7 +1062,14 @@ const BESTIARY = [
 ];
 // Portrety przeciwników — ujawniane dopiero po faktycznym spotkaniu w walce.
 const ENEMY_PORTRAITS = {
-  'Jötunnie::Mroźny Osłonik': 'enemy-portraits/jotunn_mrozny_oslonik_tier1.png'
+  'Jötunnie::Mroźny Osłonik': 'enemy-portraits/jotunn_mrozny_oslonik_tier1.png',
+  'Tytani::Marmurowy Bastion': 'enemy-portraits/tytani_marmurowy_bastion_tier1.png',
+  'Tytani::Ciskacz Gromów': 'enemy-portraits/tytani_ciskacz_gromow_tier2.png',
+  'Tytani::Tkacz Czasu': 'enemy-portraits/tytani_tkacz_czasu_tier3.png',
+  'Tytani::Miażdżyciel Światów': 'enemy-portraits/tytani_miazdzyciel_swiatow_tier4.png',
+  'Tytani::Kronos': 'enemy-portraits/tytani_kronos_boss.png',
+  'Tytani::Atlas': 'enemy-portraits/tytani_atlas_boss.png',
+  'Tytani::Okeanos': 'enemy-portraits/tytani_okeanos_boss.png'
 };
 function getEnemyPortraitUrl(path){
   if(!path)return '';
@@ -1072,7 +1079,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.128.4';
+const GAME_VERSION = '0.128.6';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -7177,6 +7184,13 @@ function getBestiaryRaceRange(raceName){
   if(idx<0) return '???';
   return `${idx*5+1}–${idx*5+5}`;
 }
+function isBestiaryRaceKnown(raceName){
+  const order=Array.isArray(state?.raceOrder)?state.raceOrder:[];
+  const idx=order.findIndex(i=>BESTIARY[i]?.name===raceName);
+  if(idx<0) return false;
+  const maxFloor=Math.max(1,Number(state?.maxUnlockedFloor)||Number(state?.floor)||1);
+  return maxFloor >= (idx*5+1);
+}
 function getBestiaryUnit(raceName,unitName){
   const race=BESTIARY.find(r=>r.name===raceName);
   return race ? race.units.find(u=>u.name===unitName) : null;
@@ -7207,7 +7221,9 @@ function renderBestiary(){
   </div>`;
 
   BESTIARY.forEach(r=>{
-    const raceKnown=r.units.some(u=>getBestiaryEntry({race:r.name,name:u.name}).encounters>0);
+    // Starsze zapisy nie posiadają historii konkretnych przeciwników.
+    // Na ich podstawie ujawniamy tylko rasy, których segmenty gracz już odblokował.
+    const raceKnown=isBestiaryRaceKnown(r.name) || r.units.some(u=>getBestiaryEntry({race:r.name,name:u.name}).encounters>0);
     let units=r.units.filter(u=>{
       const e=getBestiaryEntry({race:r.name,name:u.name});
       const known=e.encounters>0;
@@ -7218,7 +7234,7 @@ function renderBestiary(){
     });
     if(!units.length)return;
     const raceTitle=raceKnown?r.name:'???';
-    const raceTag=raceKnown?`${battleEsc(r.tag)} · piętra ${getBestiaryRaceRange(r.name)}`:'Nieznana rasa · zakres nieodkryty';
+    const raceTag=raceKnown?`${battleEsc(r.tag)} · rasa znana`:'Nieznana rasa · zakres nieodkryty';
     html+=`<section class="bestiary-race"><div class="bestiary-race-head" onclick="this.nextElementSibling.hidden=!this.nextElementSibling.hidden"><strong>${battleEsc(raceTitle)}</strong><br><small>${raceTag} · ${units.length} wpisów</small></div><div class="bestiary-grid">`;
     units.forEach(u=>{
       const e=getBestiaryEntry({race:r.name,name:u.name});
