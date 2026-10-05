@@ -1072,7 +1072,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.128.3';
+const GAME_VERSION = '0.128.4';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -7225,7 +7225,6 @@ function renderBestiary(){
       const known=e.encounters>0;
       const portraitKey=`${r.name}::${u.name}`;
       const portraitSrc=ENEMY_PORTRAITS[portraitKey];
-      const portraitFallback=ENEMY_PORTRAIT_FALLBACKS[portraitKey]||'';
       const portraitUrl=known&&portraitSrc?getEnemyPortraitUrl(portraitSrc):'';
       const portrait=portraitUrl
         ? `<div class="bestiary-portrait"><img src="${portraitUrl}" alt="" loading="eager" decoding="async" onerror="this.onerror=null;this.style.display='none';this.parentElement.classList.add('portrait-missing');"></div>`
