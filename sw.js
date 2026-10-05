@@ -1,6 +1,6 @@
-const BUILD_ID = '0.128.4-bestiary-render-fix';
+const BUILD_ID = '0.128.6-bestiary-titans';
 const CACHE_NAME = 'wieza-pwa-' + BUILD_ID;
-const APP_SHELL = ['./','./index.html','./wieza.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/icon-maskable-512.png','./screenshots/desktop.png','./screenshots/mobile.png','./enemy-portraits/jotunn_mrozny_oslonik_tier1.png'];
+const APP_SHELL = ['./','./index.html','./wieza.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/icon-maskable-512.png','./screenshots/desktop.png','./screenshots/mobile.png','./enemy-portraits/jotunn_mrozny_oslonik_tier1.png','./enemy-portraits/tytani_marmurowy_bastion_tier1.png','./enemy-portraits/tytani_ciskacz_gromow_tier2.png','./enemy-portraits/tytani_tkacz_czasu_tier3.png','./enemy-portraits/tytani_miazdzyciel_swiatow_tier4.png','./enemy-portraits/tytani_kronos_boss.png','./enemy-portraits/tytani_atlas_boss.png','./enemy-portraits/tytani_okeanos_boss.png'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
