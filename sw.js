@@ -1,38 +1,24 @@
-const BUILD_ID = '0.129.1-kowal-evolution-fix';
+const BUILD_ID = '0.129.1-opening-mobile';
 const CACHE_NAME = 'wieza-pwa-' + BUILD_ID;
 
+// Minimalny cache instalacyjny. Żaden opcjonalny plik nie może zablokować aktualizacji SW.
 const CORE_ASSETS = [
+  './opening_4k.mp4',
   './index.html',
-  './wieza.html',
   './manifest.webmanifest'
 ];
 
-const OPTIONAL_ASSETS = [
-  './enemy-portraits/jotunn_mrozny_oslonik_tier1.png?v=0.129.1',
-  './enemy-portraits/jotunn_ciskacz_gromow_tier2.png?v=0.129.1',
-  './enemy-portraits/jotunn_rzucacz_glazow_tier2.png?v=0.129.1',
-  './enemy-portraits/jotunn_runotworca_mrozu_tier3.png?v=0.129.1',
-  './enemy-portraits/jotunn_lodowy_zgniatacz_tier4.png?v=0.129.1',
-  './enemy-portraits/jotunn_krol_zmarzliny_boss.png?v=0.129.1',
-  './enemy-portraits/jotunn_ymir_boss.png?v=0.129.1',
-  './enemy-portraits/jotunn_runiczny_jotunn_boss.png?v=0.129.1'
-];
-
-async function cacheIndividually(cache, urls, optional = false) {
+async function cacheIndividually(cache, urls) {
   for (const url of urls) {
     try { await cache.add(url); }
-    catch (error) {
-      console.warn('[Wieża SW] Pominięto plik podczas instalacji:', url, error);
-      if (!optional) throw error;
-    }
+    catch (error) { console.warn('[Wieża SW] Pominięto plik podczas instalacji:', url, error); }
   }
 }
 
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
-    await cacheIndividually(cache, CORE_ASSETS, false);
-    await cacheIndividually(cache, OPTIONAL_ASSETS, true);
+    await cacheIndividually(cache, CORE_ASSETS);
     await self.skipWaiting();
   })());
 });
@@ -54,20 +40,6 @@ self.addEventListener('fetch', event => {
 
   const isNavigation = event.request.mode === 'navigate';
   const isAppDocument = url.pathname.endsWith('/') || url.pathname.endsWith('/index.html') || url.pathname.endsWith('/wieza.html');
-  const isEnemyPortrait = url.pathname.includes('/enemy-portraits/');
-
-  if (isEnemyPortrait) {
-    event.respondWith(
-      caches.match(event.request).then(cached => cached || fetch(new Request(event.request, {cache:'no-store'})).then(response => {
-        if (response && response.ok) {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then(c => c.put(event.request, copy)).catch(()=>{});
-        }
-        return response;
-      }))
-    );
-    return;
-  }
 
   if (isNavigation || isAppDocument) {
     event.respondWith(
