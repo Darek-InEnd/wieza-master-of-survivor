@@ -1103,7 +1103,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.134.2';
+const GAME_VERSION = '0.134.3';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -1364,14 +1364,43 @@ function getTalentAffinityWeight(t,h){
   Object.entries(t.affinity||{}).forEach(([k,v])=>{const delta=Math.max(-2,Math.min(5,(stats[k]-8)/2.5));w*=Math.max(.25,1+delta*.12*Number(v));});
   return Math.max(.12,w);
 }
+// Talent: tylko Legendarny może posiadać więcej niż jeden efekt mechaniczny.
+// Wcześniejsze wersje miały przypadki, w których Rzadki/Niezwykły/Epicki
+// otrzymywał 2 efekty. Zachowujemy pierwszy zdefiniowany efekt jako główny.
+function normalizeTalentEffect(talent){
+  if(!talent || !talent.effect || typeof talent.effect!=='object') return talent;
+  const rarity=String(talent.rarity||'common');
+  if(rarity==='legendary') return talent;
+  const first=Object.entries(talent.effect).find(([,v])=>Number.isFinite(Number(v)));
+  talent.effect=first?{[first[0]]:first[1]}:{};
+  return talent;
+}
 function rollTalentForHero(h){
   const rarity=getTalentRarity();
   const pool=TALENTS.filter(t=>t.rarity===rarity);
   const talent=weightedPick(pool,t=>getTalentAffinityWeight(t,h))||TALENTS[0];
-  return {id:talent.id,name:talent.name,rarity:talent.rarity,text:talent.text,effect:{...(talent.effect||{})},affinity:{...(talent.affinity||{})}};
+  const result={id:talent.id,name:talent.name,rarity:talent.rarity,text:talent.text,effect:{...(talent.effect||{})},affinity:{...(talent.affinity||{})}};
+  return normalizeTalentEffect(result);
 }
 function getTalentDef(h){return TALENTS.find(t=>t.id===h?.talent?.id)||null;}
 function getTalentLabel(h){const t=h?.talent;if(!t)return null;return TALENT_RARITIES[t.rarity]||TALENT_RARITIES.common;}
+function getTalentEffectText(h){
+  const t=h?.talent;
+  if(!t) return '';
+  normalizeTalentEffect(t);
+  const e=t.effect||{}, parts=[];
+  const pct=v=>`${Math.round(Math.abs(Number(v)||0)*100)}%`;
+  const mult=v=>Number(v)||1;
+  const damage=mult(e.damage), taken=mult(e.damageTaken), boss=mult(e.bossDamage), first=mult(e.firstHitDamage);
+  if(damage!==1) parts.push(`⚔️ Obrażenia ${damage>1?'+':'-'}${pct(damage-1)}`);
+  if(taken!==1) parts.push(`🛡️ Otrzymywane obrażenia ${taken<1?'-':'+'}${pct(taken-1)}`);
+  if(Number(e.crit)) parts.push(`💥 Trafienie krytyczne ${Number(e.crit)>0?'+':'-'}${pct(e.crit)}`);
+  if(Number(e.dodge)) parts.push(`💨 Unik ${Number(e.dodge)>0?'+':'-'}${pct(e.dodge)}`);
+  if(boss!==1) parts.push(`👹 Obrażenia przeciw bossom ${boss>1?'+':'-'}${pct(boss-1)}`);
+  if(Number(e.lowHpDamage)) parts.push(`❤️‍🩹 Obrażenia przy niskim HP +${pct(e.lowHpDamage)}`);
+  if(first!==1) parts.push(`⚡ Pierwszy atak ${first>1?'+':'-'}${pct(first-1)} obrażeń`);
+  return parts.join(' · ');
+}
 function getHeroIdentityMods(h){
   const o={damage:1,damageTaken:1,dodge:0,crit:0,bossDamage:1,lowHpDamage:0,firstHitDamage:1};
   const apply=e=>{if(!e)return;o.damage*=Number(e.damage)||1;o.damageTaken*=Number(e.damageTaken)||1;o.dodge+=Number(e.dodge)||0;o.crit+=Number(e.crit)||0;o.bossDamage*=Number(e.bossDamage)||1;o.lowHpDamage+=Number(e.lowHpDamage)||0;o.firstHitDamage*=Number(e.firstHitDamage)||1;};
@@ -3746,6 +3775,7 @@ function normalizeHero(h, inventory) {
   h.explorationMemories=h.explorationMemories.filter(m=>m&&m.id&&m.name&&MEMORIES.some(def=>def.id===m.id)).slice(0,3).map(m=>({...m,effect:{...(m.effect||{})},tags:Array.isArray(m.tags)?m.tags:[]}));
   if(!h.talent){ h.talent=rollTalentForHero(h); h._talentMigrated=true; }
   if(h.talent && !TALENT_RARITIES[h.talent.rarity]) h.talent.rarity='common';
+  if(h.talent) normalizeTalentEffect(h.talent);
   return h;
 }
 function shuffleArray(arr) {
@@ -8901,7 +8931,7 @@ function updateUI() {
         if(h.missionedToday)tags+=`<span class="hero-v2-tag">⚔️ Wyprawa wykonana</span>`;
         if(h.statuses?.length)h.statuses.forEach(st=>tags+=`<span class="hero-v2-tag">${battleEsc(st.name)}</span>`);
         const talentLabel=getTalentLabel(h);
-        const talentHtml=h.talent?`<div class="hero-v2-talent" style="border-color:${talentLabel.color};"><span>${talentLabel.icon}</span> <b style="color:${talentLabel.color}">${battleEsc(talentLabel.name)}</b> · <strong>${battleEsc(h.talent.name)}</strong>${h.talent.legendary||talentLabel.name==='Legendarny'?` <span class="talent-legendary-badge">SUPER PERK + CENA</span>`:''}<div class="hero-v2-talent-text">${battleEsc(h.talent.text||'')}</div></div>`:'';
+        const talentHtml=h.talent?`<div class="hero-v2-talent" style="border-color:${talentLabel.color};"><span>${talentLabel.icon}</span> <b style="color:${talentLabel.color}">${battleEsc(talentLabel.name)}</b> · <strong>${battleEsc(h.talent.name)}</strong>${h.talent.legendary||talentLabel.name==='Legendarny'?` <span class="talent-legendary-badge">SUPER PERK + CENA</span>`:''}<div class="hero-v2-talent-text">${battleEsc(h.talent.text||'')}</div>${getTalentEffectText(h)?`<div class="hero-v2-memory-effect" style="margin-top:5px;"><b>⚡ Efekt:</b> ${getTalentEffectText(h)}</div>`:''}</div>`:'';
         const memoryHtml=Array.isArray(h.explorationMemories)&&h.explorationMemories.length?`<div class="hero-v2-memories"><b>🧠 Wspomnienia ${h.explorationMemories.length}/3</b>${h.explorationMemories.map(m=>`<div class="hero-v2-memory ${m.type==='trauma'?'trauma':''}"><span>${m.type==='trauma'?'⚠️':m.type==='insight'?'✨':'📜'}</span><b>${battleEsc(m.name)}</b><small>${battleEsc(m.text||'')}</small>${getMemoryEffectText(m)}</div>`).join('')}</div>`:`<div class="hero-v2-memories empty"><b>🧠 Wspomnienia 0/3</b><small>Pierwsze wspomnienie może pojawić się podczas eksploracji.</small></div>`;
         const experienceProfile=getExperienceProfile(h);
         let experienceHtml='';
