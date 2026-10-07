@@ -1,4 +1,4 @@
-const BUILD_ID = '0.132.8-weapon-training';
+const BUILD_ID = '0.132.9-memory-effects';
 const CACHE_NAME = 'wieza-pwa-' + BUILD_ID;
 
 const CORE_ASSETS = [
