@@ -522,7 +522,7 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 @media(max-width:700px){.ex3a-progress{grid-template-columns:repeat(3,1fr)}.ex3a-grid{grid-template-columns:1fr}.ex3a-effects{grid-template-columns:repeat(3,1fr)}.ex3a-step{font-size:10px}}
 
 .hero-v2-talent{margin-top:8px;padding:8px 9px;border:1px solid;border-radius:8px;background:linear-gradient(145deg,#10141a,#0b0e12);font-size:.86em;box-shadow:inset 0 0 16px rgba(255,255,255,.02)}
-.hero-v2-talent-text{margin-top:3px;color:#aaa;font-size:.78em;line-height:1.3}
+.hero-v2-talent-text{margin-top:3px;color:#aaa;font-size:.78em;line-height:1.3}.hero-v2-talent-effects{margin-top:7px;padding-top:6px;border-top:1px solid rgba(255,255,255,.08);font-size:.78em;line-height:1.45}.hero-v2-talent-effect-row{margin-top:2px;color:#ddd}.hero-v2-talent-cost-title{margin-top:6px;color:#d96b6b;font-weight:700}.hero-v2-talent-effects b{color:#e8c76a}
 .talent-legendary-badge{display:inline-block;margin-left:5px;padding:2px 5px;border-radius:4px;background:#3b2a0e;color:#e0a83b;font-size:.68em;letter-spacing:.04em}
 .hero-v2-memories{margin-top:7px;padding:7px 9px;border:1px solid #343a43;border-radius:8px;background:#0d1116;font-size:.82em}
 .hero-v2-memories.empty{color:#777}
@@ -1373,6 +1373,46 @@ function rollTalentForHero(h){
 }
 function getTalentDef(h){return TALENTS.find(t=>t.id===h?.talent?.id)||null;}
 function getTalentLabel(h){const t=h?.talent;if(!t)return null;return TALENT_RARITIES[t.rarity]||TALENT_RARITIES.common;}
+function formatTalentEffectValue(key,value){
+  const v=Number(value)||0;
+  if(key==='damageTaken') return Math.round((v-1)*100);
+  if(['damage','bossDamage','firstHitDamage'].includes(key)) return Math.round((v-1)*100);
+  return Math.round(v*100);
+}
+function formatTalentEffect(key,value){
+  const v=Number(value)||0;
+  const pct=Math.abs(formatTalentEffectValue(key,v));
+  const sign=formatTalentEffectValue(key,v)>=0?'+':'-';
+  const labels={
+    damage:'⚔️ Obrażenia',
+    damageTaken:'🛡️ Otrzymywane obrażenia',
+    dodge:'💨 Unik',
+    crit:'💥 Trafienie krytyczne',
+    bossDamage:'👹 Obrażenia przeciw bossom',
+    lowHpDamage:'🔥 Obrażenia przy niskim HP',
+    firstHitDamage:'⚡ Pierwszy atak'
+  };
+  return `${labels[key]||key} ${sign}${pct}%`;
+}
+function getTalentEffectHtml(h){
+  const effect=h?.talent?.effect||{};
+  const order=['damage','damageTaken','dodge','crit','bossDamage','lowHpDamage','firstHitDamage'];
+  const isPenalty=(k,v)=>{
+    const n=Number(v)||0;
+    if(k==='damageTaken') return n>1;
+    if(['damage','bossDamage','firstHitDamage'].includes(k)) return n<1;
+    return n<0;
+  };
+  const row=k=>`<div class="hero-v2-talent-effect-row">${formatTalentEffect(k,effect[k])}</div>`;
+  const keys=order.filter(k=>Number.isFinite(Number(effect[k])) && Number(effect[k])!==0);
+  if(!keys.length)return '';
+  const legendary=!!(h?.talent?.legendary||h?.talent?.rarity==='legendary');
+  if(!legendary)return `<div class="hero-v2-talent-effects"><b>⚡ Efekt</b>${keys.map(row).join('')}</div>`;
+  const positive=keys.filter(k=>!isPenalty(k,effect[k]));
+  const negative=keys.filter(k=>isPenalty(k,effect[k]));
+  return `<div class="hero-v2-talent-effects">${positive.length?`<b>⚡ Efekt</b>${positive.map(row).join('')}`:''}${negative.length?`<div class="hero-v2-talent-cost-title">⚠️ Cena</div>${negative.map(row).join('')}`:''}</div>`;
+}
+
 function getHeroIdentityMods(h){
   const o={damage:1,damageTaken:1,dodge:0,crit:0,bossDamage:1,lowHpDamage:0,firstHitDamage:1};
   const apply=e=>{if(!e)return;o.damage*=Number(e.damage)||1;o.damageTaken*=Number(e.damageTaken)||1;o.dodge+=Number(e.dodge)||0;o.crit+=Number(e.crit)||0;o.bossDamage*=Number(e.bossDamage)||1;o.lowHpDamage+=Number(e.lowHpDamage)||0;o.firstHitDamage*=Number(e.firstHitDamage)||1;};
@@ -8852,7 +8892,7 @@ function updateUI() {
         if(h.missionedToday)tags+=`<span class="hero-v2-tag">⚔️ Wyprawa wykonana</span>`;
         if(h.statuses?.length)h.statuses.forEach(st=>tags+=`<span class="hero-v2-tag">${battleEsc(st.name)}</span>`);
         const talentLabel=getTalentLabel(h);
-        const talentHtml=h.talent?`<div class="hero-v2-talent" style="border-color:${talentLabel.color};"><span>${talentLabel.icon}</span> <b style="color:${talentLabel.color}">${battleEsc(talentLabel.name)}</b> · <strong>${battleEsc(h.talent.name)}</strong>${h.talent.legendary||talentLabel.name==='Legendarny'?` <span class="talent-legendary-badge">SUPER PERK + CENA</span>`:''}<div class="hero-v2-talent-text">${battleEsc(h.talent.text||'')}</div></div>`:'';
+        const talentHtml=h.talent?`<div class="hero-v2-talent" style="border-color:${talentLabel.color};"><div><span>${talentLabel.icon}</span> <b style="color:${talentLabel.color}">${battleEsc(talentLabel.name)}</b> · <strong>${battleEsc(h.talent.name)}</strong>${h.talent.legendary||talentLabel.name==='Legendarny'?` <span class="talent-legendary-badge">TALENT LEGENDARNY</span>`:''}</div><div class="hero-v2-talent-text">${battleEsc(h.talent.text||'')}</div>${getTalentEffectHtml(h)}</div>`:'';
         const memoryHtml=Array.isArray(h.explorationMemories)&&h.explorationMemories.length?`<div class="hero-v2-memories"><b>🧠 Wspomnienia ${h.explorationMemories.length}/3</b>${h.explorationMemories.map(m=>`<div class="hero-v2-memory ${m.type==='trauma'?'trauma':''}"><span>${m.type==='trauma'?'⚠️':m.type==='insight'?'✨':'📜'}</span><b>${battleEsc(m.name)}</b><small>${battleEsc(m.text||'')}</small>${getMemoryEffectText(m)}</div>`).join('')}</div>`:`<div class="hero-v2-memories empty"><b>🧠 Wspomnienia 0/3</b><small>Pierwsze wspomnienie może pojawić się podczas eksploracji.</small></div>`;
         const experienceProfile=getExperienceProfile(h);
         let experienceHtml='';
