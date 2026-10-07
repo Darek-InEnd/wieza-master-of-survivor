@@ -1,4 +1,4 @@
-const BUILD_ID = '0.133.0-experience-paths';
+const BUILD_ID = '0.134.1-breakthrough-reactions';
 const CACHE_NAME = 'wieza-pwa-' + BUILD_ID;
 
 const CORE_ASSETS = [
