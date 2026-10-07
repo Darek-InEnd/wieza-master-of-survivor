@@ -4,7 +4,7 @@ const CACHE_NAME = 'wieza-pwa-' + BUILD_ID;
 const CORE_ASSETS = [
   './index.html',
   './manifest.webmanifest',
-  './tower-manifest.json',
+  './manifest.webmanifest',
   './opening_1080p.mp4'
 ];
 
