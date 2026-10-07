@@ -1,4 +1,4 @@
-const BUILD_ID = '0.132.9-memory-effects';
+const BUILD_ID = '0.133.0-experience-paths';
 const CACHE_NAME = 'wieza-pwa-' + BUILD_ID;
 
 const CORE_ASSETS = [
