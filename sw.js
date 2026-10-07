@@ -1,4 +1,4 @@
-const BUILD_ID = '0.134.1-breakthrough-reactions';
+const BUILD_ID = '0.134.2-talent-clarity';
 const CACHE_NAME = 'wieza-pwa-' + BUILD_ID;
 
 const CORE_ASSETS = [
