@@ -618,7 +618,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-<!-- Safe inventory compare patch: armor/accessories -->
 </head>
 <body>
 <div id="game-container">
@@ -1108,7 +1107,7 @@ function installGameToHomeScreen(){
 document.addEventListener('click',(event)=>{
   if(event.target && event.target.id==='install-app-btn') installGameToHomeScreen();
 });
-const COST_SUMMON = 50, COOLDOWN_MS = 86400000, MAX_STARS = 7, SAVE_VERSION = 60, MAX_BASE_LEVEL = 10, MAX_STAMINA = 2, AUTOSAVE_INTERVAL_MS = 30000, LIFECYCLE_SAVE_DEBOUNCE_MS = 1500;
+const COST_SUMMON = 50, COOLDOWN_MS = 86400000, MAX_STARS = 7, SAVE_VERSION = 62, MAX_BASE_LEVEL = 10, MAX_STAMINA = 2, AUTOSAVE_INTERVAL_MS = 30000, LIFECYCLE_SAVE_DEBOUNCE_MS = 1500;
 // Wymagane pokonanie bossa na danym piętrze, aby odblokować awans do danej liczby gwiazdek
 const STAR_FLOOR_REQUIREMENT = {2:5, 3:15, 4:25, 5:40, 6:60, 7:80};
 const CHANCE_MAP = { 1: 0.90, 2: 0.70, 3: 0.50, 4: 0.30, 5: 0.15, 6: 0.05 };
@@ -3212,6 +3211,26 @@ const SAVE_MIGRATIONS = [
       data.migrationHistory.push({fromVersion,toVersion:60,at:new Date().toISOString(),name:'legacy-to-60'});
       if(data.migrationHistory.length>12) data.migrationHistory=data.migrationHistory.slice(-12);
       return data;
+    }
+  },
+  {
+    from:60,
+    to:61,
+    name:'schema-60-to-61',
+    migrate(data){
+      if(!data || typeof data!=='object') throw new Error('Nieprawidłowy obiekt zapisu.');
+      data.migrationHistory=Array.isArray(data.migrationHistory)?data.migrationHistory:[];
+      // Wersja 61 zachowuje strukturę danych obsługiwaną przez wersję 60.
+    }
+  },
+  {
+    from:61,
+    to:62,
+    name:'schema-61-to-62',
+    migrate(data){
+      if(!data || typeof data!=='object') throw new Error('Nieprawidłowy obiekt zapisu.');
+      data.migrationHistory=Array.isArray(data.migrationHistory)?data.migrationHistory:[];
+      // Wersja 62 zachowuje strukturę danych obsługiwaną przez wersję 61.
     }
   }
 ];
@@ -8102,70 +8121,13 @@ function compareWeaponFromInventory(itemId){
   alert(`⚔️ PORÓWNANIE\n\nNowa: ${item.rarityName} ${item.name}\nZałożona: ${equipped?`${equipped.rarityName} ${equipped.name}`:'brak'}\nBohater: ${hero.name}\n\n${lines||'Brak wspólnych statystyk.'}`);
 }
 
-
-function compareNonWeaponEquipmentFromInventory(itemId){
-  const item=state.inventory.find(i=>i.id===Number(itemId));
-  if(!item || !['zbroja','dodatek'].includes(item.type)) return;
-  const heroes=state.heroes.filter(h=>h.isAlive&&!h.isTrainer&&!h.isBlacksmith);
-  if(!heroes.length){log('Brak bohatera do porównania.','warn');return;}
-
-  const choices=heroes.map(h=>{
-    const eq=h.equipped||{};
-    const slots=item.type==='zbroja'?['armor']:['accessory1','accessory2'];
-    const equipped=slots.map(k=>state.inventory.find(i=>i.id===eq[k])).filter(Boolean);
-    const names=equipped.length?equipped.map(x=>`${x.rarityName} ${x.name}`).join(' / '):'brak';
-    return `${h.id}: ${h.name} — ${names}`;
-  }).join('\n');
-
-  const id=prompt(`Porównaj ${item.rarityName} ${item.name} z wyposażeniem bohatera. Wpisz ID bohatera:\n\n${choices}`);
-  if(!id)return;
-  const hero=heroes.find(h=>String(h.id)===String(id));
-  if(!hero){log('Nieprawidłowy bohater.','warn');return;}
-
-  const eq=hero.equipped||{};
-  const slots=item.type==='zbroja'?['armor']:['accessory1','accessory2'];
-  const equipped=slots.map(k=>({slot:k,item:state.inventory.find(i=>i.id===eq[k])})).filter(x=>x.item);
-  const a=item.stats||{};
-  const keys=[
-    ['hp','HP'],['def','DEF'],['mdef','M.DEF'],['str','STR'],['dex','DEX'],
-    ['int','INT'],['spd','SPD'],['crit','CRIT'],['dodge','DODGE']
-  ];
-  const lines=keys.filter(([k])=>Number(a[k])||equipped.some(x=>Number(x.item.stats?.[k]))).map(([k,n])=>{
-    const x=Number(a[k]||0);
-    const values=equipped.map(x=>Number(x.item.stats?.[k]||0));
-    const best=values.length?Math.max(...values):0;
-    const d=x-best;
-    const suffix=(k==='crit'||k==='dodge')?'%':'';
-    return `${n}: ${x} vs ${best} (${d>=0?'+':''}${suffix?((d*100).toFixed(0)+'%'):d})`;
-  }).join('\n');
-
-  const equippedText=equipped.length
-    ?equipped.map(x=>`${x.item.rarityName} ${x.item.name} (${x.slot==='armor'?'zbroja':x.slot==='accessory1'?'dodatek 1':'dodatek 2'})`).join('\n')
-    :'brak';
-  alert(`⚖️ PORÓWNANIE\n\nNowy: ${item.rarityName} ${item.name}\nBohater: ${hero.name}\nObecne wyposażenie:\n${equippedText}\n\n${lines||'Brak wspólnych statystyk.'}`);
-}
-
 function safeCssColor(value,fallback='#e6dccb'){
   const v=String(value??'').trim();
   return /^(#[0-9a-fA-F]{3,8}|(?:rgb|hsl)a?\([0-9.,%\s+-]+\))$/.test(v)?v:fallback;
 }
-
-function normalizeNonWeaponEquipmentType(item){
-  if(!item) return item;
-  const name=String(item.name||'').trim();
-  const armorNames=new Set(['Kolczuga','Szata','Hełm','Płaszcz','Zbroja','Napierśnik','Ochrona']);
-  const accessoryNames=new Set(['Amulet','Pierścień','Buty','Pasma','Talizman']);
-  if(item.type==='zbroja' || item.type==='dodatek'){
-    if(armorNames.has(name)) item.type='zbroja';
-    else if(accessoryNames.has(name)) item.type='dodatek';
-  }
-  return item;
-}
-
 function renderInventory() {
   const container=document.getElementById('inventory-panel'); if(!container)return;
   const inventory=state.inventory||[];
-  inventory.forEach(normalizeNonWeaponEquipmentType);
   const maxInv=getMaxInventory();
   const freeCount=inventory.filter(i=>i.equippedBy==null).length;
   const equippedCount=inventory.length-freeCount;
@@ -8222,7 +8184,7 @@ function renderInventory() {
       ${item.special?`<div class="inventory-special">✨ ${battleEsc(item.special)}</div>`:''}
       <div class="inventory-actions">
         ${item.runeSlots?`<div style="margin-top:5px;font-size:.78em;">🔮 ${item.runes?.filter(Boolean).length||0}/${item.runeSlots} gniazd: ${Array.from({length:item.runeSlots},(_,si)=>{const rr=item.runes?.[si];return rr?`<span style="padding:2px 4px;border:1px solid #555;border-radius:4px;">${battleEsc(RUNE_DEFINITIONS[rr.type]?.name||rr.type)}</span>`:`<select onchange="if(this.value)socketRune(${Number(item.id)||0},this.value,${si})"><option value="">Puste gniazdo</option>${Object.entries(RUNE_DEFINITIONS).filter(([rk,rv])=>runeCompatible(rv,item.type)&&(state.runes?.[rk]||0)>0).map(([rk,rv])=>`<option value="${rk}">${rv.name} ×${state.runes[rk]}</option>`).join('')}</select>`}).join(' ')}</div>`:''}<select class="inventory-owner-select"><option value="">📦 Zostaw w magazynie</option>${state.heroes.filter(h=>h.isAlive&&!h.isTrainer&&!h.isBlacksmith).map(h=>`<option value="${h.id}">${battleEsc(h.name)} (${h.stars}★, ${battleEsc(h.heroClass||'brak klasy')})</option>`).join('')}</select>
-        ${item.type==='broń'?`<button class="btn-small" data-tower-action="compareWeaponFromInventory" data-id="${Number(item.id)||0}">⚖️ Porównaj</button>`:''}${(item.type==='zbroja'||item.type==='dodatek')?`<button class="btn-small" data-tower-action="compareNonWeaponEquipmentFromInventory" data-id="${Number(item.id)||0}">⚖️ Porównaj</button>`:''}${smithActive?`<button class="btn-small btn-danger inventory-salvage">♻️ ${item.type==='broń'?'Rozłóż broń':'Odzyskaj'} ${formatSalvageText(scaled)}</button>`:''}
+        ${item.type==='broń'?`<button class="btn-small" data-tower-action="compareWeaponFromInventory" data-id="${Number(item.id)||0}">⚖️ Porównaj</button>`:''}${smithActive?`<button class="btn-small btn-danger inventory-salvage">♻️ ${item.type==='broń'?'Rozłóż broń':'Odzyskaj'} ${formatSalvageText(scaled)}</button>`:''}
       </div>`;
     const select=card.querySelector('.inventory-owner-select');
     select.value=owner?String(owner.id):'';
@@ -10850,7 +10812,6 @@ TowerEvents.bindSimpleActions = function(root){
       case 'releaseTrainer': return releaseTrainer(Number(el.dataset.id)||0);
       case 'assignTrainer': return assignTrainer(Number(el.dataset.id)||0);
       case 'compareWeaponFromInventory': return compareWeaponFromInventory(Number(el.dataset.id)||0);
-      case 'compareNonWeaponEquipmentFromInventory': return compareNonWeaponEquipmentFromInventory(Number(el.dataset.id)||0);
       case 'releaseHero': if(confirm('Czy na pewno chcesz zwolnić tego bohatera?')) releaseHero(Number(el.dataset.id)||0); e.stopPropagation(); return;
       case 'removeDeadHero': removeDeadHero(Number(el.dataset.id)||0); e.stopPropagation(); return;
       case 'assignBlacksmith': assignBlacksmith(Number(el.dataset.id)||0); e.stopPropagation(); return;
