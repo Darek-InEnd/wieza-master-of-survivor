@@ -4384,6 +4384,10 @@ function normalizeState(s) {
   s.inventory.forEach(item=>{
     if(!item || !item.name) return;
     const n=String(item.name||'').trim();
+    if(/(^|[\s•-])Tarcza(?:$|[\s•-])/i.test(n)){ item.type='tarcza'; return; }
+    const weaponCandidates=[...ITEM_SUFFIXES].sort((a,b)=>b.length-a.length);
+    const weaponSuffix=weaponCandidates.find(w=>n===w || n.endsWith(' '+w) || n.endsWith('• '+w));
+    if(weaponSuffix && SUFFIX_TYPE_MAP[weaponSuffix]==='broń'){ item.type='broń'; item.weaponType=item.weaponType||weaponSuffix; return; }
     const exact=SUFFIX_TYPE_MAP[n];
     if(exact==='tarcza' || /(^|\s)Tarcza(?:\s|$)/i.test(n)){ item.type='tarcza'; return; }
     if(exact==='zbroja') item.type='zbroja';
@@ -4733,7 +4737,7 @@ function generateItem(rarityIndex, forcedType, forcedElement, itemLevel, forcedS
 
   if (Object.keys(stats).length===0) put(type==='broń'?'atk':'def', type==='broń'?baseAtk:baseDef);
   if (SUFFIX_TYPE_MAP[suffix]) type = SUFFIX_TYPE_MAP[suffix];
-  if (forcedType) type = forcedType;
+  else if (forcedType) type = forcedType;
 
   let special = null;
   if (rarityIndex>=2 && Math.random()<0.35) {
@@ -8398,6 +8402,13 @@ function compareArmorAccessoryFromInventory(itemId){
   render(heroes[0]);modal.classList.add('open');document.body.classList.add('compare-modal-open');
 }
 
+function safeCssColor(value,fallback='#e6dccb'){
+  const v=String(value??'').trim();
+  return /^(#[0-9a-fA-F]{3,8}|(?:rgb|hsl)a?\([0-9.,%\s+-]+\))$/.test(v)?v:fallback;
+}
+function useRenewalStone(itemId,heroId){const idx=state.inventory.findIndex(i=>i.id===Number(itemId)&&i.type==='relikt'&&i.name==='Kamień Odnowienia'),hero=state.heroes.find(h=>h.id===Number(heroId));if(idx<0||!hero||!hero.isAlive){log('❌ Nieprawidłowy Kamień Odnowienia lub bohater.','warn');return;}if(getTotalWeaponLevel(hero)<=0){log(`<b>${hero.name}</b> nie ma jeszcze wyszkolenia broni do zresetowania.`,'warn');return;}if(!confirm(`Kamień Odnowienia całkowicie wyzeruje wszystkie poziomy i EXP broni bohatera ${hero.name}. Kontynuować?`))return;hero.weaponTraining={};hero.weaponLegendary={};state.inventory.splice(idx,1);log(`🔷 <b>${hero.name}</b> użył Kamienia Odnowienia. Całe wyszkolenie broni zostało zresetowane do zera.`,'success');saveGame();updateUI();}
+
+
 function renderInventory() {
   const container=document.getElementById('inventory-panel'); if(!container)return;
   const inventory=state.inventory||[];
@@ -8451,7 +8462,7 @@ function renderInventory() {
     const scaled={wood:Math.round((salvage.wood||0)*salvBonus),steel:Math.round((salvage.steel||0)*salvBonus),leather:Math.round((salvage.leather||0)*salvBonus)};
     card.innerHTML=`
       <div class="inventory-card-top">
-        <div><div class="inventory-item-name" style="color:${safeCssColor(item.color)}">${battleEsc(item.rarityName)} ${battleEsc(item.name)}</div><div class="inventory-item-meta">${battleEsc(item.type)}${battleEsc(elem)} • poziom ${battleEsc(item.level||1)}${item.material?` • 🧩 ${battleEsc(item.material.name)}`:''}${item.runeSlots?` • 🔮 Gniazda ${item.runes?.filter(Boolean).length||0}/${item.runeSlots}`:''}</div></div>
+        <div><div class="inventory-item-name" style="color:${safeCssColor(item.color)}">${battleEsc(item.rarityName)} ${battleEsc(item.name)}</div><div class="inventory-item-meta">${item.type==='broń'?'⚔️ Broń':item.type==='tarcza'?'🛡️ Tarcza':item.type==='zbroja'?'🛡️ Zbroja':item.type==='dodatek'?'💍 Dodatek':battleEsc(item.type)}${battleEsc(elem)} • poziom ${battleEsc(item.level||1)}${item.material?` • 🧩 ${battleEsc(item.material.name)}`:''}${item.runeSlots?` • 🔮 Gniazda ${item.runes?.filter(Boolean).length||0}/${item.runeSlots}`:''}</div></div>
         <div class="inventory-owner">${owner?`👤 ${battleEsc(owner.name)}`:'📦 W magazynie'}</div>
       </div>
       <div class="inventory-stats">${formatItemStats(item)||'<span class="inventory-stat">Brak statystyk</span>'}</div>
