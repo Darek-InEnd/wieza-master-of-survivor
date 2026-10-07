@@ -591,7 +591,7 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 <script>
 /* Prosty mechanizm aktualizacji PWA: sprawdzenie SW przy starcie + automatyczne przeładowanie po przejęciu aplikacji przez nowy SW. */
 if ('serviceWorker' in navigator) {
-  const PWA_BUILD = '0.132.4-training-stamina';
+  const PWA_BUILD = '0.132.7-weapon-training';
   let registration = null;
   let reloadDone = false;
   const hadController = !!navigator.serviceWorker.controller;
@@ -646,7 +646,7 @@ if ('serviceWorker' in navigator) {
         <br><strong>Ważne:</strong> przed zmianą urządzenia lub przeglądarki wyeksportuj zapis gry, aby móc go później zaimportować.
     </aside>
     <input id="save-import-input" aria-label="Importuj zapis gry" type="file" accept=".tower,application/json,.json" style="display:none" onchange="handleSaveImportFile(event)">
-        <div id="game-version" class="game-version" aria-label="Wersja gry">Wersja gry: v0.132.4</div>
+        <div id="game-version" class="game-version" aria-label="Wersja gry">Wersja gry: v0.132.7</div>
         <div id="game-credits" class="game-credits" aria-label="Informacje o grze">
             <div><span class="game-credits-label">Projekt i koncepcja:</span> Dariusz "InEnd" Osiński</div>
             <div><span class="game-credits-label">Pomysłodawca:</span> InEnd</div>
@@ -1078,14 +1078,14 @@ const BESTIARY = [
 ];
 // Portrety przeciwników — ujawniane dopiero po faktycznym spotkaniu w walce.
 const ENEMY_PORTRAITS = {
-  'Jötunnie::Mroźny Osłonik': 'enemy-portraits/jotunn_mrozny_oslonik_tier1.png?v=0.132.4',
-  'Jötunnie::Ciskacz Gromów': 'enemy-portraits/jotunn_ciskacz_gromow_tier2.png?v=0.132.4',
-  'Jötunnie::Rzucacz Głazów': 'enemy-portraits/jotunn_rzucacz_glazow_tier2.png?v=0.132.4',
-  'Jötunnie::Runotwórca Mrozu': 'enemy-portraits/jotunn_runotworca_mrozu_tier3.png?v=0.132.4',
-  'Jötunnie::Lodowy Zgniatacz': 'enemy-portraits/jotunn_lodowy_zgniatacz_tier4.png?v=0.132.4',
-  'Jötunnie::Król Zmarzliny': 'enemy-portraits/jotunn_krol_zmarzliny_boss.png?v=0.132.4',
-  'Jötunnie::Ymir': 'enemy-portraits/jotunn_ymir_boss.png?v=0.132.4',
-  'Jötunnie::Runiczny Jötunn': 'enemy-portraits/jotunn_runiczny_jotunn_boss.png?v=0.132.4'
+  'Jötunnie::Mroźny Osłonik': 'enemy-portraits/jotunn_mrozny_oslonik_tier1.png?v=0.132.7',
+  'Jötunnie::Ciskacz Gromów': 'enemy-portraits/jotunn_ciskacz_gromow_tier2.png?v=0.132.7',
+  'Jötunnie::Rzucacz Głazów': 'enemy-portraits/jotunn_rzucacz_glazow_tier2.png?v=0.132.7',
+  'Jötunnie::Runotwórca Mrozu': 'enemy-portraits/jotunn_runotworca_mrozu_tier3.png?v=0.132.7',
+  'Jötunnie::Lodowy Zgniatacz': 'enemy-portraits/jotunn_lodowy_zgniatacz_tier4.png?v=0.132.7',
+  'Jötunnie::Król Zmarzliny': 'enemy-portraits/jotunn_krol_zmarzliny_boss.png?v=0.132.7',
+  'Jötunnie::Ymir': 'enemy-portraits/jotunn_ymir_boss.png?v=0.132.7',
+  'Jötunnie::Runiczny Jötunn': 'enemy-portraits/jotunn_runiczny_jotunn_boss.png?v=0.132.7'
 };
 function getEnemyPortraitUrl(path){
   if(!path)return '';
@@ -1766,7 +1766,7 @@ const HERO_SKILLS={
 };
 const WEAPON_MASTERY_TITLES=['Nieznający broni','Nowicjusz','Uczeń','Adept','Biegły','Wyszkolony','Ekspert','Mistrz','Mistrz Zaawansowany','Mistrz Doskonały','Legenda'];
 const WEAPON_TRAINING_LEVEL_EXP=10, MAX_WEAPON_TRAINING_LEVEL=10, MAX_TOTAL_WEAPON_LEVEL=10;
-const WEAPON_TYPE_LIST=Object.keys(SUFFIX_TYPE_MAP).filter(k=>SUFFIX_TYPE_MAP[k]==='broń');
+const WEAPON_TYPE_LIST=["Miecz", "Topór", "Łuk", "Młot", "Kostur", "Sztylet", "Krótki Miecz", "Księga", "Lanca", "Siekiera", "Kij", "Szpada", "Rapier", "Kusza", "Wielki Miecz", "Miecz Dwuręczny", "Wielki Młot", "Młot Bojowy", "Topór Dwuręczny", "Wielka Siekiera", "Halabarda"];
 const WEAPON_STYLE_GROUPS={parry:new Set(['Miecz','Krótki Miecz','Szpada','Rapier','Halabarda']),heavy:new Set(['Topór','Siekiera','Młot','Wielki Młot','Młot Bojowy','Topór Dwuręczny','Wielka Siekiera','Wielki Miecz','Miecz Dwuręczny','Halabarda']),precision:new Set(['Łuk','Kusza','Sztylet','Krótki Miecz','Szpada','Rapier']),magic:new Set(['Kostur','Księga','Kij']),control:new Set(['Młot','Wielki Młot','Młot Bojowy','Halabarda']),quick:new Set(['Sztylet','Krótki Miecz','Szpada','Rapier'])};
 function ensureHeroWeaponTraining(h){if(!h.weaponTraining||typeof h.weaponTraining!=='object'||Array.isArray(h.weaponTraining))h.weaponTraining={};if(!h.weaponLegendary||typeof h.weaponLegendary!=='object'||Array.isArray(h.weaponLegendary))h.weaponLegendary={};Object.keys(h.weaponTraining).forEach(k=>{const n=Math.max(0,Math.min(100,Math.floor(Number(h.weaponTraining[k])||0)));if(!WEAPON_TYPE_LIST.includes(k))delete h.weaponTraining[k];else h.weaponTraining[k]=n;});Object.keys(h.weaponLegendary).forEach(k=>{if(!WEAPON_TYPE_LIST.includes(k))delete h.weaponLegendary[k];else h.weaponLegendary[k]=!!h.weaponLegendary[k];});return h.weaponTraining;}
 function getWeaponTrainingExp(hero,weaponType){return Math.max(0,Math.min(100,Math.floor(Number(hero?.weaponTraining?.[weaponType])||0)));}
