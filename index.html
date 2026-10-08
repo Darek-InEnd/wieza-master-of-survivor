@@ -1104,7 +1104,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.135.7';
+const GAME_VERSION = '0.135.8';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -1671,21 +1671,21 @@ const INDIA_WARRIOR_PORTRAITS = {
 };
 // v0.110 — Wojownik z Indii, mężczyzna, 1★–7★.
 // Każdy dostarczony portret został użyty w całości i tylko przeskalowany do 66×66 px; brak kadrowania.
-// v0.135.7 — Hinduski Obrońca, mężczyzna, Tank: portrety zewnętrzne z repozytorium GitHub.
+// v0.135.8 — Hinduski Obrońca, mężczyzna, Tank: portrety zewnętrzne z repozytorium GitHub.
 // Stare obrazy base64 zostały usunięte z kodu gry.
 const INDIA_DEFENDER_PORTRAITS = {
-  1: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_1star.png?v=0.135.7',
-  2: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_2star.png?v=0.135.7',
-  3: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_3star.png?v=0.135.7',
-  4: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_4star.png?v=0.135.7',
-  5: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_5star.png?v=0.135.7',
-  6: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_6star.png?v=0.135.7'
+  1: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_1star.png?v=0.135.8',
+  2: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_2star.png?v=0.135.8',
+  3: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_3star.png?v=0.135.8',
+  4: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_4star.png?v=0.135.8',
+  5: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_5star.png?v=0.135.8',
+  6: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_6star.png?v=0.135.8'
 };
 
 const INDIA_DEFENDER_INCARNATION_PORTRAITS = {
-  durga: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_7star_durga.png?v=0.135.7',
-  vishnu: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_7star_vishnu.png?v=0.135.7',
-  shiva: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_7star_shiva.png?v=0.135.7'
+  durga: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_7star_durga.png?v=0.135.8',
+  vishnu: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_7star_vishnu.png?v=0.135.8',
+  shiva: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_7star_shiva.png?v=0.135.8'
 };
 
 function getIndiaDefenderIncarnationPortrait(h){
@@ -1811,6 +1811,50 @@ function getAztecRogueFemaleDpsPortrait(h){
 }
 
 
+// SŁOWIANIE — WOJOWNIK, MĘŻCZYZNA, DPS — portrety 1★–6★ oraz 3 warianty 7★.
+// 7★: Perun / Swaróg / Jarowit — wybór zgodny z Inkarnacją/Aspektem.
+const SLAVIC_WARRIOR_MALE_DPS_PORTRAITS = {
+  1: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_1star.png',
+  2: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_2star.png',
+  3: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_3star.png',
+  4: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_4star.png',
+  5: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_5star.png',
+  6: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_6star.png',
+  7: {
+    perun: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_7star_perun.png',
+    swarog: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_7star_swarog.png',
+    jarowit: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_7star_jarowit.png'
+  }
+};
+
+function getSlavicWarriorMaleDpsPortrait(h){
+  const star=Math.max(1,Math.min(7,Number(h?.stars)||1));
+  if(star<7)return {src:SLAVIC_WARRIOR_MALE_DPS_PORTRAITS[star],key:`${star}★`};
+
+  const title=String(h?.incarnation?.title||'').toLowerCase();
+  const aspect=String(h?.incarnation?.aspect||'').toLowerCase();
+
+  if(title.includes('peruna') || aspect.includes('gromu') || aspect.includes('grom')){
+    return {src:SLAVIC_WARRIOR_MALE_DPS_PORTRAITS[7].perun,key:'Perun'};
+  }
+  if(title.includes('swaroga') || aspect.includes('ognia') || aspect.includes('ogień') || aspect.includes('ogn')){
+    return {src:SLAVIC_WARRIOR_MALE_DPS_PORTRAITS[7].swarog,key:'Swaróg'};
+  }
+  if(title.includes('jarowita') || aspect.includes('wiosny')){
+    return {src:SLAVIC_WARRIOR_MALE_DPS_PORTRAITS[7].jarowit,key:'Jarowit'};
+  }
+
+  try{
+    const pool=INCARNATION_TITLES?.['Słowian']?.['Wojownik']||[];
+    const idx=typeof getIncarnationIndex==='function'?getIncarnationIndex(h,pool):0;
+    if(idx===1)return {src:SLAVIC_WARRIOR_MALE_DPS_PORTRAITS[7].swarog,key:'Swaróg'};
+    if(idx===2)return {src:SLAVIC_WARRIOR_MALE_DPS_PORTRAITS[7].jarowit,key:'Jarowit'};
+  }catch(e){}
+
+  return {src:SLAVIC_WARRIOR_MALE_DPS_PORTRAITS[7].perun,key:'Perun'};
+}
+
+
 // CELTOWIE — MAG, MĘŻCZYZNA, SUPPORT — portrety 1★–6★ oraz 3 warianty 7★.
 // 7★: Brigid / Lugh / Morrigan — wybór zgodny z Inkarnacją/Aspektem.
 const CELT_MAGE_MALE_SUPPORT_PORTRAITS = {
@@ -1901,6 +1945,10 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
   } else if(h.gender==="Żeńska" && h.race==="Arabii" && h.heroClass==="Łotrzyk") {
     src=ARABIA_ROGUE_FEMALE_PORTRAITS[star];
     alt=`Portret łotrzycy z Arabii, ${star} gwiazdek`;
+  } else if(h.gender==="Męska" && h.race==="Słowian" && h.heroClass==="Wojownik" && h.role==="DPS") {
+    const slavicWarriorDps=getSlavicWarriorMaleDpsPortrait(h);
+    src=slavicWarriorDps.src;
+    alt=`Portret słowiańskiego wojownika DPS — ${slavicWarriorDps.key}`;
   } else if(h.gender==="Męska" && h.race==="Celtów" && h.heroClass==="Mag" && h.role==="Support") {
     const celtMageSupport=getCeltMageMaleSupportPortrait(h);
     src=celtMageSupport.src;
