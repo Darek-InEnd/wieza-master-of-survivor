@@ -1103,7 +1103,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.134.3';
+const GAME_VERSION = '0.134.4';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -1131,7 +1131,7 @@ function installGameToHomeScreen(){
 document.addEventListener('click',(event)=>{
   if(event.target && event.target.id==='install-app-btn') installGameToHomeScreen();
 });
-const COST_SUMMON = 50, COOLDOWN_MS = 86400000, MAX_STARS = 7, SAVE_VERSION = 62, MAX_BASE_LEVEL = 10, MAX_STAMINA = 2, AUTOSAVE_INTERVAL_MS = 30000, LIFECYCLE_SAVE_DEBOUNCE_MS = 1500;
+const COST_SUMMON = 50, COOLDOWN_MS = 86400000, MAX_STARS = 7, SAVE_VERSION = 63, MAX_BASE_LEVEL = 10, MAX_STAMINA = 2, AUTOSAVE_INTERVAL_MS = 30000, LIFECYCLE_SAVE_DEBOUNCE_MS = 1500;
 // Wymagane pokonanie bossa na danym piętrze, aby odblokować awans do danej liczby gwiazdek
 const STAR_FLOOR_REQUIREMENT = {2:5, 3:15, 4:25, 5:40, 6:60, 7:80};
 const CHANCE_MAP = { 1: 0.90, 2: 0.70, 3: 0.50, 4: 0.30, 5: 0.15, 6: 0.05 };
@@ -3447,6 +3447,26 @@ const SAVE_MIGRATIONS = [
       if(data.migrationHistory.length>12)data.migrationHistory=data.migrationHistory.slice(-12); return data;
     }
   }
+,
+  {
+    from:62,to:63,name:'first-star-evolution-63',
+    migrate(data,fromVersion){
+      if(!data || typeof data!=='object') throw new Error('Nieprawidłowy obiekt zapisu.');
+      data.migrationHistory=Array.isArray(data.migrationHistory)?data.migrationHistory:[];
+      // 1★ → 2★ dla wszystkich bohaterów, w tym Trenera i Kowala,
+      // nie wymaga dodatkowych pól w zapisie. Zachowujemy jednak
+      // dotychczasowe dane ról i normalizacja uzupełni brakujące wartości.
+      if(Array.isArray(data.heroes)) data.heroes.forEach(h=>{
+        if(!h || typeof h!=='object') return;
+        if(h.isTrainer && h.trainerFormerClass===undefined) h.trainerFormerClass=h.heroClass||null;
+        if(h.isBlacksmith && h.blacksmithSpecializationChosen===undefined) h.blacksmithSpecializationChosen=!!h.blacksmithSpecialization;
+      });
+      data.saveVersion=63;
+      data.migrationHistory.push({fromVersion:62,toVersion:63,at:new Date().toISOString(),name:'first-star-evolution-63'});
+      if(data.migrationHistory.length>12)data.migrationHistory=data.migrationHistory.slice(-12);
+      return data;
+    }
+  }
 ];
 
 function migrateSaveData(rawData){
@@ -3484,7 +3504,7 @@ function runSaveMigrationSelfTest(){
   try{
     const legacy={saveVersion:1,heroes:[{id:1,name:'Test',stars:1}],base:{altar:4,trainingGrounds:2},inventory:[{id:1,type:'zbroja',name:'Tarcza drewniana'}]};
     const migrated=migrateSaveData(legacy);
-    if(!migrated.migrated) errors.push('zapis v59 nie został oznaczony jako zmigrowany');
+    if(!migrated.migrated) errors.push('stary zapis nie został oznaczony jako zmigrowany');
     if(migrated.data.saveVersion!==SAVE_VERSION) errors.push('nieprawidłowa wersja po migracji');
     if(migrated.data.base.altar!==undefined) errors.push('stary altar nie został usunięty');
     if(migrated.data.base.trainingGrounds!==4) errors.push('poziom starego altar nie został zachowany');
