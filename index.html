@@ -1103,7 +1103,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.134.4';
+const GAME_VERSION = '0.134.3';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -1131,7 +1131,7 @@ function installGameToHomeScreen(){
 document.addEventListener('click',(event)=>{
   if(event.target && event.target.id==='install-app-btn') installGameToHomeScreen();
 });
-const COST_SUMMON = 50, COOLDOWN_MS = 86400000, MAX_STARS = 7, SAVE_VERSION = 63, MAX_BASE_LEVEL = 10, MAX_STAMINA = 2, AUTOSAVE_INTERVAL_MS = 30000, LIFECYCLE_SAVE_DEBOUNCE_MS = 1500;
+const COST_SUMMON = 50, COOLDOWN_MS = 86400000, MAX_STARS = 7, SAVE_VERSION = 62, MAX_BASE_LEVEL = 10, MAX_STAMINA = 2, AUTOSAVE_INTERVAL_MS = 30000, LIFECYCLE_SAVE_DEBOUNCE_MS = 1500;
 // Wymagane pokonanie bossa na danym piętrze, aby odblokować awans do danej liczby gwiazdek
 const STAR_FLOOR_REQUIREMENT = {2:5, 3:15, 4:25, 5:40, 6:60, 7:80};
 const CHANCE_MAP = { 1: 0.90, 2: 0.70, 3: 0.50, 4: 0.30, 5: 0.15, 6: 0.05 };
@@ -3447,23 +3447,6 @@ const SAVE_MIGRATIONS = [
       if(data.migrationHistory.length>12)data.migrationHistory=data.migrationHistory.slice(-12); return data;
     }
   }
-,
-  {
-    from:62,to:63,name:'shield-type-fix-63',
-    migrate(data,fromVersion){
-      if(!data || typeof data!=='object') throw new Error('Nieprawidłowy obiekt zapisu.');
-      data.migrationHistory=Array.isArray(data.migrationHistory)?data.migrationHistory:[];
-      if(Array.isArray(data.inventory)){
-        data.inventory.forEach(item=>{
-          if(item && item.type==='zbroja' && item.name && /(^|\s)Tarcza(\s|$)/i.test(item.name)) item.type='tarcza';
-        });
-      }
-      data.saveVersion=63;
-      data.migrationHistory.push({fromVersion,toVersion:63,at:new Date().toISOString(),name:'shield-type-fix-63'});
-      if(data.migrationHistory.length>12)data.migrationHistory=data.migrationHistory.slice(-12);
-      return data;
-    }
-  }
 ];
 
 function migrateSaveData(rawData){
@@ -3510,11 +3493,6 @@ function runSaveMigrationSelfTest(){
     const current={saveVersion:SAVE_VERSION,heroes:[{id:1}]};
     const untouched=migrateSaveData(current);
     if(untouched.migrated) errors.push('aktualny zapis został niepotrzebnie zmigrowany');
-
-    const v62={saveVersion:62,heroes:[{id:1}],inventory:[{id:2,type:'zbroja',name:'Tarcza stalowa'}]};
-    const migrated63=migrateSaveData(v62);
-    if(migrated63.data.saveVersion!==63) errors.push('zapis v62 nie został zmigrowany do v63');
-    if(migrated63.data.inventory[0].type!=='tarcza') errors.push('migracja v62→v63 nie poprawiła typu tarczy');
 
     let futureRejected=false;
     try{migrateSaveData({saveVersion:SAVE_VERSION+1,heroes:[{id:1}]});}catch(e){futureRejected=true;}
@@ -6868,7 +6846,6 @@ function startBattleCombat(phase='final') {
       h.hp = Math.min(h.hp, h.maxHp);
       h._eqBonus = eqBonus;
       ensureHeroSkillState(h).cooldown=0;
-      h._s11517UsedRounds=[]; h._s11517LastTargetId=null; h._relationshipDamageMod=1;
     });
     
     updateBattleVisual(party,enemies,round,null,battleLastAction,phase);
@@ -6939,9 +6916,6 @@ function startBattleCombat(phase='final') {
         const skillPassive=getHeroPassiveMods(h);
         let target=chooseEnemy(enemies);
         if(!target)break;
-        h._relationshipDamageMod=1;
-        const relationshipCombat=applyS11517CombatCoordination(h,aliveParty,target,round,floor,type);
-        if(relationshipCombat?.mult) h._relationshipDamageMod=relationshipCombat.mult;
         const equippedWeaponType=chooseCombatWeaponType(h,round); h._activeCombatWeaponType=equippedWeaponType; const weaponCombat=getWeaponTrainingClassBehavior(h,equippedWeaponType);
         if(weaponCombat.level>=2){if(h.heroClass==='Łucznik'||h.heroClass==='Łotrzyk'){const weakTargets=enemies.filter(e=>e.hp>0&&Array.isArray(e.weaknesses)&&e.weaknesses.length);if(weakTargets.length&&Math.random()<weaponCombat.weakPoint)target=weakTargets.sort((a,b)=>a.hp-b.hp)[0];}else if(h.heroClass==='Mag'){const magicTargets=enemies.filter(e=>e.hp>0&&Array.isArray(e.weaknesses)&&e.weaknesses.length);if(magicTargets.length&&Math.random()<weaponCombat.magicTactics)target=magicTargets[0];}}
         const hitMod = h._statMods?.hit || 0;
@@ -7029,7 +7003,6 @@ function startBattleCombat(phase='final') {
         if(markedTarget?.teamDamage) totalDamageMod *= (1+Math.min(.12,markedTarget.teamDamage));
         if(!isEntry && explorationEffects.dmg) totalDamageMod *= (1+explorationEffects.dmg);
         totalDamageMod *= skillPassive.damage;
-        if(h._relationshipDamageMod) totalDamageMod *= h._relationshipDamageMod;
         if(h.hp<h.maxHp*.35) totalDamageMod *= (1+skillPassive.lowHpDamage);
         if(type==='boss') totalDamageMod *= skillPassive.bossDamage;
         totalDamageMod = Math.min(totalDamageMod, 2.5);
@@ -7276,7 +7249,6 @@ function ensureSanctuaryNameAtFloor(floor){
   return true;
 }
 function finishBattle(success,floor,type,deadCount) {
-  try{ finalizeS11517BattleRelationships(state?.selectedHeroIds?.map(id=>state.heroes.find(h=>h.id===id)).filter(Boolean)||[],floor,success); }catch(e){ console.warn('S-1.15.17:',e); }
   hideBattleVisual();
   if(battleInterval){ clearInterval(battleInterval); battleInterval=null; }
   
@@ -7287,7 +7259,6 @@ function finishBattle(success,floor,type,deadCount) {
     }
     delete h._eqBonus;
     delete h._statMods;
-    delete h._s11517UsedRounds; delete h._s11517LastTargetId; delete h._relationshipDamageMod;
   });
   
   if (success) {
@@ -8029,6 +8000,10 @@ function hashString(str){let hash=0;for(let i=0;i<String(str).length;i++)hash=((
 function performEvolution12(mainId,sacrificeId){
   const a=state.heroes.find(x=>x.id===mainId),b=state.heroes.find(x=>x.id===sacrificeId);
   if(!a||!b||a.id===b.id||a.stars!==1||b.stars!==1)return;
+  // Każdy bohater może być stroną główną ewolucji 1★ → 2★, także Trener
+  // i Kowal. Poświęcany bohater musi być jednak zwykłym bohaterem — role
+  // specjalne zachowują własną ścieżkę rozwoju i nie mogą zostać usunięte.
+  if(b.isTrainer||b.isBlacksmith){log('Nie można poświęcić Trenera ani Kowala. Wybierz zwykłego bohatera 1★ LV10.','warn');return;}
   if(a.level<10||b.level<10||!evolutionFloorReady(2)){log('Bohaterowie nie są jeszcze gotowi na ten etap.','warn');return;}
   if(!confirm(`⚠️ ${b.name} zostanie poświęcony bezpowrotnie, a ${a.name} otrzyma 2★.\n\nKontynuować?`))return;
   state.heroes=state.heroes.filter(x=>x.id!==b.id);a.stars=2;a.level=Math.min(a.level,20);
@@ -8086,7 +8061,10 @@ function getEvolutionPreviewData(h,stage){
 function closeEvolutionAwakening(){const m=document.getElementById('evo43-modal');if(m)m.remove();}
 function showEvolutionSacrificeRitual(mainId){
   const h=state.heroes.find(x=>x.id===mainId);if(!h||h.stars!==1)return;
-  const candidates=state.heroes.filter(x=>x.isAlive&&x.id!==h.id&&x.stars===1&&x.level>=10&&x.heroClass);
+  // Pierwsza ewolucja jest wspólna dla wszystkich bohaterów, również dla
+  // Trenera i Kowala. Poświęcony może być wyłącznie zwykły bohater 1★ LV10;
+  // bohater pełniący specjalną rolę nie może zostać materiałem ewolucyjnym.
+  const candidates=state.heroes.filter(x=>x.isAlive&&x.id!==h.id&&x.stars===1&&x.level>=10&&x.heroClass&&!x.isTrainer&&!x.isBlacksmith);
   const existing=document.getElementById('evo43-sacrifice-modal');if(existing)existing.remove();
   const m=document.createElement('div');m.id='evo43-sacrifice-modal';m.className='evo43-modal';
   m.onclick=e=>{if(e.target===m)m.remove()};
@@ -9966,7 +9944,6 @@ function updateUI() {
     check('memory_system',()=>typeof tryGainExplorationMemory==='function'&&Array.isArray(MEMORIES));
     check('dossier_hook',()=>typeof renderDossier==='function');
     check('boss_hook',()=>typeof finishBattle==='function');
-    check('s11517_relationship_combat',()=>typeof runS11517MechanicTest==='function'&&runS11517MechanicTest().ok);
     if(state){normalizeTowerExpansionA();check('state_storage',()=>!!state.towerEcology&&Array.isArray(state.towerTraces)&&Array.isArray(state.heroReactions));}
     return report;
   }
@@ -10712,117 +10689,6 @@ if(typeof s11515OriginalUpdateUI==='function'){
 }
 </script>
 
-
-<script>
-// =====================================================================
-// S-1.15.17 — WSPÓLNY RYTM W WALCE
-// Relacje z Sanktuarium przechodzą do samego starcia. To nie jest nowy
-// licznik relacji: istniejące stany określają, czy bohaterowie potrafią
-// wykorzystać wspólne doświadczenie w praktyce.
-// =====================================================================
-const S11517_COMBO_DEFINITIONS={
-  tank_dps:{name:'Osłona i Kontratak',classes:['Tank','DPS'],mult:1.10,desc:'obrońca otwiera przestrzeń, a partner wykorzystuje ją do ataku'},
-  tank_rogue:{name:'Odciągnięcie i Cios',classes:['Tank','Łotrzyk'],mult:1.09,desc:'obrońca skupia uwagę przeciwnika, dając łotrzykowi lepsze wejście'},
-  mage_archer:{name:'Znamię i Precyzja',classes:['Mag','Łucznik'],mult:1.10,desc:'mag ujawnia słaby punkt, a łucznik wykorzystuje go z dystansu'},
-  support_any:{name:'Wspólny Oddech',classes:['Support','*'],mult:1.05,desc:'wsparcie i jego partner utrzymują wspólny rytm działania'},
-  warrior_defender:{name:'Tarcza i Natarcie',classes:['Wojownik','Defender'],mult:1.09,desc:'obrońca stabilizuje linię, a wojownik wchodzi w otwartą lukę'},
-  generic:{name:'Wspólny Rytm',classes:['*','*'],mult:1.05,desc:'bohaterowie wykorzystują doświadczenie zdobyte razem'}
-};
-function s11517PairClassKey(a,b){
-  const ac=a?.role||a?.heroClass||'',bc=b?.role||b?.heroClass||'';
-  if((ac==='Tank'&&bc==='DPS')||(ac==='DPS'&&bc==='Tank'))return 'tank_dps';
-  if((ac==='Tank'&&bc==='Łotrzyk')||(ac==='Łotrzyk'&&bc==='Tank'))return 'tank_rogue';
-  if((ac==='Mag'&&bc==='Łucznik')||(ac==='Łucznik'&&bc==='Mag'))return 'mage_archer';
-  if(ac==='Support'||bc==='Support')return 'support_any';
-  if((ac==='Wojownik'&&bc==='Defender')||(ac==='Defender'&&bc==='Wojownik'))return 'warrior_defender';
-  return 'generic';
-}
-function s11517EnsurePairCombatRecord(rel,a,b){
-  if(!rel)return null;
-  if(!Array.isArray(rel.combatMoments))rel.combatMoments=[];
-  if(!Array.isArray(rel.unlockedCombos))rel.unlockedCombos=[];
-  const key=s11517PairClassKey(a,b),def=S11517_COMBO_DEFINITIONS[key]||S11517_COMBO_DEFINITIONS.generic;
-  return {key,def};
-}
-function s11517RecordCombatMoment(a,b,rel,def,floor,round,result){
-  if(!rel)return;
-  const pairKey=s11513PairKey(a.id,b.id);
-  const battleKey=`${floor}:${pairKey}`;
-  if(!rel.combatMoments.some(m=>m.battleKey===battleKey)){
-    rel.combatMoments.push({battleKey,floor,round,combo:def.name,result,createdAt:Date.now()});
-  }
-  if(!rel.unlockedCombos.includes(def.name) && rel.combatMoments.length>=2) rel.unlockedCombos.push(def.name);
-  rel.lastCombatMoment={floor,round,combo:def.name,result,createdAt:Date.now()};
-}
-function applyS11517CombatCoordination(hero,party,target,round,floor,type){
-  if(!hero||!Array.isArray(party)||!target||typeof getS11513Relationship!=='function')return null;
-  const partners=party.filter(x=>x&&x.isAlive&&x.id!==hero.id);
-  for(const partner of partners){
-    const rel=getS11513Relationship(hero.id,partner.id);
-    if(!rel?.state)continue;
-    const allowed=['cooperation','friendship','rivalry'];
-    if(!allowed.includes(rel.state))continue;
-    const rec=s11517EnsurePairCombatRecord(rel,hero,partner); if(!rec)continue;
-    const pairRoundKey=`${floor}:${s11513PairKey(hero.id,partner.id)}:${round}`;
-    if(hero._s11517UsedRounds?.includes(pairRoundKey))continue;
-    hero._s11517UsedRounds=hero._s11517UsedRounds||[]; hero._s11517UsedRounds.push(pairRoundKey);
-    let mult=1,mode='';
-    if(rel.state==='rivalry'){
-      mult=1.06; mode='Rywalizują o inicjatywę';
-    }else{
-      mult=rec.def.mult; mode=rec.def.name;
-    }
-    if(rel.state==='friendship')mult+=.02;
-    if(partner._s11517LastTargetId===target.id && rel.state!=='rivalry')mult+=.03;
-    hero._relationshipDamageMod=Math.max(hero._relationshipDamageMod||1,mult);
-    partner._s11517LastTargetId=target.id;
-    if(partner.role==='Support' || hero.role==='Support'){
-      const support=partner.role==='Support'?partner:hero;
-      const receiver=support.id===hero.id?partner:hero;
-      const heal=Math.max(1,Math.floor((receiver.maxHp||0)*.04));
-      receiver.hp=Math.min(receiver.maxHp,receiver.hp+heal);
-      mode=rel.state==='rivalry'?'Rywalizacja o tempo':'Wspólny Oddech';
-      battleLastAction=battleActionText('🤝',`${hero.name} i ${partner.name}: ${mode}`,`+${heal} HP dla ${receiver.name}`);
-    }else{
-      battleLastAction=battleActionText('🤝',`${hero.name} i ${partner.name}: ${mode}`,`wspólny rytm • obrażenia x${mult.toFixed(2)}`);
-    }
-    if(typeof log==='function')log(`🤝 <b>${hero.name}</b> i <b>${partner.name}</b>: ${mode}.`,'info');
-    s11517RecordCombatMoment(hero,partner,rel,rec.def,floor,round,mode);
-    return {mult,partner,relation:rel.state,combo:rec.def.name};
-  }
-  return null;
-}
-function finalizeS11517BattleRelationships(party,floor,success){
-  if(!Array.isArray(party)||typeof getS11513Relationship!=='function')return;
-  const seen=new Set();
-  for(let i=0;i<party.length;i++)for(let j=i+1;j<party.length;j++){
-    const a=party[i],b=party[j],key=s11513PairKey(a.id,b.id); if(seen.has(key))continue; seen.add(key);
-    const rel=getS11513Relationship(a.id,b.id); if(!rel)continue;
-    if(!Array.isArray(rel.combatMoments))continue;
-    const moments=rel.combatMoments.filter(m=>Number(m.floor)===Number(floor));
-    if(success&&moments.length){
-      rel.lastCombatOutcome={floor:Number(floor),success:true,moments:moments.length,createdAt:Date.now()};
-      if(rel.state==='cooperation'&&moments.length>=2){rel.state='friendship';rel.history=Array.isArray(rel.history)?rel.history:[];rel.history.push({from:'cooperation',to:'friendship',eventId:`combat:${floor}`,floor:Number(floor),outcome:'wspólny_rytm',reactionType:'combat_cooperation',createdAt:Date.now()});}
-    }
-  }
-}
-function runS11517MechanicTest(){
-  const old=state,errors=[];
-  try{
-    state={heroes:[{id:1,name:'Tank',role:'Tank',heroClass:'Defender',isAlive:true,maxHp:100,hp:100},{id:2,name:'Dps',role:'DPS',heroClass:'Wojownik',isAlive:true,maxHp:100,hp:100}],heroRelationships:{[s11513PairKey(1,2)]:{heroAId:1,heroBId:2,state:'cooperation',history:[],combatMoments:[],unlockedCombos:[]}}};
-    const a=state.heroes[0],b=state.heroes[1],target={id:99,name:'Wróg',hp:100,maxHp:100};
-    const r=applyS11517CombatCoordination(a,[a,b],target,1,10,'assault');
-    if(!r||r.mult<1.09)errors.push('brak właściwego zgrania Tank+DPS');
-    if(!getS11513Relationship(1,2).combatMoments.length)errors.push('brak zapisu wspólnego momentu');
-    s11517RecordCombatMoment(a,b,getS11513Relationship(1,2),S11517_COMBO_DEFINITIONS.tank_dps,11,1,'Osłona i Kontratak');
-    finalizeS11517BattleRelationships([a,b],10,true);
-    if(getS11513Relationship(1,2).state!=='friendship')errors.push('współpraca nie rozwinęła się po powtarzalnym doświadczeniu');
-    return {ok:errors.length===0,errors};
-  }catch(e){return {ok:false,errors:[e.message]};}finally{state=old;}
-}
-window.runS11517MechanicTest=runS11517MechanicTest;
-</script>
-
 <script>
 // =====================================================================
 // S-1.15.16 — WYKORZYSTANIE RELACJI I TAKTYKI W EKSPLORACJI
@@ -11222,87 +11088,15 @@ if(typeof s11516OriginalUpdateExplorationPanel==='function'){
     if(!root||typeof state==='undefined'||!state)return;
     let extra=document.getElementById('s122-sanctuary-overview');
     if(!extra){extra=document.createElement('div');extra.id='s122-sanctuary-overview';root.appendChild(extra);}
-
     const ledger=window.getFinalRelationshipLedger();
-    const getHero=id=>state.heroes.find(h=>String(h.id)===String(id));
-    const relIcon={cooperation:'🤝',friendship:'💚',rivalry:'⚔️',conflict:'🔥',distrust:'👁️',shared_secret:'🔒'};
-    const relTone={cooperation:'#70c7a0',friendship:'#8fd6a8',rivalry:'#d6a45c',conflict:'#d87979',distrust:'#aaa4d6',shared_secret:'#9d83d4'};
-    const esc=v=>battleEsc(v==null?'':String(v));
-
-    const sorted=[...ledger].sort((a,b)=>{
-      const ac=(a.history?.length||0)+(a.combatMoments?.length||0);
-      const bc=(b.history?.length||0)+(b.combatMoments?.length||0);
-      return bc-ac;
-    });
-    const totalRelationships=sorted.length;
-    const friendshipCount=sorted.filter(r=>r.state==='friendship').length;
-    const activeCombatMoments=sorted.reduce((n,r)=>n+(Array.isArray(r.combatMoments)?r.combatMoments.length:0),0);
-    const unlockedCombos=[...new Set(sorted.flatMap(r=>Array.isArray(r.unlockedCombos)?r.unlockedCombos:[]))];
-
-    const relationCards=sorted.slice(0,8).map(r=>{
-      const a=getHero(r.heroAId),b=getHero(r.heroBId);
-      const stateKey=r.state||'';
-      const label=getS11513RelationshipLabel(stateKey)||stateKey||'Nieokreślona więź';
-      const icon=relIcon[stateKey]||'🤝';
-      const tone=relTone[stateKey]||'#aaa';
-      const history=Array.isArray(r.history)?r.history.slice(-6).reverse():[];
-      const moments=Array.isArray(r.combatMoments)?r.combatMoments.slice(-6).reverse():[];
-      const combos=Array.isArray(r.unlockedCombos)?r.unlockedCombos:[];
-      const last=r.lastCombatMoment||moments[0]||null;
-      const historyHtml=history.length?history.map(h=>`<div style="padding:6px 0;border-top:1px solid rgba(255,255,255,.05);"><span style="color:#777;">${h.floor!=null?`Piętro ${esc(h.floor)}`:'Wyprawa'}</span> · ${esc(h.from||'—')} → <b style="color:${tone}">${esc(getS11513RelationshipLabel(h.to)||h.to||'—')}</b>${h.reactionType?` <span style="color:#777">· ${esc(h.reactionType==='combat_cooperation'?'wspólne doświadczenie bojowe':'wspólne wydarzenie')}</span>`:''}</div>`).join(''):'<div style="color:#777;padding:6px 0;">Brak zapisanych zmian stanu.</div>';
-      const comboHtml=combos.length?combos.map(c=>{
-        const def=Object.values(S11517_COMBO_DEFINITIONS||{}).find(x=>x.name===c);
-        return `<div style="padding:6px 8px;margin-top:5px;border:1px solid rgba(224,182,90,.16);border-radius:7px;background:rgba(224,182,90,.035);"><b>⚔️ ${esc(c)}</b>${def?.desc?`<div style="font-size:.78em;color:#999;margin-top:2px;">${esc(def.desc)}</div>`:''}</div>`;
-      }).join(''):'<div style="color:#777;padding:6px 0;">Żadna wspólna technika nie została jeszcze odblokowana.</div>';
-      const momentsHtml=moments.length?moments.map(m=>`<div style="padding:5px 0;border-top:1px solid rgba(255,255,255,.04);font-size:.82em;"><span style="color:#777;">Piętro ${esc(m.floor)}</span> · ${esc(m.combo||'Wspólny Rytm')} · ${esc(m.result||'wspólna akcja')}</div>`).join(''):'<div style="color:#777;padding:6px 0;">Brak zapisanych wspólnych momentów bojowych.</div>';
-      return `<details class="s122-relation-card" style="border:1px solid ${tone}33;border-left:3px solid ${tone};border-radius:9px;background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(0,0,0,.12));margin:7px 0;overflow:hidden;">
-        <summary style="cursor:pointer;list-style:none;padding:10px 11px;display:flex;justify-content:space-between;gap:8px;align-items:center;">
-          <span><b>${esc(a?.name||r.heroAId)} × ${esc(b?.name||r.heroBId)}</b><br><span style="font-size:.78em;color:${tone};">${icon} ${esc(label)}</span></span>
-          <span style="font-size:.72em;color:#888;text-align:right;">${r.history?.length||0} zmian<br>${moments.length} wspólnych walk</span>
-        </summary>
-        <div style="padding:0 11px 11px;border-top:1px solid rgba(255,255,255,.05);">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px;">
-            <div style="padding:7px;background:rgba(255,255,255,.025);border-radius:7px;"><span style="font-size:.72em;color:#777;">WIĘŹ</span><br><b style="color:${tone};">${icon} ${esc(label)}</b></div>
-            <div style="padding:7px;background:rgba(255,255,255,.025);border-radius:7px;"><span style="font-size:.72em;color:#777;">WSPÓLNY RYTM</span><br><b>${moments.length}</b> zapisanych momentów</div>
-          </div>
-          ${last?`<div style="margin-top:8px;padding:7px 9px;border-radius:7px;background:rgba(112,199,160,.035);font-size:.8em;color:#aaa;">Ostatni wspólny moment: <b style="color:#ddd;">Piętro ${esc(last.floor)}</b> · ${esc(last.combo||'Wspólny Rytm')}</div>`:''}
-          <div style="margin-top:10px;font-size:.83em;color:#bbb;"><b>📜 Historia więzi</b>${historyHtml}</div>
-          <div style="margin-top:10px;font-size:.83em;color:#bbb;"><b>⚔️ Wspólne doświadczenie bojowe</b>${momentsHtml}</div>
-          <div style="margin-top:10px;font-size:.83em;color:#bbb;"><b>✨ Odblokowane wspólne techniki</b>${comboHtml}</div>
-        </div>
-      </details>`;
+    const relRows=ledger.slice(-8).map(r=>{
+      const a=state.heroes.find(h=>String(h.id)===String(r.heroAId));
+      const b=state.heroes.find(h=>String(h.id)===String(r.heroBId));
+      return `<div class="s1156-note"><b>${battleEsc(a?.name||r.heroAId)} + ${battleEsc(b?.name||r.heroBId)}</b> — ${battleEsc(getS11513RelationshipLabel(r.state)||r.state)}${r.history?.length?` <span style="color:#888">(${r.history.length} zapisów)</span>`:''}</div>`;
     }).join('');
-
-    const history=(state.expeditionHistory||[]).slice(-6).reverse().map(h=>`<div class="s1156-note"><b>Piętro ${esc(h.floor)}</b> · ${esc(MISSION_TYPES[h.missionType]?.name||h.missionType||'wyprawa')} · ${h.expeditionSuccess?'sukces':'wynik niepomyślny'}${h.tacticalOutcome?` · ${esc(TACTIC_OUTCOME_DEFINITIONS[h.tacticalOutcome]?.name||h.tacticalOutcome)}`:''}</div>`).join('');
-    const recentEvents=(state.sanctuaryHistoryEvents||[]).slice(-5).reverse().map(e=>{
-      const title=e.title||e.name||e.eventTitle||e.id||'Wydarzenie';
-      const floor=e.sourceFloor||e.floor||null;
-      const decision=e.sourceDecision||e.decision||null;
-      return `<div class="s1156-note"><b>${esc(title)}</b>${floor!=null?` · Piętro ${esc(floor)}`:''}${decision?` · ${esc(decision)}`:''}</div>`;
-    }).join('');
-
-    extra.innerHTML=`<div class="s122-sanctuary-overview-card">
-      <div class="s1156-kicker">Sanktuarium — stan drużyny</div>
-      <div class="s1156-title" style="font-size:1.05em;">🏠 ${state.sanctuaryName?`Sanktuarium: ${esc(state.sanctuaryName)}`:'Sanktuarium'}</div>
-      <div class="s1156-note">${state.sanctuaryName?'To miejsce ma już swoje imię.':'Sanktuarium wciąż czeka na swoje imię.'}</div>
-
-      <div class="s1156-title" style="font-size:1.05em;">🤝 Relacje i historia</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0 10px;">
-        <div style="padding:7px;border:1px solid rgba(255,255,255,.06);border-radius:7px;text-align:center;"><b style="font-size:1.05em;">${totalRelationships}</b><div style="font-size:.68em;color:#777;">WIĘZI</div></div>
-        <div style="padding:7px;border:1px solid rgba(255,255,255,.06);border-radius:7px;text-align:center;"><b style="font-size:1.05em;">${friendshipCount}</b><div style="font-size:.68em;color:#777;">PRZYJAŹNI</div></div>
-        <div style="padding:7px;border:1px solid rgba(255,255,255,.06);border-radius:7px;text-align:center;"><b style="font-size:1.05em;">${activeCombatMoments}</b><div style="font-size:.68em;color:#777;">WSPÓLNYCH WALK</div></div>
-      </div>
-      ${relationCards||'<div class="s1156-note">Brak zapisanych relacji między bohaterami. Więzi zaczną się tworzyć, gdy bohaterowie wspólnie przeżyją ważne wydarzenia.</div>'}
-
-      ${unlockedCombos.length?`<details style="margin-top:9px;border-top:1px solid rgba(255,255,255,.05);padding-top:8px;"><summary style="cursor:pointer;color:#cdb46a;font-size:.88em;">✨ Wszystkie odblokowane techniki (${unlockedCombos.length})</summary><div style="margin-top:6px;">${unlockedCombos.map(c=>`<div style="padding:5px 0;color:#bbb;">⚔️ ${esc(c)}</div>`).join('')}</div></details>`:''}
-
-      <div class="s1156-title" style="font-size:1.05em;margin-top:12px;">📜 Ostatnie wyprawy</div>
-      ${history||'<div class="s1156-note">Brak zapisanej historii wypraw.</div>'}
-      ${recentEvents?`<div class="s1156-title" style="font-size:1.05em;margin-top:10px;">🕯️ Ślady w pamięci Sanktuarium</div>${recentEvents}`:''}
-      <div class="s1156-note" style="margin-top:8px;color:#aaa;">Między wyprawami Sanktuarium żyje własnym rytmem. To, co wydarzyło się wcześniej, pozostaje częścią jego historii.</div>
-    </div>`;
+    const history=(state.expeditionHistory||[]).slice(-5).reverse().map(h=>`<div class="s1156-note"><b>Piętro ${h.floor}</b> · ${battleEsc(MISSION_TYPES[h.missionType]?.name||h.missionType||'wyprawa')} · ${h.expeditionSuccess?'sukces':'wynik niepomyślny'}${h.tacticalOutcome?` · ${battleEsc(TACTIC_OUTCOME_DEFINITIONS[h.tacticalOutcome]?.name||h.tacticalOutcome)}`:''}</div>`).join('');
+    extra.innerHTML=`<div class="s122-sanctuary-overview-card"><div class="s1156-kicker">Sanktuarium — stan drużyny</div><div class="s1156-title" style="font-size:1.05em;">🏠 ${state.sanctuaryName?`Sanktuarium: ${battleEsc(state.sanctuaryName)}`:'Sanktuarium'}</div><div class="s1156-note">${state.sanctuaryName?'To miejsce ma już swoje imię.':'Sanktuarium wciąż czeka na swoje imię.'}</div><div class="s1156-title" style="font-size:1.05em;">🤝 Relacje i historia</div>${relRows||'<div class="s1156-note">Brak zapisanych relacji między bohaterami.</div>'}<div style="height:6px"></div><div class="s1156-title" style="font-size:1.05em;">📜 Ostatnie wyprawy</div>${history||'<div class="s1156-note">Brak zapisanej historii wypraw.</div>'}<div class="s1156-note" style="margin-top:8px;color:#aaa;">Między wyprawami Sanktuarium żyje własnym rytmem. To, co wydarzyło się wcześniej, pozostaje częścią jego historii.</div></div>`;
   }
-
   const originalRenderTactical=window.renderS11515TacticalPreparation;
   if(typeof originalRenderTactical==='function'){
     window.renderS11515TacticalPreparation=function(){const r=originalRenderTactical.apply(this,arguments);try{renderFinalSanctuaryOverview();}catch(e){console.warn('S-1.22 sanctuary overview',e);}return r;};
