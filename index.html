@@ -1103,7 +1103,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.134.3';
+const GAME_VERSION = '0.134.4';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -3447,6 +3447,23 @@ const SAVE_MIGRATIONS = [
       if(data.migrationHistory.length>12)data.migrationHistory=data.migrationHistory.slice(-12); return data;
     }
   }
+,
+  {
+    from:62,to:63,name:'shield-type-fix-63',
+    migrate(data,fromVersion){
+      if(!data || typeof data!=='object') throw new Error('Nieprawidłowy obiekt zapisu.');
+      data.migrationHistory=Array.isArray(data.migrationHistory)?data.migrationHistory:[];
+      if(Array.isArray(data.inventory)){
+        data.inventory.forEach(item=>{
+          if(item && item.type==='zbroja' && item.name && /(^|\s)Tarcza(\s|$)/i.test(item.name)) item.type='tarcza';
+        });
+      }
+      data.saveVersion=63;
+      data.migrationHistory.push({fromVersion,toVersion:63,at:new Date().toISOString(),name:'shield-type-fix-63'});
+      if(data.migrationHistory.length>12)data.migrationHistory=data.migrationHistory.slice(-12);
+      return data;
+    }
+  }
 ];
 
 function migrateSaveData(rawData){
@@ -3493,6 +3510,11 @@ function runSaveMigrationSelfTest(){
     const current={saveVersion:SAVE_VERSION,heroes:[{id:1}]};
     const untouched=migrateSaveData(current);
     if(untouched.migrated) errors.push('aktualny zapis został niepotrzebnie zmigrowany');
+
+    const v62={saveVersion:62,heroes:[{id:1}],inventory:[{id:2,type:'zbroja',name:'Tarcza stalowa'}]};
+    const migrated63=migrateSaveData(v62);
+    if(migrated63.data.saveVersion!==63) errors.push('zapis v62 nie został zmigrowany do v63');
+    if(migrated63.data.inventory[0].type!=='tarcza') errors.push('migracja v62→v63 nie poprawiła typu tarczy');
 
     let futureRejected=false;
     try{migrateSaveData({saveVersion:SAVE_VERSION+1,heroes:[{id:1}]});}catch(e){futureRejected=true;}
