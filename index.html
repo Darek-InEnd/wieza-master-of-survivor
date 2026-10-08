@@ -11222,15 +11222,87 @@ if(typeof s11516OriginalUpdateExplorationPanel==='function'){
     if(!root||typeof state==='undefined'||!state)return;
     let extra=document.getElementById('s122-sanctuary-overview');
     if(!extra){extra=document.createElement('div');extra.id='s122-sanctuary-overview';root.appendChild(extra);}
+
     const ledger=window.getFinalRelationshipLedger();
-    const relRows=ledger.slice(-8).map(r=>{
-      const a=state.heroes.find(h=>String(h.id)===String(r.heroAId));
-      const b=state.heroes.find(h=>String(h.id)===String(r.heroBId));
-      return `<div class="s1156-note"><b>${battleEsc(a?.name||r.heroAId)} + ${battleEsc(b?.name||r.heroBId)}</b> — ${battleEsc(getS11513RelationshipLabel(r.state)||r.state)}${r.history?.length?` <span style="color:#888">(${r.history.length} zapisów)</span>`:''}</div>`;
+    const getHero=id=>state.heroes.find(h=>String(h.id)===String(id));
+    const relIcon={cooperation:'🤝',friendship:'💚',rivalry:'⚔️',conflict:'🔥',distrust:'👁️',shared_secret:'🔒'};
+    const relTone={cooperation:'#70c7a0',friendship:'#8fd6a8',rivalry:'#d6a45c',conflict:'#d87979',distrust:'#aaa4d6',shared_secret:'#9d83d4'};
+    const esc=v=>battleEsc(v==null?'':String(v));
+
+    const sorted=[...ledger].sort((a,b)=>{
+      const ac=(a.history?.length||0)+(a.combatMoments?.length||0);
+      const bc=(b.history?.length||0)+(b.combatMoments?.length||0);
+      return bc-ac;
+    });
+    const totalRelationships=sorted.length;
+    const friendshipCount=sorted.filter(r=>r.state==='friendship').length;
+    const activeCombatMoments=sorted.reduce((n,r)=>n+(Array.isArray(r.combatMoments)?r.combatMoments.length:0),0);
+    const unlockedCombos=[...new Set(sorted.flatMap(r=>Array.isArray(r.unlockedCombos)?r.unlockedCombos:[]))];
+
+    const relationCards=sorted.slice(0,8).map(r=>{
+      const a=getHero(r.heroAId),b=getHero(r.heroBId);
+      const stateKey=r.state||'';
+      const label=getS11513RelationshipLabel(stateKey)||stateKey||'Nieokreślona więź';
+      const icon=relIcon[stateKey]||'🤝';
+      const tone=relTone[stateKey]||'#aaa';
+      const history=Array.isArray(r.history)?r.history.slice(-6).reverse():[];
+      const moments=Array.isArray(r.combatMoments)?r.combatMoments.slice(-6).reverse():[];
+      const combos=Array.isArray(r.unlockedCombos)?r.unlockedCombos:[];
+      const last=r.lastCombatMoment||moments[0]||null;
+      const historyHtml=history.length?history.map(h=>`<div style="padding:6px 0;border-top:1px solid rgba(255,255,255,.05);"><span style="color:#777;">${h.floor!=null?`Piętro ${esc(h.floor)}`:'Wyprawa'}</span> · ${esc(h.from||'—')} → <b style="color:${tone}">${esc(getS11513RelationshipLabel(h.to)||h.to||'—')}</b>${h.reactionType?` <span style="color:#777">· ${esc(h.reactionType==='combat_cooperation'?'wspólne doświadczenie bojowe':'wspólne wydarzenie')}</span>`:''}</div>`).join(''):'<div style="color:#777;padding:6px 0;">Brak zapisanych zmian stanu.</div>';
+      const comboHtml=combos.length?combos.map(c=>{
+        const def=Object.values(S11517_COMBO_DEFINITIONS||{}).find(x=>x.name===c);
+        return `<div style="padding:6px 8px;margin-top:5px;border:1px solid rgba(224,182,90,.16);border-radius:7px;background:rgba(224,182,90,.035);"><b>⚔️ ${esc(c)}</b>${def?.desc?`<div style="font-size:.78em;color:#999;margin-top:2px;">${esc(def.desc)}</div>`:''}</div>`;
+      }).join(''):'<div style="color:#777;padding:6px 0;">Żadna wspólna technika nie została jeszcze odblokowana.</div>';
+      const momentsHtml=moments.length?moments.map(m=>`<div style="padding:5px 0;border-top:1px solid rgba(255,255,255,.04);font-size:.82em;"><span style="color:#777;">Piętro ${esc(m.floor)}</span> · ${esc(m.combo||'Wspólny Rytm')} · ${esc(m.result||'wspólna akcja')}</div>`).join(''):'<div style="color:#777;padding:6px 0;">Brak zapisanych wspólnych momentów bojowych.</div>';
+      return `<details class="s122-relation-card" style="border:1px solid ${tone}33;border-left:3px solid ${tone};border-radius:9px;background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(0,0,0,.12));margin:7px 0;overflow:hidden;">
+        <summary style="cursor:pointer;list-style:none;padding:10px 11px;display:flex;justify-content:space-between;gap:8px;align-items:center;">
+          <span><b>${esc(a?.name||r.heroAId)} × ${esc(b?.name||r.heroBId)}</b><br><span style="font-size:.78em;color:${tone};">${icon} ${esc(label)}</span></span>
+          <span style="font-size:.72em;color:#888;text-align:right;">${r.history?.length||0} zmian<br>${moments.length} wspólnych walk</span>
+        </summary>
+        <div style="padding:0 11px 11px;border-top:1px solid rgba(255,255,255,.05);">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px;">
+            <div style="padding:7px;background:rgba(255,255,255,.025);border-radius:7px;"><span style="font-size:.72em;color:#777;">WIĘŹ</span><br><b style="color:${tone};">${icon} ${esc(label)}</b></div>
+            <div style="padding:7px;background:rgba(255,255,255,.025);border-radius:7px;"><span style="font-size:.72em;color:#777;">WSPÓLNY RYTM</span><br><b>${moments.length}</b> zapisanych momentów</div>
+          </div>
+          ${last?`<div style="margin-top:8px;padding:7px 9px;border-radius:7px;background:rgba(112,199,160,.035);font-size:.8em;color:#aaa;">Ostatni wspólny moment: <b style="color:#ddd;">Piętro ${esc(last.floor)}</b> · ${esc(last.combo||'Wspólny Rytm')}</div>`:''}
+          <div style="margin-top:10px;font-size:.83em;color:#bbb;"><b>📜 Historia więzi</b>${historyHtml}</div>
+          <div style="margin-top:10px;font-size:.83em;color:#bbb;"><b>⚔️ Wspólne doświadczenie bojowe</b>${momentsHtml}</div>
+          <div style="margin-top:10px;font-size:.83em;color:#bbb;"><b>✨ Odblokowane wspólne techniki</b>${comboHtml}</div>
+        </div>
+      </details>`;
     }).join('');
-    const history=(state.expeditionHistory||[]).slice(-5).reverse().map(h=>`<div class="s1156-note"><b>Piętro ${h.floor}</b> · ${battleEsc(MISSION_TYPES[h.missionType]?.name||h.missionType||'wyprawa')} · ${h.expeditionSuccess?'sukces':'wynik niepomyślny'}${h.tacticalOutcome?` · ${battleEsc(TACTIC_OUTCOME_DEFINITIONS[h.tacticalOutcome]?.name||h.tacticalOutcome)}`:''}</div>`).join('');
-    extra.innerHTML=`<div class="s122-sanctuary-overview-card"><div class="s1156-kicker">Sanktuarium — stan drużyny</div><div class="s1156-title" style="font-size:1.05em;">🏠 ${state.sanctuaryName?`Sanktuarium: ${battleEsc(state.sanctuaryName)}`:'Sanktuarium'}</div><div class="s1156-note">${state.sanctuaryName?'To miejsce ma już swoje imię.':'Sanktuarium wciąż czeka na swoje imię.'}</div><div class="s1156-title" style="font-size:1.05em;">🤝 Relacje i historia</div>${relRows||'<div class="s1156-note">Brak zapisanych relacji między bohaterami.</div>'}<div style="height:6px"></div><div class="s1156-title" style="font-size:1.05em;">📜 Ostatnie wyprawy</div>${history||'<div class="s1156-note">Brak zapisanej historii wypraw.</div>'}<div class="s1156-note" style="margin-top:8px;color:#aaa;">Między wyprawami Sanktuarium żyje własnym rytmem. To, co wydarzyło się wcześniej, pozostaje częścią jego historii.</div></div>`;
+
+    const history=(state.expeditionHistory||[]).slice(-6).reverse().map(h=>`<div class="s1156-note"><b>Piętro ${esc(h.floor)}</b> · ${esc(MISSION_TYPES[h.missionType]?.name||h.missionType||'wyprawa')} · ${h.expeditionSuccess?'sukces':'wynik niepomyślny'}${h.tacticalOutcome?` · ${esc(TACTIC_OUTCOME_DEFINITIONS[h.tacticalOutcome]?.name||h.tacticalOutcome)}`:''}</div>`).join('');
+    const recentEvents=(state.sanctuaryHistoryEvents||[]).slice(-5).reverse().map(e=>{
+      const title=e.title||e.name||e.eventTitle||e.id||'Wydarzenie';
+      const floor=e.sourceFloor||e.floor||null;
+      const decision=e.sourceDecision||e.decision||null;
+      return `<div class="s1156-note"><b>${esc(title)}</b>${floor!=null?` · Piętro ${esc(floor)}`:''}${decision?` · ${esc(decision)}`:''}</div>`;
+    }).join('');
+
+    extra.innerHTML=`<div class="s122-sanctuary-overview-card">
+      <div class="s1156-kicker">Sanktuarium — stan drużyny</div>
+      <div class="s1156-title" style="font-size:1.05em;">🏠 ${state.sanctuaryName?`Sanktuarium: ${esc(state.sanctuaryName)}`:'Sanktuarium'}</div>
+      <div class="s1156-note">${state.sanctuaryName?'To miejsce ma już swoje imię.':'Sanktuarium wciąż czeka na swoje imię.'}</div>
+
+      <div class="s1156-title" style="font-size:1.05em;">🤝 Relacje i historia</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0 10px;">
+        <div style="padding:7px;border:1px solid rgba(255,255,255,.06);border-radius:7px;text-align:center;"><b style="font-size:1.05em;">${totalRelationships}</b><div style="font-size:.68em;color:#777;">WIĘZI</div></div>
+        <div style="padding:7px;border:1px solid rgba(255,255,255,.06);border-radius:7px;text-align:center;"><b style="font-size:1.05em;">${friendshipCount}</b><div style="font-size:.68em;color:#777;">PRZYJAŹNI</div></div>
+        <div style="padding:7px;border:1px solid rgba(255,255,255,.06);border-radius:7px;text-align:center;"><b style="font-size:1.05em;">${activeCombatMoments}</b><div style="font-size:.68em;color:#777;">WSPÓLNYCH WALK</div></div>
+      </div>
+      ${relationCards||'<div class="s1156-note">Brak zapisanych relacji między bohaterami. Więzi zaczną się tworzyć, gdy bohaterowie wspólnie przeżyją ważne wydarzenia.</div>'}
+
+      ${unlockedCombos.length?`<details style="margin-top:9px;border-top:1px solid rgba(255,255,255,.05);padding-top:8px;"><summary style="cursor:pointer;color:#cdb46a;font-size:.88em;">✨ Wszystkie odblokowane techniki (${unlockedCombos.length})</summary><div style="margin-top:6px;">${unlockedCombos.map(c=>`<div style="padding:5px 0;color:#bbb;">⚔️ ${esc(c)}</div>`).join('')}</div></details>`:''}
+
+      <div class="s1156-title" style="font-size:1.05em;margin-top:12px;">📜 Ostatnie wyprawy</div>
+      ${history||'<div class="s1156-note">Brak zapisanej historii wypraw.</div>'}
+      ${recentEvents?`<div class="s1156-title" style="font-size:1.05em;margin-top:10px;">🕯️ Ślady w pamięci Sanktuarium</div>${recentEvents}`:''}
+      <div class="s1156-note" style="margin-top:8px;color:#aaa;">Między wyprawami Sanktuarium żyje własnym rytmem. To, co wydarzyło się wcześniej, pozostaje częścią jego historii.</div>
+    </div>`;
   }
+
   const originalRenderTactical=window.renderS11515TacticalPreparation;
   if(typeof originalRenderTactical==='function'){
     window.renderS11515TacticalPreparation=function(){const r=originalRenderTactical.apply(this,arguments);try{renderFinalSanctuaryOverview();}catch(e){console.warn('S-1.22 sanctuary overview',e);}return r;};
