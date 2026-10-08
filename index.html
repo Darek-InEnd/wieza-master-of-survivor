@@ -632,7 +632,7 @@ if ('serviceWorker' in navigator) {
 #tower-opening-start.visible{display:block}
 
 </style>
-<style id="equipment-compare-styles">body.compare-modal-open{overflow:hidden}.equipment-compare-modal{display:none;position:fixed;inset:0;z-index:99999}.equipment-compare-modal.open{display:block}.equipment-compare-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(3px)}.equipment-compare-dialog{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(920px,94vw);max-height:90vh;overflow:auto;background:#15181d;border:1px solid #59636d;border-radius:16px;box-shadow:0 25px 80px rgba(0,0,0,.65);color:#eee;padding:20px}.equipment-compare-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid #30363d;padding-bottom:12px}.equipment-compare-kicker,.compare-label{font-size:.72rem;letter-spacing:.12em;color:#9aa6b2}.equipment-compare-head h3{margin:3px 0 0}.equipment-compare-close{border:0;background:#252b31;color:#ddd;border-radius:9px;width:36px;height:36px;cursor:pointer}.compare-hero-select{margin:15px 0}.compare-hero-select label{display:flex;gap:10px;align-items:center;font-weight:700}.compare-hero-select select{flex:1;max-width:520px;background:#0f1215;color:#eee;border:1px solid #46505a;border-radius:8px;padding:9px}.compare-items{display:grid;grid-template-columns:1fr 60px 1fr;gap:12px;align-items:stretch}.compare-card{border:1px solid #343b43;border-radius:12px;padding:15px;background:#101318;min-height:130px}.compare-card.new{border-color:#55735e}.compare-card h4{margin:7px 0 5px}.compare-type{font-size:.8rem;color:#9da7b0;margin-bottom:10px}.compare-item-stats{display:flex;flex-wrap:wrap;gap:5px}.compare-vs{display:flex;align-items:center;justify-content:center;font-weight:900;color:#d5b86a}.compare-item-mini{padding:9px 0;border-bottom:1px solid #2b3036}.compare-item-mini:last-child{border-bottom:0}.compare-item-mini small{display:block;color:#9aa6b2;margin-top:4px}.compare-none,.compare-empty{color:#777;font-style:italic}.compare-table{margin-top:15px;border:1px solid #30363d;border-radius:10px;overflow:hidden}.compare-stat-head,.compare-stat-row{display:grid;grid-template-columns:1.2fr .8fr 1fr .8fr;gap:8px;padding:8px 12px;align-items:center}.compare-stat-head{background:#20262c;color:#aeb8c2;font-size:.72rem}.compare-stat-row{border-top:1px solid #292e34}.compare-stat-row>b,.compare-diff{text-align:center}.compare-diff{font-weight:800}.compare-diff.better{color:#59d27b}.compare-diff.worse{color:#f06c6c}.compare-diff.same{color:#aab2ba}.compare-verdict{margin-top:14px;padding:12px;border-radius:10px;background:#20252b;text-align:center;font-weight:700}.compare-actions{text-align:right;margin-top:14px}@media(max-width:650px){.equipment-compare-dialog{padding:14px;width:96vw}.compare-items{grid-template-columns:1fr}.compare-vs{height:25px}.compare-hero-select label{align-items:stretch;flex-direction:column}.compare-hero-select select{max-width:none}}</style></head>
+</head>
 <body>
 <div id="tower-opening-overlay" aria-label="Opening gry Wieża">
   <video id="tower-opening-video" playsinline webkit-playsinline preload="none" disablepictureinpicture></video>
@@ -3446,16 +3446,6 @@ const SAVE_MIGRATIONS = [
       data.saveVersion=62; data.migrationHistory.push({fromVersion,toVersion:62,at:new Date().toISOString(),name:'shield-and-dual-weapon-training-62'});
       if(data.migrationHistory.length>12)data.migrationHistory=data.migrationHistory.slice(-12); return data;
     }
-  },
-  {
-    from:62,to:63,name:'shield-type-fix-63',
-    migrate(data,fromVersion){
-      if(!data || typeof data!=='object') throw new Error('Nieprawidłowy obiekt zapisu.');
-      data.migrationHistory=Array.isArray(data.migrationHistory)?data.migrationHistory:[];
-      if(Array.isArray(data.inventory)) data.inventory.forEach(item=>{ if(item && item.name && /(^|\s)Tarcza(?:\s|$)/i.test(String(item.name))) item.type='tarcza'; });
-      data.saveVersion=63; data.migrationHistory.push({fromVersion,toVersion:63,at:new Date().toISOString(),name:'shield-type-fix-63'});
-      if(data.migrationHistory.length>12)data.migrationHistory=data.migrationHistory.slice(-12); return data;
-    }
   }
 ];
 
@@ -4383,15 +4373,9 @@ function normalizeState(s) {
   // broni ani tarcz.
   s.inventory.forEach(item=>{
     if(!item || !item.name) return;
-    const n=String(item.name||'').trim();
-    if(/(^|[\s•-])Tarcza(?:$|[\s•-])/i.test(n)){ item.type='tarcza'; return; }
-    const weaponCandidates=[...ITEM_SUFFIXES].sort((a,b)=>b.length-a.length);
-    const weaponSuffix=weaponCandidates.find(w=>n===w || n.endsWith(' '+w) || n.endsWith('• '+w));
-    if(weaponSuffix && SUFFIX_TYPE_MAP[weaponSuffix]==='broń'){ item.type='broń'; item.weaponType=item.weaponType||weaponSuffix; return; }
-    const exact=SUFFIX_TYPE_MAP[n];
-    if(exact==='tarcza' || /(^|\s)Tarcza(?:\s|$)/i.test(n)){ item.type='tarcza'; return; }
-    if(exact==='zbroja') item.type='zbroja';
-    if(exact==='dodatek') item.type='dodatek';
+    const canonical=SUFFIX_TYPE_MAP[item.name];
+    if(canonical==='zbroja' && item.name!=='Tarcza') item.type='zbroja';
+    if(canonical==='dodatek') item.type='dodatek';
   });
 
   const weaponTypeCandidates=[...ITEM_SUFFIXES].sort((a,b)=>b.length-a.length);
@@ -4470,7 +4454,7 @@ const ITEM_PREFIXES_FALLBACK = ["Stalowy","Żelazny","Kamienny","Skórzany","Kry
 const ITEM_SUFFIXES = ["Miecz","Topór","Łuk","Tarcza","Kolczuga","Szata","Amulet","Pierścień","Buty","Pasma","Kostur","Młot","Sztylet","Krótki Miecz","Księga","Strzały","Hełm","Płaszcz","Lanca","Siekiera","Kij","Szpada","Rapier","Kusza","Zbroja","Napierśnik","Ochrona","Talizman","Wielki Miecz","Miecz Dwuręczny","Wielki Młot","Młot Bojowy","Topór Dwuręczny","Wielka Siekiera","Halabarda"];
 const SUFFIX_TYPE_MAP = {
   "Miecz":"broń","Topór":"broń","Łuk":"broń","Młot":"broń","Kostur":"broń","Sztylet":"broń","Krótki Miecz":"broń","Księga":"broń","Lanca":"broń","Siekiera":"broń","Kij":"broń","Szpada":"broń","Rapier":"broń","Kusza":"broń","Wielki Miecz":"broń","Miecz Dwuręczny":"broń","Wielki Młot":"broń","Młot Bojowy":"broń","Topór Dwuręczny":"broń","Wielka Siekiera":"broń","Halabarda":"broń",
-  "Tarcza":"tarcza","Kolczuga":"zbroja","Szata":"zbroja","Hełm":"zbroja","Płaszcz":"zbroja","Zbroja":"zbroja","Napierśnik":"zbroja","Ochrona":"zbroja",
+  "Tarcza":"zbroja","Kolczuga":"zbroja","Szata":"zbroja","Hełm":"zbroja","Płaszcz":"zbroja","Zbroja":"zbroja","Napierśnik":"zbroja","Ochrona":"zbroja",
   "Amulet":"dodatek","Pierścień":"dodatek","Buty":"dodatek","Pasma":"dodatek","Strzały":"dodatek","Talizman":"dodatek"
 };
 const RARITIES = [{ name:"Zwykły", color:"#aaa", multiplier:1 }, { name:"Niezwykły", color:"#4dff88", multiplier:1.5 }, { name:"Rzadki", color:"#4da6ff", multiplier:2 }, { name:"Epicki", color:"#b366ff", multiplier:2.5 }, { name:"Legendarny", color:"#ffd700", multiplier:3.5 }];
@@ -4490,8 +4474,7 @@ const SPECIAL_EFFECTS = ["+5% EXP z treningu","+10% obrażeń przeciw bossom","+
 const CLASS_ITEM_POOLS = {
   Wojownik: {
     "broń": ["Miecz","Wielki Miecz","Miecz Dwuręczny","Topór","Topór Dwuręczny","Młot","Wielki Młot","Młot Bojowy","Lanca","Halabarda","Siekiera","Wielka Siekiera","Krótki Miecz","Kij"],
-    "zbroja": ["Kolczuga","Hełm","Zbroja","Napierśnik","Ochrona"],
-    "tarcza": ["Tarcza"],
+    "zbroja": ["Kolczuga","Hełm","Zbroja","Napierśnik","Tarcza","Ochrona"],
     "dodatek": ["Pierścień","Buty","Pasma","Talizman"]
   },
   Łotrzyk: {
@@ -4506,8 +4489,7 @@ const CLASS_ITEM_POOLS = {
   },
   Obrońca: {
     "broń": ["Młot","Wielki Młot","Młot Bojowy","Topór","Topór Dwuręczny","Lanca","Halabarda","Siekiera","Wielka Siekiera","Miecz","Wielki Miecz","Miecz Dwuręczny"],
-    "zbroja": ["Kolczuga","Hełm","Zbroja","Napierśnik","Ochrona"],
-    "tarcza": ["Tarcza"],
+    "zbroja": ["Tarcza","Kolczuga","Hełm","Zbroja","Napierśnik","Ochrona"],
     "dodatek": ["Talizman","Amulet","Pierścień","Buty"]
   },
   Łucznik: {
@@ -4698,9 +4680,9 @@ function generateItem(rarityIndex, forcedType, forcedElement, itemLevel, forcedS
     if(possible.length) suffix=possible[Math.floor(Math.random()*possible.length)];
   }
   if (forcedSuffix && SUFFIX_TYPE_MAP[forcedSuffix]) {
-    forcedType = SUFFIX_TYPE_MAP[forcedSuffix];
+    forcedType = forcedType || SUFFIX_TYPE_MAP[forcedSuffix];
   }
-  let type = SUFFIX_TYPE_MAP[suffix] || forcedType || "dodatek";
+  let type = forcedType || SUFFIX_TYPE_MAP[suffix] || "dodatek";
   let element = forcedElement || null;
   if (type==="broń" && !element) {
     const chance = [0.3,0.5,0.7,0.9,1.0][rarityIndex]||0.3;
@@ -4737,7 +4719,7 @@ function generateItem(rarityIndex, forcedType, forcedElement, itemLevel, forcedS
 
   if (Object.keys(stats).length===0) put(type==='broń'?'atk':'def', type==='broń'?baseAtk:baseDef);
   if (SUFFIX_TYPE_MAP[suffix]) type = SUFFIX_TYPE_MAP[suffix];
-  else if (forcedType) type = forcedType;
+  if (forcedType) type = forcedType;
 
   let special = null;
   if (rarityIndex>=2 && Math.random()<0.35) {
@@ -6864,6 +6846,7 @@ function startBattleCombat(phase='final') {
       h.hp = Math.min(h.hp, h.maxHp);
       h._eqBonus = eqBonus;
       ensureHeroSkillState(h).cooldown=0;
+      h._s11517UsedRounds=[]; h._s11517LastTargetId=null; h._relationshipDamageMod=1;
     });
     
     updateBattleVisual(party,enemies,round,null,battleLastAction,phase);
@@ -6934,6 +6917,9 @@ function startBattleCombat(phase='final') {
         const skillPassive=getHeroPassiveMods(h);
         let target=chooseEnemy(enemies);
         if(!target)break;
+        h._relationshipDamageMod=1;
+        const relationshipCombat=applyS11517CombatCoordination(h,aliveParty,target,round,floor,type);
+        if(relationshipCombat?.mult) h._relationshipDamageMod=relationshipCombat.mult;
         const equippedWeaponType=chooseCombatWeaponType(h,round); h._activeCombatWeaponType=equippedWeaponType; const weaponCombat=getWeaponTrainingClassBehavior(h,equippedWeaponType);
         if(weaponCombat.level>=2){if(h.heroClass==='Łucznik'||h.heroClass==='Łotrzyk'){const weakTargets=enemies.filter(e=>e.hp>0&&Array.isArray(e.weaknesses)&&e.weaknesses.length);if(weakTargets.length&&Math.random()<weaponCombat.weakPoint)target=weakTargets.sort((a,b)=>a.hp-b.hp)[0];}else if(h.heroClass==='Mag'){const magicTargets=enemies.filter(e=>e.hp>0&&Array.isArray(e.weaknesses)&&e.weaknesses.length);if(magicTargets.length&&Math.random()<weaponCombat.magicTactics)target=magicTargets[0];}}
         const hitMod = h._statMods?.hit || 0;
@@ -7021,6 +7007,7 @@ function startBattleCombat(phase='final') {
         if(markedTarget?.teamDamage) totalDamageMod *= (1+Math.min(.12,markedTarget.teamDamage));
         if(!isEntry && explorationEffects.dmg) totalDamageMod *= (1+explorationEffects.dmg);
         totalDamageMod *= skillPassive.damage;
+        if(h._relationshipDamageMod) totalDamageMod *= h._relationshipDamageMod;
         if(h.hp<h.maxHp*.35) totalDamageMod *= (1+skillPassive.lowHpDamage);
         if(type==='boss') totalDamageMod *= skillPassive.bossDamage;
         totalDamageMod = Math.min(totalDamageMod, 2.5);
@@ -7267,6 +7254,7 @@ function ensureSanctuaryNameAtFloor(floor){
   return true;
 }
 function finishBattle(success,floor,type,deadCount) {
+  try{ finalizeS11517BattleRelationships(state?.selectedHeroIds?.map(id=>state.heroes.find(h=>h.id===id)).filter(Boolean)||[],floor,success); }catch(e){ console.warn('S-1.15.17:',e); }
   hideBattleVisual();
   if(battleInterval){ clearInterval(battleInterval); battleInterval=null; }
   
@@ -7277,6 +7265,7 @@ function finishBattle(success,floor,type,deadCount) {
     }
     delete h._eqBonus;
     delete h._statMods;
+    delete h._s11517UsedRounds; delete h._s11517LastTargetId; delete h._relationshipDamageMod;
   });
   
   if (success) {
@@ -8384,22 +8373,57 @@ function equipItemToHero(itemId, heroId) {
   log(`<b>${item.rarityName} ${item.name}</b> założono na <b>${hero.name}</b> (${slot==='weapon'?'broń':slot==='armor'?'zbroję':'dodatek'}).`,'success');
   saveGame(); updateUI();
 }
-function ensureEquipmentCompareModal(){
-  if(document.getElementById('equipment-compare-modal')) return;
-  const wrap=document.createElement('div'); wrap.id='equipment-compare-modal'; wrap.className='equipment-compare-modal';
-  wrap.innerHTML=`<div class="equipment-compare-backdrop" data-compare-close="1"></div><div class="equipment-compare-dialog" role="dialog" aria-modal="true"><div class="equipment-compare-head"><div><div class="equipment-compare-kicker">⚖️ ANALIZA EKWIPUNKU</div><h3>Porównanie przedmiotów</h3></div><button type="button" class="equipment-compare-close" data-compare-close="1">✕</button></div><div id="equipment-compare-body"></div></div>`;
-  document.body.appendChild(wrap); wrap.addEventListener('click',e=>{if(e.target.closest('[data-compare-close]'))closeEquipmentCompareModal();});
-}
-function closeEquipmentCompareModal(){const m=document.getElementById('equipment-compare-modal');if(m){m.classList.remove('open');document.body.classList.remove('compare-modal-open');}}
 function compareArmorAccessoryFromInventory(itemId){
-  const item=state.inventory.find(i=>i.id===Number(itemId)); if(!item||!['broń','tarcza','zbroja','dodatek'].includes(item.type))return;
-  const heroes=state.heroes.filter(h=>h.isAlive&&!h.isTrainer&&!h.isBlacksmith); if(!heroes.length){log('Brak bohatera do porównania.','warn');return;}
-  ensureEquipmentCompareModal(); const modal=document.getElementById('equipment-compare-modal'),body=document.getElementById('equipment-compare-body');
-  const keys=[['atk','ATK'],['str','STR'],['dex','DEX'],['int','INT'],['spd','SPD'],['def','DEF'],['mdef','M.DEF'],['hp','HP'],['crit','CRIT'],['dodge','DODGE']];
-  const fmt=(k,v)=>['crit','dodge'].includes(k)?`${(Number(v||0)*100).toFixed(0)}%`:Math.floor(Number(v||0)); const esc=v=>typeof battleEsc==='function'?battleEsc(String(v??'')):String(v??'');
-  const getCurr=h=>{const e=h.equipped||{};if(item.type==='broń'||item.type==='tarcza')return[e.hand1,e.hand2].map(id=>state.inventory.find(x=>x.id===id)).filter(x=>x&&x.type===item.type);if(item.type==='zbroja')return[state.inventory.find(x=>x.id===e.armor)].filter(Boolean);return[state.inventory.find(x=>x.id===e.accessory1),state.inventory.find(x=>x.id===e.accessory2)].filter(Boolean);};
-  const render=hero=>{const cur=getCurr(hero),old={};keys.forEach(([k])=>old[k]=cur.reduce((m,x)=>Math.max(m,Number(x.stats?.[k]||0)),0));const ns=item.stats||{};const rows=keys.filter(([k])=>Number(ns[k]||0)||Number(old[k]||0)).map(([k,l])=>{const d=Number(ns[k]||0)-old[k],c=d>0?'better':d<0?'worse':'same';return `<div class="compare-stat-row"><span>${l}</span><b>${fmt(k,ns[k])}</b><span class="compare-diff ${c}">${d>0?'+':''}${fmt(k,d)}</span><b>${fmt(k,old[k])}</b></div>`;}).join('')||'<div class="compare-empty">Brak statystyk.</div>';const score=keys.reduce((a,[k])=>a+Number(ns[k]||0)-old[k],0);const verdict=score>0?'⬆️ Nowy przedmiot ma przewagę statystyczną.':score<0?'⬇️ Obecne wyposażenie ma przewagę statystyczną.':'⚖️ Statystyki są równoważne.';const oldHtml=cur.length?cur.map(x=>`<div class="compare-item-mini"><strong>${esc(x.rarityName)} ${esc(x.name)}</strong><div>${formatItemStats(x)||'Brak statystyk'}</div>${item.type==='broń'?`<small>${getHandUsageLabel(x)}</small>`:''}</div>`).join(''):'<div class="compare-none">Brak obecnego przedmiotu tego typu.</div>';body.innerHTML=`<div class="compare-hero-select"><label>Bohater <select id="equipment-compare-hero">${heroes.map(h=>`<option value="${h.id}">${esc(h.name)} — ${esc(h.heroClass||'bez klasy')}</option>`).join('')}</select></label></div><div class="compare-items"><section class="compare-card new"><div class="compare-label">NOWY PRZEDMIOT</div><h4>${esc(item.rarityName)} ${esc(item.name)}</h4><div class="compare-type">${esc(item.type)}${item.type==='broń'?` • ${getHandUsageLabel(item)}`:''}</div><div class="compare-item-stats">${formatItemStats(item)||'Brak statystyk'}</div></section><div class="compare-vs">VS</div><section class="compare-card old"><div class="compare-label">OBECNE WYPOSAŻENIE</div>${oldHtml}</section></div><div class="compare-table"><div class="compare-stat-head"><span>STATYSTYKA</span><span>NOWY</span><span>RÓŻNICA</span><span>OBECNY</span></div>${rows}</div><div class="compare-verdict">${verdict}</div><div class="compare-actions"><button type="button" class="btn-small" data-compare-close="1">Zamknij</button></div>`;document.getElementById('equipment-compare-hero').addEventListener('change',e=>{const h=heroes.find(x=>String(x.id)===String(e.target.value));if(h)render(h);});};
-  render(heroes[0]);modal.classList.add('open');document.body.classList.add('compare-modal-open');
+  const item=state.inventory.find(i=>i.id===Number(itemId));
+  if(!item || !['zbroja','dodatek'].includes(item.type)) return;
+
+  const heroes=state.heroes.filter(h=>h.isAlive&&!h.isTrainer&&!h.isBlacksmith);
+  if(!heroes.length){log('Brak bohatera do porównania.','warn');return;}
+
+  const slotLabel=item.type==='zbroja'?'zbroją':'dodatkiem';
+  const choices=heroes.map(h=>{
+    const eq=h.equipped||{};
+    const equippedIds=item.type==='zbroja'
+      ? [eq.armor]
+      : [eq.accessory1,eq.accessory2];
+    const names=equippedIds.filter(Boolean).map(id=>{
+      const x=state.inventory.find(i=>i.id===id);
+      return x ? `${x.rarityName} ${x.name}` : 'brak';
+    });
+    return `${h.id}: ${h.name} — ${names.length?names.join(' / '):'brak założonego przedmiotu'}`;
+  }).join('\n');
+
+  const id=prompt(`Porównaj ${item.rarityName} ${item.name} z założonym ${slotLabel}. Wpisz ID bohatera:\n\n${choices}`);
+  if(!id) return;
+
+  const hero=heroes.find(h=>String(h.id)===String(id));
+  if(!hero){log('Nieprawidłowy bohater.','warn');return;}
+
+  const eq=hero.equipped||{};
+  let equippedItems=[];
+  if(item.type==='zbroja'){
+    const x=getEquippedItem(hero,'armor');
+    equippedItems=x?[x]:[];
+  }else{
+    equippedItems=[getEquippedItem(hero,'accessory1'),getEquippedItem(hero,'accessory2')].filter(Boolean);
+  }
+
+  const compareOne=(current,slotName)=>{
+    const a=item.stats||{}, b=current?.stats||{};
+    const keys=[['atk','ATK'],['str','STR'],['dex','DEX'],['int','INT'],['spd','SPD'],['def','DEF'],['mdef','M.DEF'],['hp','HP'],['crit','CRIT'],['dodge','DODGE']];
+    const lines=keys.filter(([k])=>Number(a[k])||Number(b[k])).map(([k,n])=>{
+      const x=Number(a[k]||0), y=Number(b[k]||0), d=x-y;
+      const shown=k==='crit'||k==='dodge' ? `${(d*100>=0?'+':'')}${(d*100).toFixed(0)}%` : `${d>=0?'+':''}${Math.floor(d)}`;
+      return `${n}: ${x===0?'0':(k==='crit'||k==='dodge'?`${(x*100).toFixed(0)}%`:Math.floor(x))} vs ${y===0?'0':(k==='crit'||k==='dodge'?`${(y*100).toFixed(0)}%`:Math.floor(y))} (${shown})`;
+    }).join('\n');
+    return `${slotName}: ${current?`${current.rarityName} ${current.name}`:'brak'}\n${lines||'Brak wspólnych statystyk.'}`;
+  };
+
+  const comparisonText=equippedItems.length
+    ? equippedItems.map((x,i)=>compareOne(x,item.type==='zbroja'?'Zbroja':`Dodatek ${i+1}`)).join('\n\n')
+    : compareOne(null,item.type==='zbroja'?'Zbroja':'Dodatek');
+
+  alert(`🛡️ PORÓWNANIE EKWIPUNKU\n\nNowy: ${item.rarityName} ${item.name}\nBohater: ${hero.name}\n\n${comparisonText}`);
 }
 
 function safeCssColor(value,fallback='#e6dccb'){
@@ -8407,7 +8431,6 @@ function safeCssColor(value,fallback='#e6dccb'){
   return /^(#[0-9a-fA-F]{3,8}|(?:rgb|hsl)a?\([0-9.,%\s+-]+\))$/.test(v)?v:fallback;
 }
 function useRenewalStone(itemId,heroId){const idx=state.inventory.findIndex(i=>i.id===Number(itemId)&&i.type==='relikt'&&i.name==='Kamień Odnowienia'),hero=state.heroes.find(h=>h.id===Number(heroId));if(idx<0||!hero||!hero.isAlive){log('❌ Nieprawidłowy Kamień Odnowienia lub bohater.','warn');return;}if(getTotalWeaponLevel(hero)<=0){log(`<b>${hero.name}</b> nie ma jeszcze wyszkolenia broni do zresetowania.`,'warn');return;}if(!confirm(`Kamień Odnowienia całkowicie wyzeruje wszystkie poziomy i EXP broni bohatera ${hero.name}. Kontynuować?`))return;hero.weaponTraining={};hero.weaponLegendary={};state.inventory.splice(idx,1);log(`🔷 <b>${hero.name}</b> użył Kamienia Odnowienia. Całe wyszkolenie broni zostało zresetowane do zera.`,'success');saveGame();updateUI();}
-
 
 function renderInventory() {
   const container=document.getElementById('inventory-panel'); if(!container)return;
@@ -8462,14 +8485,14 @@ function renderInventory() {
     const scaled={wood:Math.round((salvage.wood||0)*salvBonus),steel:Math.round((salvage.steel||0)*salvBonus),leather:Math.round((salvage.leather||0)*salvBonus)};
     card.innerHTML=`
       <div class="inventory-card-top">
-        <div><div class="inventory-item-name" style="color:${safeCssColor(item.color)}">${battleEsc(item.rarityName)} ${battleEsc(item.name)}</div><div class="inventory-item-meta">${item.type==='broń'?'⚔️ Broń':item.type==='tarcza'?'🛡️ Tarcza':item.type==='zbroja'?'🛡️ Zbroja':item.type==='dodatek'?'💍 Dodatek':battleEsc(item.type)}${battleEsc(elem)} • poziom ${battleEsc(item.level||1)}${item.material?` • 🧩 ${battleEsc(item.material.name)}`:''}${item.runeSlots?` • 🔮 Gniazda ${item.runes?.filter(Boolean).length||0}/${item.runeSlots}`:''}</div></div>
+        <div><div class="inventory-item-name" style="color:${safeCssColor(item.color)}">${battleEsc(item.rarityName)} ${battleEsc(item.name)}</div><div class="inventory-item-meta">${battleEsc(item.type)}${battleEsc(elem)} • poziom ${battleEsc(item.level||1)}${item.material?` • 🧩 ${battleEsc(item.material.name)}`:''}${item.runeSlots?` • 🔮 Gniazda ${item.runes?.filter(Boolean).length||0}/${item.runeSlots}`:''}</div></div>
         <div class="inventory-owner">${owner?`👤 ${battleEsc(owner.name)}`:'📦 W magazynie'}</div>
       </div>
       <div class="inventory-stats">${formatItemStats(item)||'<span class="inventory-stat">Brak statystyk</span>'}</div>
       ${item.special?`<div class="inventory-special">✨ ${battleEsc(item.special)}</div>`:''}
       <div class="inventory-actions">
         ${item.runeSlots?`<div style="margin-top:5px;font-size:.78em;">🔮 ${item.runes?.filter(Boolean).length||0}/${item.runeSlots} gniazd: ${Array.from({length:item.runeSlots},(_,si)=>{const rr=item.runes?.[si];return rr?`<span style="padding:2px 4px;border:1px solid #555;border-radius:4px;">${battleEsc(RUNE_DEFINITIONS[rr.type]?.name||rr.type)}</span>`:`<select onchange="if(this.value)socketRune(${Number(item.id)||0},this.value,${si})"><option value="">Puste gniazdo</option>${Object.entries(RUNE_DEFINITIONS).filter(([rk,rv])=>runeCompatible(rv,item.type)&&(state.runes?.[rk]||0)>0).map(([rk,rv])=>`<option value="${rk}">${rv.name} ×${state.runes[rk]}</option>`).join('')}</select>`}).join(' ')}</div>`:''}<select class="inventory-owner-select"><option value="">📦 Zostaw w magazynie</option>${state.heroes.filter(h=>h.isAlive&&!h.isTrainer&&!h.isBlacksmith).map(h=>`<option value="${h.id}">${battleEsc(h.name)} (${h.stars}★, ${battleEsc(h.heroClass||'brak klasy')})</option>`).join('')}</select>
-${['broń','tarcza','zbroja','dodatek'].includes(item.type)?`<button class="btn-small" data-tower-action="compareArmorAccessoryFromInventory" data-id="${Number(item.id)||0}">⚖️ Porównaj</button>`:''}${smithActive?`<button class="btn-small btn-danger inventory-salvage">♻️ ${item.type==='broń'?'Rozłóż broń':'Odzyskaj'} ${formatSalvageText(scaled)}</button>`:''}
+${['zbroja','dodatek'].includes(item.type)?`<button class="btn-small" data-tower-action="compareArmorAccessoryFromInventory" data-id="${Number(item.id)||0}">⚖️ Porównaj</button>`:''}${smithActive?`<button class="btn-small btn-danger inventory-salvage">♻️ ${item.type==='broń'?'Rozłóż broń':'Odzyskaj'} ${formatSalvageText(scaled)}</button>`:''}
       </div>`;
     const select=card.querySelector('.inventory-owner-select');
     select.value=owner?String(owner.id):'';
@@ -9921,6 +9944,7 @@ function updateUI() {
     check('memory_system',()=>typeof tryGainExplorationMemory==='function'&&Array.isArray(MEMORIES));
     check('dossier_hook',()=>typeof renderDossier==='function');
     check('boss_hook',()=>typeof finishBattle==='function');
+    check('s11517_relationship_combat',()=>typeof runS11517MechanicTest==='function'&&runS11517MechanicTest().ok);
     if(state){normalizeTowerExpansionA();check('state_storage',()=>!!state.towerEcology&&Array.isArray(state.towerTraces)&&Array.isArray(state.heroReactions));}
     return report;
   }
@@ -10664,6 +10688,117 @@ if(typeof s11515OriginalUpdateUI==='function'){
     return r;
   };
 }
+</script>
+
+
+<script>
+// =====================================================================
+// S-1.15.17 — WSPÓLNY RYTM W WALCE
+// Relacje z Sanktuarium przechodzą do samego starcia. To nie jest nowy
+// licznik relacji: istniejące stany określają, czy bohaterowie potrafią
+// wykorzystać wspólne doświadczenie w praktyce.
+// =====================================================================
+const S11517_COMBO_DEFINITIONS={
+  tank_dps:{name:'Osłona i Kontratak',classes:['Tank','DPS'],mult:1.10,desc:'obrońca otwiera przestrzeń, a partner wykorzystuje ją do ataku'},
+  tank_rogue:{name:'Odciągnięcie i Cios',classes:['Tank','Łotrzyk'],mult:1.09,desc:'obrońca skupia uwagę przeciwnika, dając łotrzykowi lepsze wejście'},
+  mage_archer:{name:'Znamię i Precyzja',classes:['Mag','Łucznik'],mult:1.10,desc:'mag ujawnia słaby punkt, a łucznik wykorzystuje go z dystansu'},
+  support_any:{name:'Wspólny Oddech',classes:['Support','*'],mult:1.05,desc:'wsparcie i jego partner utrzymują wspólny rytm działania'},
+  warrior_defender:{name:'Tarcza i Natarcie',classes:['Wojownik','Defender'],mult:1.09,desc:'obrońca stabilizuje linię, a wojownik wchodzi w otwartą lukę'},
+  generic:{name:'Wspólny Rytm',classes:['*','*'],mult:1.05,desc:'bohaterowie wykorzystują doświadczenie zdobyte razem'}
+};
+function s11517PairClassKey(a,b){
+  const ac=a?.role||a?.heroClass||'',bc=b?.role||b?.heroClass||'';
+  if((ac==='Tank'&&bc==='DPS')||(ac==='DPS'&&bc==='Tank'))return 'tank_dps';
+  if((ac==='Tank'&&bc==='Łotrzyk')||(ac==='Łotrzyk'&&bc==='Tank'))return 'tank_rogue';
+  if((ac==='Mag'&&bc==='Łucznik')||(ac==='Łucznik'&&bc==='Mag'))return 'mage_archer';
+  if(ac==='Support'||bc==='Support')return 'support_any';
+  if((ac==='Wojownik'&&bc==='Defender')||(ac==='Defender'&&bc==='Wojownik'))return 'warrior_defender';
+  return 'generic';
+}
+function s11517EnsurePairCombatRecord(rel,a,b){
+  if(!rel)return null;
+  if(!Array.isArray(rel.combatMoments))rel.combatMoments=[];
+  if(!Array.isArray(rel.unlockedCombos))rel.unlockedCombos=[];
+  const key=s11517PairClassKey(a,b),def=S11517_COMBO_DEFINITIONS[key]||S11517_COMBO_DEFINITIONS.generic;
+  return {key,def};
+}
+function s11517RecordCombatMoment(a,b,rel,def,floor,round,result){
+  if(!rel)return;
+  const pairKey=s11513PairKey(a.id,b.id);
+  const battleKey=`${floor}:${pairKey}`;
+  if(!rel.combatMoments.some(m=>m.battleKey===battleKey)){
+    rel.combatMoments.push({battleKey,floor,round,combo:def.name,result,createdAt:Date.now()});
+  }
+  if(!rel.unlockedCombos.includes(def.name) && rel.combatMoments.length>=2) rel.unlockedCombos.push(def.name);
+  rel.lastCombatMoment={floor,round,combo:def.name,result,createdAt:Date.now()};
+}
+function applyS11517CombatCoordination(hero,party,target,round,floor,type){
+  if(!hero||!Array.isArray(party)||!target||typeof getS11513Relationship!=='function')return null;
+  const partners=party.filter(x=>x&&x.isAlive&&x.id!==hero.id);
+  for(const partner of partners){
+    const rel=getS11513Relationship(hero.id,partner.id);
+    if(!rel?.state)continue;
+    const allowed=['cooperation','friendship','rivalry'];
+    if(!allowed.includes(rel.state))continue;
+    const rec=s11517EnsurePairCombatRecord(rel,hero,partner); if(!rec)continue;
+    const pairRoundKey=`${floor}:${s11513PairKey(hero.id,partner.id)}:${round}`;
+    if(hero._s11517UsedRounds?.includes(pairRoundKey))continue;
+    hero._s11517UsedRounds=hero._s11517UsedRounds||[]; hero._s11517UsedRounds.push(pairRoundKey);
+    let mult=1,mode='';
+    if(rel.state==='rivalry'){
+      mult=1.06; mode='Rywalizują o inicjatywę';
+    }else{
+      mult=rec.def.mult; mode=rec.def.name;
+    }
+    if(rel.state==='friendship')mult+=.02;
+    if(partner._s11517LastTargetId===target.id && rel.state!=='rivalry')mult+=.03;
+    hero._relationshipDamageMod=Math.max(hero._relationshipDamageMod||1,mult);
+    partner._s11517LastTargetId=target.id;
+    if(partner.role==='Support' || hero.role==='Support'){
+      const support=partner.role==='Support'?partner:hero;
+      const receiver=support.id===hero.id?partner:hero;
+      const heal=Math.max(1,Math.floor((receiver.maxHp||0)*.04));
+      receiver.hp=Math.min(receiver.maxHp,receiver.hp+heal);
+      mode=rel.state==='rivalry'?'Rywalizacja o tempo':'Wspólny Oddech';
+      battleLastAction=battleActionText('🤝',`${hero.name} i ${partner.name}: ${mode}`,`+${heal} HP dla ${receiver.name}`);
+    }else{
+      battleLastAction=battleActionText('🤝',`${hero.name} i ${partner.name}: ${mode}`,`wspólny rytm • obrażenia x${mult.toFixed(2)}`);
+    }
+    if(typeof log==='function')log(`🤝 <b>${hero.name}</b> i <b>${partner.name}</b>: ${mode}.`,'info');
+    s11517RecordCombatMoment(hero,partner,rel,rec.def,floor,round,mode);
+    return {mult,partner,relation:rel.state,combo:rec.def.name};
+  }
+  return null;
+}
+function finalizeS11517BattleRelationships(party,floor,success){
+  if(!Array.isArray(party)||typeof getS11513Relationship!=='function')return;
+  const seen=new Set();
+  for(let i=0;i<party.length;i++)for(let j=i+1;j<party.length;j++){
+    const a=party[i],b=party[j],key=s11513PairKey(a.id,b.id); if(seen.has(key))continue; seen.add(key);
+    const rel=getS11513Relationship(a.id,b.id); if(!rel)continue;
+    if(!Array.isArray(rel.combatMoments))continue;
+    const moments=rel.combatMoments.filter(m=>Number(m.floor)===Number(floor));
+    if(success&&moments.length){
+      rel.lastCombatOutcome={floor:Number(floor),success:true,moments:moments.length,createdAt:Date.now()};
+      if(rel.state==='cooperation'&&moments.length>=2){rel.state='friendship';rel.history=Array.isArray(rel.history)?rel.history:[];rel.history.push({from:'cooperation',to:'friendship',eventId:`combat:${floor}`,floor:Number(floor),outcome:'wspólny_rytm',reactionType:'combat_cooperation',createdAt:Date.now()});}
+    }
+  }
+}
+function runS11517MechanicTest(){
+  const old=state,errors=[];
+  try{
+    state={heroes:[{id:1,name:'Tank',role:'Tank',heroClass:'Defender',isAlive:true,maxHp:100,hp:100},{id:2,name:'Dps',role:'DPS',heroClass:'Wojownik',isAlive:true,maxHp:100,hp:100}],heroRelationships:{[s11513PairKey(1,2)]:{heroAId:1,heroBId:2,state:'cooperation',history:[],combatMoments:[],unlockedCombos:[]}}};
+    const a=state.heroes[0],b=state.heroes[1],target={id:99,name:'Wróg',hp:100,maxHp:100};
+    const r=applyS11517CombatCoordination(a,[a,b],target,1,10,'assault');
+    if(!r||r.mult<1.09)errors.push('brak właściwego zgrania Tank+DPS');
+    if(!getS11513Relationship(1,2).combatMoments.length)errors.push('brak zapisu wspólnego momentu');
+    s11517RecordCombatMoment(a,b,getS11513Relationship(1,2),S11517_COMBO_DEFINITIONS.tank_dps,11,1,'Osłona i Kontratak');
+    finalizeS11517BattleRelationships([a,b],10,true);
+    if(getS11513Relationship(1,2).state!=='friendship')errors.push('współpraca nie rozwinęła się po powtarzalnym doświadczeniu');
+    return {ok:errors.length===0,errors};
+  }catch(e){return {ok:false,errors:[e.message]};}finally{state=old;}
+}
+window.runS11517MechanicTest=runS11517MechanicTest;
 </script>
 
 <script>
