@@ -595,7 +595,7 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 <script>
 /* Prosty mechanizm aktualizacji PWA: sprawdzenie SW przy starcie + automatyczne przeładowanie po przejęciu aplikacji przez nowy SW. */
 if ('serviceWorker' in navigator) {
-  const PWA_BUILD = '0.135.10';
+  const PWA_BUILD = '0.136';
   let registration = null;
   let reloadDone = false;
   const hadController = !!navigator.serviceWorker.controller;
@@ -1104,7 +1104,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.135.10';
+const GAME_VERSION = '0.136';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -2190,7 +2190,6 @@ const BUILDINGS = {
 // =====================================================================
 const STATUS_SYSTEM = {
   poison: { type: 'dot', damagePercent: 0.08, duration: 3, desc: 'Trucizna -8% HP na turę', css: 'debuff' },
-  burn: { type: 'dot', damagePercent: 0.06, duration: 2, desc: 'Podpalenie -6% HP na turę', css: 'debuff' },
   bleed: { type: 'dot', damagePercent: 0.05, duration: 3, desc: 'Krwawienie -5% HP na turę', css: 'debuff' },
   slow: { type: 'debuff', stat: 'spd', value: -0.3, duration: 2, desc: 'Spowolnienie -30% SPD', css: 'debuff' },
   stun: { type: 'cc', skipTurn: true, duration: 1, desc: 'Ogłuszenie - traci turę', css: 'cc' },
@@ -2217,7 +2216,7 @@ const STATUS_SYSTEM = {
   support_resonance: { type: 'buff', stat: 'damage', value: .04, duration: 2, desc: 'Rezonans Żywiołów', css: 'buff' }
 };
 
-function cleanseHeroStatuses(target,count){if(!target||!Array.isArray(target.statuses)||count<=0)return 0;const priority=['silence','stun','blind','slow','burn','poison','bleed','fear','reduce_attack'];let removed=0;for(const name of priority){if(removed>=count)break;const idx=target.statuses.findIndex(s=>s.name===name);if(idx>=0){target.statuses.splice(idx,1);removed++;}}return removed;}
+function cleanseHeroStatuses(target,count){if(!target||!Array.isArray(target.statuses)||count<=0)return 0;const priority=['silence','stun','blind','slow','poison','bleed','fear','reduce_attack'];let removed=0;for(const name of priority){if(removed>=count)break;const idx=target.statuses.findIndex(s=>s.name===name);if(idx>=0){target.statuses.splice(idx,1);removed++;}}return removed;}
 
 function applyStatus(target, effectName, source) {
   if (!target.statuses) target.statuses = [];
@@ -4720,14 +4719,14 @@ const MATERIAL_KEYS_BY_RACE={}; Object.entries(CRAFT_MATERIALS).forEach(([k,m])=
 // RUNY — warstwa modyfikacji wyposażenia
 // =====================================================================
 const RUNE_DEFINITIONS={
-  fire:{name:"Runa Ognia",element:"fire",effect:"Podpalenie",desc:"Atak: +5% obrażeń żywiołowych i 22% szansy na podpalenie. Obrona: 12% szansy na podpalenie napastnika.",allowed:["broń","zbroja","tarcza"]},
-  ice:{name:"Runa Lodu",element:"ice",effect:"Spowolnienie",desc:"Atak: +5% obrażeń żywiołowych i 22% szansy na spowolnienie. Obrona: szansa na spowolnienie napastnika przy użyciu tarczy.",allowed:["broń","tarcza"]},
-  lightning:{name:"Runa Błyskawic",element:"lightning",effect:"Porażenie",desc:"Atak: +5% obrażeń żywiołowych i 22% szansy na ogłuszenie. Obrona: 25% szansy na ogłuszenie napastnika.",allowed:["broń","zbroja","tarcza"]},
-  dark:{name:"Runa Mroku",element:"dark",effect:"Klątwa",desc:"Atak: +5% obrażeń żywiołowych i 22% szansy na osłabienie. Obrona: 15% szansy na osłabienie napastnika.",allowed:["broń","zbroja","tarcza","dodatek"]},
-  holy:{name:"Runa Światła",element:"holy",effect:"Oślepienie",desc:"Atak: +5% obrażeń żywiołowych i 22% szansy na oślepienie. Obrona: 12% szansy na oślepienie napastnika.",allowed:["broń","zbroja","tarcza","dodatek"]},
-  earth:{name:"Runa Ziemi",element:"earth",effect:"Ciężar",desc:"Atak: +5% obrażeń żywiołowych i 22% szansy na spowolnienie. Obrona: szansa na spowolnienie napastnika przy użyciu tarczy.",allowed:["broń","tarcza"]},
-  water:{name:"Runa Wody",element:"water",effect:"Osłabienie",desc:"Atak: +5% obrażeń żywiołowych i 22% szansy na osłabienie. Obrona: 12% szansy na osłabienie napastnika.",allowed:["broń","zbroja","tarcza","dodatek"]},
-  air:{name:"Runa Powietrza",element:"air",effect:"Przyspieszenie",desc:"Atak: +5% obrażeń żywiołowych i 22% szansy na przyspieszenie. Obrona: 12% szansy na zmniejszenie otrzymanych obrażeń o 12%.",allowed:["broń","zbroja","tarcza","dodatek"]}
+  fire:{name:"Runa Ognia",element:"fire",effect:"Płomień",desc:"obrażenia ogniem + szansa na dodatkowe podpalenie",allowed:["broń","zbroja"]},
+  ice:{name:"Runa Lodu",element:"ice",effect:"Spowolnienie",desc:"obrażenia lodem + szansa na spowolnienie",allowed:["broń","zbroja"]},
+  lightning:{name:"Runa Błyskawic",element:"lightning",effect:"Porażenie",desc:"obrażenia błyskawicami + szansa na ogłuszenie",allowed:["broń","zbroja"]},
+  dark:{name:"Runa Mroku",element:"dark",effect:"Klątwa",desc:"obrażenia mrokiem + osłabienie",allowed:["broń","zbroja","dodatek"]},
+  holy:{name:"Runa Światła",element:"holy",effect:"Oślepienie",desc:"obrażenia światłem + szansa na oślepienie",allowed:["broń","zbroja","dodatek"]},
+  earth:{name:"Runa Ziemi",element:"earth",effect:"Ciężar",desc:"obrażenia ziemią + szansa na spowolnienie",allowed:["broń","zbroja"]},
+  water:{name:"Runa Wody",element:"water",effect:"Przypływ",desc:"obrażenia wodą + szansa na osłabienie",allowed:["broń","zbroja","dodatek"]},
+  air:{name:"Runa Powietrza",element:"air",effect:"Wicher",desc:"obrażenia powietrzem + premia do szybkości",allowed:["broń","zbroja","dodatek"]}
 };
 const RUNE_MATERIAL_MAP={fire:"oni",ice:"jotunn",lightning:"titan",dark:"keres",holy:"anunnaki",earth:"spriggan",water:"fomorian",air:"tengu"};
 const RZEMIESLNIK_EFFECTS={
@@ -4765,66 +4764,34 @@ function applyCraftSpecialDefense(defender,attacker,damage){
 function getMaterialKeyFamily(prefix,tier){const k=Object.keys(CRAFT_MATERIALS).find(x=>x===prefix+'_'+tier);return k||null;}
 function runeCompatible(rune,type){return !!rune?.allowed?.includes(type)}
 function getRuneTierPower(rune){ return rune?.tier==='boss'?1.35:rune?.tier==='elite'?1.18:1; }
-function getRuneActivationChance(type,mode='attack'){
-  if(mode==='attack')return .22;
-  return type==='lightning'?.25:type==='earth'?.18:type==='dark'?.15:.12;
-}
-function getRuneDisplayedChance(type,mode='attack'){
-  let masteryBonus=0;
-  if(typeof window!=='undefined'&&typeof window.getRuneMasteryActivationBonus==='function')masteryBonus=Number(window.getRuneMasteryActivationBonus())||0;
-  return Math.min(.95,getRuneActivationChance(type,mode)+masteryBonus);
-}
-// Runa działa zgodnie z miejscem osadzenia: broń wzmacnia atak, a zbroja/tarcza/dodatek chronią.
-function getEquippedRunes(hero,mode='all'){
-  const out=[]; const eq=hero?.equipped||{};
-  Object.values(eq).forEach(id=>{
-    const item=state.inventory.find(i=>i.id===id);
-    if(!item?.runes?.length)return;
-    if(mode==='attack'&&item.type!=='broń')return;
-    if(mode==='defense'&&!['zbroja','tarcza','dodatek'].includes(item.type))return;
-    item.runes.filter(Boolean).forEach(r=>{if(RUNE_DEFINITIONS[r.type])out.push({...r,def:RUNE_DEFINITIONS[r.type],itemType:item.type});});
-  });
+function getEquippedRunes(hero){
+  const out=[]; const eq=hero.equipped||{};
+  Object.values(eq).forEach(id=>{const item=state.inventory.find(i=>i.id===id); if(item?.runes?.length) item.runes.filter(Boolean).forEach(r=>{if(RUNE_DEFINITIONS[r.type])out.push({...r,def:RUNE_DEFINITIONS[r.type]});});});
   return out;
 }
 function applyRuneOffense(attacker,target,damage){
-  const runes=getEquippedRunes(attacker,'attack');
-  if(!runes.length)return damage;
-  // Każda runa w broni dodaje 5% obrażeń; limit 15% zapobiega nadmiernemu skalowaniu.
-  const elementalBonus=Math.min(.15,runes.length*.05);
-  let out=Math.max(1,Math.floor(damage*(1+elementalBonus)));
-  runes.forEach(r=>{
-    const chance=Math.min(.95,getRuneActivationChance(r.type,'attack')+(attacker?._runeMasteryBonus||0));
-    if(Math.random()<chance){
-      if(r.type==='fire')applyStatus(target,'burn',attacker);
-      else if(r.type==='ice'||r.type==='earth')applyStatus(target,'slow',attacker);
-      else if(r.type==='lightning')applyStatus(target,'stun',attacker);
-      else if(r.type==='dark'||r.type==='water')applyStatus(target,'reduce_attack',attacker);
-      else if(r.type==='holy')applyStatus(target,'blind',attacker);
-      else if(r.type==='air')applyStatus(attacker,'haste',attacker);
-      log(`🔮 <b>${r.def.name}</b>: ${r.def.effect}! (${Math.round(chance*100)}% szansy)`,'success');
-    }
-  });
-  return out;
+  const runes=getEquippedRunes(attacker); let extra=0;
+  runes.forEach(r=>{if(r.def?.element && !attacker._runeElementApplied){attacker._runeElementApplied=true;} const chance=Math.min(.95,(r.chance||.22)+(attacker?._runeMasteryBonus||0)); if(Math.random()<chance){
+    if(r.type==='ice'||r.type==='earth') applyStatus(target,'slow',attacker);
+    else if(r.type==='lightning') applyStatus(target,'stun',attacker);
+    else if(r.type==='fire'||r.type==='water') applyStatus(target,'poison',attacker);
+    else if(r.type==='dark') applyStatus(target,'reduce_attack',attacker);
+    else if(r.type==='holy') applyStatus(target,'blind',attacker);
+    else if(r.type==='air') attacker._runeHaste=true;
+    log(`🔮 <b>${r.def.name}</b>: ${r.def.effect}!`,'success');
+  }});
+  return damage+extra;
 }
 function applyRuneDefense(defender,attacker,damage){
-  const runes=getEquippedRunes(defender,'defense'); let out=damage;
-  runes.forEach(r=>{
-    if(!r.def)return;
-    const chance=Math.min(.95,getRuneActivationChance(r.type,'defense')+(defender?._runeMasteryBonus||0));
-    if(Math.random()<chance){
-      if(r.type==='fire')applyStatus(attacker,'burn',defender);
-      else if(r.type==='ice'||r.type==='earth'){
-        // Spowolnienie z obrony działa wyłącznie z tarczy, nigdy ze zbroi ani dodatku.
-        if(r.itemType==='tarcza')applyStatus(attacker,'slow',defender);
-      }
-      else if(r.type==='lightning')applyStatus(attacker,'stun',defender);
-      else if(r.type==='holy')applyStatus(attacker,'blind',defender);
-      else if(r.type==='dark'||r.type==='water')applyStatus(attacker,'reduce_attack',defender);
-      else if(r.type==='air')out=Math.max(1,Math.floor(out*.88));
-      log(`🔮 <b>${r.def.name}</b> aktywuje się przy obronie! (${Math.round(chance*100)}% szansy)`,'success');
-    }
-  });
-  return out;
+  const runes=getEquippedRunes(defender); let out=damage;
+  runes.forEach(r=>{ if(!r.def)return; const chance=Math.min(.95,(r.type==='lightning'?.25:r.type==='earth'?.18:r.type==='dark'?.15:.12)+(defender?._runeMasteryBonus||0)); if(Math.random()<chance){
+    if(r.type==='lightning') applyStatus(attacker,'stun',defender);
+    else if(r.type==='ice'||r.type==='earth') applyStatus(attacker,'slow',defender);
+    else if(r.type==='holy') applyStatus(attacker,'blind',defender);
+    else if(r.type==='dark') applyStatus(attacker,'reduce_attack',defender);
+    else if(r.type==='air') out=Math.max(1,Math.floor(out*.88));
+    log(`🔮 <b>${r.def.name}</b> aktywuje się przy obronie!`,'success');
+  }}); return out;
 }
 function forgeRune(type,smithId){
   if(!state)return; const r=RUNE_DEFINITIONS[type],smith=state.heroes.find(h=>h.id===smithId);
@@ -4894,20 +4861,7 @@ const ITEM_STAT_PROFILES = {
   "Talizman":     { hp:.35, int:.45, mdef:.55, dodge:1.00 }
 };
 
-// Szanse są sprawdzane warunkowo w ustalonej kolejności: 3 gniazda → 2 → 1.
-// Parametrem jest liczba gwiazdek Kowala runicznego, nie rzadkość przedmiotu.
-function rollRuneSlots(blacksmithStars){
-  const stars=Math.max(1,Math.min(7,Number(blacksmithStars)||1));
-  const chance3={1:0,2:0,3:0,4:.05,5:.10,6:.15,7:.45}[stars];
-  const chance2={1:0,2:0,3:.20,4:.40,5:.60,6:.60,7:.80}[stars];
-  const chance1={1:0,2:.50,3:.50,4:.75,5:.75,6:1,7:1}[stars];
-  if(Math.random()<chance3)return 3;
-  if(Math.random()<chance2)return 2;
-  if(Math.random()<chance1)return 1;
-  return 0;
-}
-
-function generateItem(rarityIndex, forcedType, forcedElement, itemLevel, forcedSuffix, forcedMaterialKey, blacksmithStars) {
+function generateItem(rarityIndex, forcedType, forcedElement, itemLevel, forcedSuffix, forcedMaterialKey, blacksmithStars, craftedForClass) {
   const rarity = RARITIES[rarityIndex] || RARITIES[0];
   const level = Math.max(1, Number(itemLevel)||1);
   const levelTier = Math.max(1, Math.ceil(level/10));
@@ -4959,6 +4913,24 @@ function generateItem(rarityIndex, forcedType, forcedElement, itemLevel, forcedS
   if (SUFFIX_TYPE_MAP[suffix]) type = SUFFIX_TYPE_MAP[suffix];
   if (forcedType) type = forcedType;
 
+  // Klasa wybrana w oknie craftingu steruje główną cechą przedmiotu,
+  // niezależnie od kategorii. Profil konkretnego przedmiotu nadal zachowuje
+  // jego charakter (np. miecz daje ATK, buty SPD), ale nie może przebić
+  // głównej cechy klasy, szczególnie w dodatkach.
+  const CLASS_CRAFT_FOCUS = {
+    'Wojownik': { key:'str', source:()=>Math.floor((baseAtk+baseDef)*.58), secondary:['dex','int'], damp:.55 },
+    'Łotrzyk':  { key:'dex', source:()=>Math.floor((baseAtk+baseSpd)*.62), secondary:['str','def'], damp:.55 },
+    'Mag':      { key:'int', source:()=>Math.floor((baseInt+baseMdef+baseAtk*.25)*.72), secondary:['str','dex'], damp:.55 },
+    'Obrońca':  { key:'def', source:()=>Math.floor((baseDef+baseHp*.12)*.72), secondary:['dex','int'], damp:.55 },
+    'Łucznik':  { key:'dex', source:()=>Math.floor((baseAtk+baseSpd)*.62), secondary:['str','int'], damp:.55 }
+  };
+  const classFocus=CLASS_CRAFT_FOCUS[craftedForClass];
+  if(classFocus){
+    const primaryValue=Math.max(1,classFocus.source());
+    stats[classFocus.key]=Math.max(stats[classFocus.key]||0,primaryValue);
+    classFocus.secondary.forEach(k=>{if(stats[k]>0)stats[k]=Math.max(1,Math.floor(stats[k]*classFocus.damp));});
+  }
+
   let special = null;
   if (rarityIndex>=2 && Math.random()<0.35) {
     special = SPECIAL_EFFECTS[Math.floor(Math.random()*SPECIAL_EFFECTS.length)];
@@ -4966,8 +4938,8 @@ function generateItem(rarityIndex, forcedType, forcedElement, itemLevel, forcedS
   const id = state.itemIdCounter++;
   let material=null;
   if(forcedMaterialKey&&CRAFT_MATERIALS[forcedMaterialKey]&&materialCompatible(CRAFT_MATERIALS[forcedMaterialKey],type)){material=CRAFT_MATERIALS[forcedMaterialKey];element=material.element||element;const mul=material.tier==='boss'?1.18:material.tier==='elite'?1.10:1.05;if(type==='broń'&&material.tier!=='basic')stats.atk=Math.max(1,Math.floor((stats.atk||baseAtk)*mul));if(type==='zbroja'&&material.tier!=='basic')stats.def=Math.max(1,Math.floor((stats.def||baseDef)*mul));if(material.effect==='Precyzja')stats.crit=Math.min(.18,(stats.crit||0)+.05);if(['Wiatr','Szybka Szarża'].includes(material.effect))stats.spd=(stats.spd||0)+2;if(['Regeneracja','Dar Ziemi'].includes(material.effect))stats.hp=(stats.hp||0)+Math.max(3,Math.floor(baseHp*.12));}
-  const runeSlots=rollRuneSlots(blacksmithStars);
-  return { id, name, type, weaponType: type==='broń' ? suffix : null, rarityIndex, rarityName: rarity.name, color: rarity.color, stats, special, equippedBy: null, element, level, material:material?{key:forcedMaterialKey,name:material.name,tier:material.tier,effect:material.effect}:null, runeSlots, runes:[] };
+  const ss=Math.max(1,Math.min(7,Number(blacksmithStars)||1));const p3={1:0,2:0,3:0,4:.05,5:.10,6:.15,7:.45}[ss],p2={1:0,2:0,3:.20,4:.40,5:.60,6:.60,7:.80}[ss],p1={1:0,2:.50,3:.50,4:.75,5:.75,6:1,7:1}[ss];let runeSlots=0;if(Math.random()<p3)runeSlots=3;else if(Math.random()<p2)runeSlots=2;else if(Math.random()<p1)runeSlots=1;
+  return { id, name, type, weaponType: type==='broń' ? suffix : null, craftedForClass: craftedForClass || null, rarityIndex, rarityName: rarity.name, color: rarity.color, stats, special, equippedBy: null, element, level, material:material?{key:forcedMaterialKey,name:material.name,tier:material.tier,effect:material.effect}:null, runeSlots, runes:[] };
 }
 
 function getItemStatsBonus(item) { return item ? item.stats||{} : {}; }
@@ -7258,7 +7230,7 @@ function startBattleCombat(phase='final') {
         if(!h._identityFirstHitUsed){ const fh=getHeroIdentityMods(h).firstHitDamage||1; if(fh!==1)skillCtx.baseAtk*=fh; h._identityFirstHitUsed=true; }
         if(useHeroActiveSkill(h,target,aliveParty,enemies,skillCtx)){deadCount=skillCtx.deadCount; const actionTarget=target||{name:skillCtx.supportActionTarget||'drużyna',hp:0,maxHp:0}; battleLastAction=battleActionText('✨', `${h.name} używa ${skillCtx.supportActionLabel||'umiejętności'}`, `${actionTarget.name}${actionTarget.maxHp?`: ${Math.max(0,Math.floor(actionTarget.hp))}/${Math.floor(actionTarget.maxHp)} HP`:''}`); updateBattleVisual(party,enemies,round,h.id,battleLastAction,phase); await battleVisualPause(900); if(target&&target.hp<=0){recordSoulKill(h);recordEnemyDefeat(target,floor);log(`💥 <b>${target.name}</b> pokonany przez umiejętność!`,'success');}continue;}
         const attackType=getAttackTypeFromHero(h);
-        const isMagic=(attackType==="magical"||(h.heroClass==="Mag"&&["fire","ice","lightning","dark","holy","earth","water","air"].includes(attackType)));
+        const isMagic=(attackType==="magical"||["fire","ice","lightning","dark","holy","earth","water","air"].includes(attackType));
         let defense=isMagic?target.mdef:target.def;
         if (!Number.isFinite(defense)) defense = 0;
         const defMod = target._statMods?.def || 0;
@@ -7972,7 +7944,7 @@ function renderWorkshop() {
   if(!hasSmith) html+=`<p style="color:var(--danger);font-weight:bold;">⚠️ Brak aktywnego kowala! Przypisz żywego bohatera jako kowala w zakładce Bohaterowie.</p>`;
   smiths.forEach(h=>{ if(h.isAlive&&h.stars>=2&&!h.blacksmithSpecializationChosen) html+=`<div style="background:#17120b;border:1px solid #8a5a18;border-radius:8px;padding:8px;margin:5px 0;"><b>🔨 ${battleEsc(h.name)} — wybierz specjalizację</b><div style="display:flex;gap:5px;margin-top:6px;"><button class="btn-small btn-role" data-tower-action="chooseBlacksmithSpecialization" data-id="${Number(h.id)||0}" data-value="Rzemieślnik">🛠️ Rzemieślnik</button><button class="btn-small btn-role" data-tower-action="chooseBlacksmithSpecialization" data-id="${Number(h.id)||0}" data-value="Kowal runiczny">🔮 Kowal runiczny</button></div></div>`; });
   const runeSmith=smiths.find(h=>h.isAlive&&h.blacksmithSpecialization==='Kowal runiczny');
-  if(runeSmith){ html+=`<hr><h4>🔮 Kuźnia Run</h4><p style="font-size:.8em;color:#aaa;">Każda runa wymaga 2× materiału podstawowego + 1× materiału elitarnego z odpowiadającej rasy oraz 5 Stali i 10 Złota. Liczba gniazd w nowym przedmiocie zależy od gwiazdek Kowala runicznego; szanse są sprawdzane kolejno: 3, potem 2, potem 1 gniazdo.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:5px;">${Object.entries(RUNE_DEFINITIONS).map(([k,r])=>{const fam=RUNE_MATERIAL_MAP[k],bk=getMaterialKeyFamily(fam,'basic'),ek=getMaterialKeyFamily(fam,'elite');return `<div style="background:#0b0c10;border:1px solid #333;border-radius:7px;padding:7px;font-size:.8em;"><b>🔮 ${r.name}</b> ×${state.runes?.[k]||0}<br><span style="color:#999;">${r.desc}</span><br><button class="btn-small" data-tower-action="forgeRune" data-key="${k}" data-id="${runeSmith.id}">Wykuj</button></div>`}).join('')}</div>`; }
+  if(runeSmith){ html+=`<hr><h4>🔮 Kuźnia Run</h4><p style="font-size:.8em;color:#aaa;">Każda runa wymaga 2× materiału podstawowego + 1× materiału elitarnego z odpowiadającej rasy oraz 5 Stali i 10 Złota.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:5px;">${Object.entries(RUNE_DEFINITIONS).map(([k,r])=>{const fam=RUNE_MATERIAL_MAP[k],bk=getMaterialKeyFamily(fam,'basic'),ek=getMaterialKeyFamily(fam,'elite');return `<div style="background:#0b0c10;border:1px solid #333;border-radius:7px;padding:7px;font-size:.8em;"><b>🔮 ${r.name}</b> ×${state.runes?.[k]||0}<br><span style="color:#999;">${r.desc}</span><br><button class="btn-small" data-tower-action="forgeRune" data-key="${k}" data-id="${runeSmith.id}">Wykuj</button></div>`}).join('')}</div>`; }
   const ownedMaterials=Object.entries(CRAFT_MATERIALS).filter(([k,m])=>(state.materials?.[k]||0)>0);
   html+=`<h4 style="margin:6px 0;">🧩 Materiały z bestiariusza</h4>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:5px;margin-bottom:10px;">${ownedMaterials.length?ownedMaterials.map(([k,m])=>`<div style="background:#0b0c10;border:1px solid #333;border-radius:7px;padding:6px;font-size:.8em;"><b>🧩 ${m.name}</b> ×${state.materials[k]}<br><span style="color:#999;">${m.race} • ${m.tier==='boss'?'BOSS':m.tier==='elite'?'ELITA':'PODSTAWOWY'} • ${m.effect}</span></div>`).join(''):'<span style="color:#888;">Brak materiałów. Zdobywaj je podczas wspinaczki.</span>'}</div>
@@ -7998,7 +7970,7 @@ function renderWorkshop() {
       <label>Materiał z bestiariusza (opcjonalny):</label><select id="craft-material"><option value="">Bez materiału</option>${Object.entries(CRAFT_MATERIALS).filter(([k,m])=>(state.materials?.[k]||0)>0).map(([k,m])=>`<option value="${k}">${m.name} ×${state.materials[k]} — ${m.race} (${m.tier})</option>`).join('')}</select>
       <button class="btn-role" data-tower-action="craftItemFromSelect" ${hasSmith?'':'disabled'}>⚒️ Wytwórz (z surowców)</button>
     </div>
-    <div style="font-size:.8em;color:#aaa;margin-top:4px;">Koszt: 10 Drewna + 15 Stali + 5 Złota</div>`;
+    <div style="font-size:.8em;color:#aaa;margin-top:4px;">Koszt zależy od kategorii i rodzaju sprzętu; receptura jest sprawdzana przed wykonaniem.</div>`;
   container.innerHTML=html;
 }
 function trainBlacksmith(id) {
@@ -8012,23 +7984,73 @@ function trainBlacksmith(id) {
   updateUI();
 }
 
+function getCraftResourceCost(itemType, itemSuffix, classForCraft) {
+  // Koszt zależy od faktycznego rodzaju sprzętu, a nie od jednej stałej receptury.
+  const cost = { wood: 10, steel: 15, gold: 5, stone: 0, leather: 0, gems: 0 };
+  const suffix = String(itemSuffix || '').toLowerCase();
+  const type = String(itemType || '').toLowerCase();
+  const lightArmorClasses = ['Łotrzyk', 'Łucznik', 'Mag'];
+  const isLightArmorClass = lightArmorClasses.includes(classForCraft);
+
+  if (type === 'zbroja') {
+    if (isLightArmorClass) {
+      cost.wood = 4; cost.steel = 12; cost.leather = 16;
+    } else {
+      cost.wood = 5; cost.steel = 24; cost.leather = 5;
+    }
+    if (['szata', 'płaszcz'].some(n => suffix.includes(n))) {
+      cost.wood = 3; cost.steel = 8; cost.leather = isLightArmorClass ? 20 : 12;
+    }
+    if (['hełm', 'napierśnik', 'kolczuga', 'zbroja'].some(n => suffix.includes(n))) {
+      cost.steel = Math.max(cost.steel, 25);
+      cost.leather = Math.max(cost.leather, isLightArmorClass ? 12 : 5);
+    }
+  } else if (type === 'tarcza' || suffix.includes('tarcza')) {
+    cost.wood = 8; cost.steel = 28; cost.leather = 4;
+  } else if (type === 'broń') {
+    if (suffix.includes('łuk') || suffix.includes('kusza')) {
+      cost.wood = 26; cost.steel = 9; cost.leather = 5;
+    } else if (suffix.includes('sztylet') || suffix.includes('miecz') || suffix.includes('szpada') || suffix.includes('rapier') || suffix.includes('topór') || suffix.includes('siekiera') || suffix.includes('halabarda') || suffix.includes('lanca') || suffix.includes('młot')) {
+      cost.wood = 5; cost.steel = 26; cost.leather = suffix.includes('sztylet') ? 7 : 4;
+    } else if (suffix.includes('kostur') || suffix.includes('kij')) {
+      cost.wood = 20; cost.steel = 7; cost.leather = 3;
+    } else if (suffix.includes('księga')) {
+      cost.wood = 8; cost.steel = 4; cost.leather = 12;
+    } else {
+      cost.wood = 12; cost.steel = 20; cost.leather = 4;
+    }
+  } else if (type === 'dodatek') {
+    if (suffix.includes('buty')) {
+      cost.wood = 2; cost.steel = 5; cost.leather = 16;
+    } else if (suffix.includes('strzały')) {
+      cost.wood = 18; cost.steel = 4; cost.leather = 2;
+    } else if (suffix.includes('pierścień') || suffix.includes('amulet') || suffix.includes('talizman') || suffix.includes('pasma')) {
+      cost.wood = 2; cost.steel = 9; cost.leather = 8;
+    } else {
+      cost.wood = 6; cost.steel = 12; cost.leather = 6;
+    }
+  }
+  return cost;
+}
+
 function craftItemFromSelect() {
   if(!state)return;
   const smith=getBlacksmithSpecialist(); if(!smith){log('❌ Brak aktywnego kowala!','warn');return;}
   const typeSelect=document.getElementById('craft-type'),classSelect=document.getElementById('craft-class'); if(!typeSelect||!classSelect)return;
-  const cost={wood:10,steel:15,gold:5,stone:0,leather:0,gems:0};
+  let cost={wood:10,steel:15,gold:5,stone:0,leather:0,gems:0};
   const freeCount=state.inventory.filter(i=>i.equippedBy===null).length; if(freeCount>=getMaxInventory()){log('❌ Brak miejsca w magazynie.','warn');return;}
   let forcedType=typeSelect.value; if(forcedType==='losowe')forcedType=null;
   const classForCraft=classSelect.value; let craftType=forcedType,forcedSuffix=null;
   if(classForCraft!=='losowa'){const pools=CLASS_ITEM_POOLS[classForCraft];const valid=(craftType?[craftType]:Object.keys(pools)).filter(t=>pools[t]?.length);if(!valid.length){log('❌ Ta klasa nie ma receptury dla wybranego typu.','warn');return;}if(!craftType)craftType=valid[Math.floor(Math.random()*valid.length)];const pool=pools[craftType];forcedSuffix=pool[Math.floor(Math.random()*pool.length)];}
+  cost=getCraftResourceCost(craftType,forcedSuffix,classForCraft);
   const materialKey=document.getElementById('craft-material')?.value||null,mat=materialKey?CRAFT_MATERIALS[materialKey]:null;
   if(materialKey&&(!mat||!materialCompatible(mat,craftType))){log(`❌ Materiał <b>${mat?.name||'nieznany'}</b> nie pasuje do typu <b>${craftType}</b>.`,'warn');return;}
   if(materialKey&&(state.materials?.[materialKey]||0)<1){log('❌ Brak wybranego materiału.','warn');return;}
-  if(!canAffordRecipe(cost)){log('❌ Za mało surowców! Potrzeba: 10 Drewna, 15 Stali, 5 Złota.','warn');return;}
+  if(!canAffordRecipe(cost)){log(`❌ Za mało surowców! Receptura wymaga: ${cost.wood} Drewna, ${cost.steel} Stali, ${cost.leather} Skóry i ${cost.gold} Złota.`, 'warn');return;}
   let rarityIdx=getCraftRarityIndex(state.selectedFloor||1,smith);
   const quality=getCraftQualityBonus(smith); if(quality&&Math.random()<quality&&rarityIdx<4)rarityIdx++;
   payRecipeCost(cost); if(materialKey)state.materials[materialKey]--;
-  const item=generateItem(rarityIdx,craftType,null,getMaxLevelForFloor(state.selectedFloor||1),forcedSuffix,materialKey,smith.stars); if(item.name&&/^Tarcza(?:$|\s)/i.test(item.name)) item.type='tarcza'; const craftsmanEffect=rollCraftsmanEffect(item.type,smith); if(craftsmanEffect)item.special=craftsmanEffect; state.inventory.push(item);
+  const item=generateItem(rarityIdx,craftType,null,getMaxLevelForFloor(state.selectedFloor||1),forcedSuffix,materialKey,smith.stars,classForCraft==='losowa'?null:classForCraft); if(item.name&&/^Tarcza(?:$|\s)/i.test(item.name)) item.type='tarcza'; const craftsmanEffect=rollCraftsmanEffect(item.type,smith); if(craftsmanEffect)item.special=craftsmanEffect; state.inventory.push(item);
   const elem=item.element?` (${getElementName(item.element)})`:''; const matMsg=item.material?` + 🧩 ${item.material.name}`:''; const slotMsg=item.runeSlots?` • 🔮 ${item.runeSlots} gniazd`:'';
   log(`<b>${item.rarityName} ${item.name}</b>${elem}${matMsg}${slotMsg}${item.special?` • ✨ ${item.special}`:''} wykuty!`,'success');
   if(smith.blacksmithSpecialization==='Rzemieślnik'){log(`🛠️ Rzemieślnik: jakość wykonania +${Math.round(quality*100)}% szansy na dodatkową premię.` ,'success');}
@@ -8837,7 +8859,7 @@ function renderInventory() {
       <div class="inventory-stats">${formatItemStats(item)||'<span class="inventory-stat">Brak statystyk</span>'}</div>
       ${item.special?`<div class="inventory-special">✨ ${battleEsc(item.special)}</div>`:''}
       <div class="inventory-actions">
-        ${item.runeSlots?`<div style="margin-top:5px;font-size:.78em;">🔮 ${item.runes?.filter(Boolean).length||0}/${item.runeSlots} gniazd: ${Array.from({length:item.runeSlots},(_,si)=>{const rr=item.runes?.[si];return rr?`<span title="Szansa aktywacji: ${Math.round(getRuneDisplayedChance(rr.type,item.type==='broń'?'attack':'defense')*100)}%${typeof window.getRuneMasteryActivationBonus==='function'&&window.getRuneMasteryActivationBonus()>0?' (z premią Mistrza Run)':''}" style="padding:2px 4px;border:1px solid #555;border-radius:4px;white-space:nowrap;">${battleEsc(RUNE_DEFINITIONS[rr.type]?.name||rr.type)} <small style="color:#9ed9ff;">${Math.round(getRuneDisplayedChance(rr.type,item.type==='broń'?'attack':'defense')*100)}%</small></span>`:`<select onchange="if(this.value)socketRune(${Number(item.id)||0},this.value,${si})"><option value="">Puste gniazdo</option>${Object.entries(RUNE_DEFINITIONS).filter(([rk,rv])=>runeCompatible(rv,item.type)&&(state.runes?.[rk]||0)>0).map(([rk,rv])=>`<option value="${rk}">${rv.name} ×${state.runes[rk]}</option>`).join('')}</select>`}).join(' ')}</div>`:''}<select class="inventory-owner-select"><option value="">📦 Zostaw w magazynie</option>${state.heroes.filter(h=>h.isAlive&&!h.isTrainer&&!h.isBlacksmith).map(h=>`<option value="${h.id}">${battleEsc(h.name)} (${h.stars}★, ${battleEsc(h.heroClass||'brak klasy')})</option>`).join('')}</select>
+        ${item.runeSlots?`<div style="margin-top:5px;font-size:.78em;">🔮 ${item.runes?.filter(Boolean).length||0}/${item.runeSlots} gniazd: ${Array.from({length:item.runeSlots},(_,si)=>{const rr=item.runes?.[si];return rr?`<span style="padding:2px 4px;border:1px solid #555;border-radius:4px;">${battleEsc(RUNE_DEFINITIONS[rr.type]?.name||rr.type)}</span>`:`<select onchange="if(this.value)socketRune(${Number(item.id)||0},this.value,${si})"><option value="">Puste gniazdo</option>${Object.entries(RUNE_DEFINITIONS).filter(([rk,rv])=>runeCompatible(rv,item.type)&&(state.runes?.[rk]||0)>0).map(([rk,rv])=>`<option value="${rk}">${rv.name} ×${state.runes[rk]}</option>`).join('')}</select>`}).join(' ')}</div>`:''}<select class="inventory-owner-select"><option value="">📦 Zostaw w magazynie</option>${state.heroes.filter(h=>h.isAlive&&!h.isTrainer&&!h.isBlacksmith).map(h=>`<option value="${h.id}">${battleEsc(h.name)} (${h.stars}★, ${battleEsc(h.heroClass||'brak klasy')})</option>`).join('')}</select>
 ${['zbroja','dodatek'].includes(item.type)?`<button class="btn-small" data-tower-action="compareArmorAccessoryFromInventory" data-id="${Number(item.id)||0}">⚖️ Porównaj</button>`:''}${item.type==='broń'?`<button class="btn-small" data-tower-action="compareWeaponFromInventory" data-id="${Number(item.id)||0}">⚖️ Porównaj</button>`:''}${smithActive?`<button class="btn-small btn-danger inventory-salvage">♻️ ${item.type==='broń'?'Rozłóż broń':'Odzyskaj'} ${formatSalvageText(scaled)}</button>`:''}
       </div>`;
     const select=card.querySelector('.inventory-owner-select');
@@ -9682,7 +9704,7 @@ function updateUI() {
     if(!item||!smith||smith.stars<4)return item;
     ensureBHero(smith);
     const s=item.stats||{};
-    const cls=smith.heroClass;
+    const cls=item.craftedForClass||smith.heroClass;
     const rank=getHeroSkillRanks(smith);
     const mems=Array.isArray(smith.explorationMemories)?smith.explorationMemories:[];
     const equippedItems=(smith.equipped&&typeof smith.equipped==='object'?Object.values(smith.equipped):[])
@@ -9695,16 +9717,16 @@ function updateUI() {
     const equipmentTotal=Object.values(equipmentFocus).reduce((a,b)=>a+b,0);
     let equipmentKey=Object.entries(equipmentFocus).sort((a,b)=>b[1]-a[1])[0]?.[0]||null;
     let key=cls==='Wojownik'?'str':cls==='Łotrzyk'?'dex':cls==='Mag'?'int':cls==='Obrońca'?'def':'dex';
-    if(smith.role==='Support'&&cls==='Mag')key='mdef';
-    if(smith.subclass&&/Berserker|Barbarzyńca|Gladiator|Szermierz/.test(smith.subclass))key='str';
-    if(smith.subclass&&/Zabójca|Hultaj|Tropiciel/.test(smith.subclass))key='dex';
-    if(smith.subclass&&/Mag|Elemental|Arkan|Nekrom|Geom|Hydro|Aero/.test(smith.subclass))key='int';
-    if(smith.subclass&&/Bastion|Mur|Strażnik|Obrońca|Tarcz/.test(smith.subclass))key='def';
-    if(mems.some(m=>m.tags?.includes('combat'))&&cls==='Wojownik')key='str';
-    if(mems.some(m=>m.tags?.includes('path'))&&(cls==='Łotrzyk'||cls==='Łucznik'))key='dex';
+    if(!item.craftedForClass&&smith.role==='Support'&&cls==='Mag')key='mdef';
+    if(!item.craftedForClass&&smith.subclass&&/Berserker|Barbarzyńca|Gladiator|Szermierz/.test(smith.subclass))key='str';
+    if(!item.craftedForClass&&smith.subclass&&/Zabójca|Hultaj|Tropiciel/.test(smith.subclass))key='dex';
+    if(!item.craftedForClass&&smith.subclass&&/Mag|Elemental|Arkan|Nekrom|Geom|Hydro|Aero/.test(smith.subclass))key='int';
+    if(!item.craftedForClass&&smith.subclass&&/Bastion|Mur|Strażnik|Obrońca|Tarcz/.test(smith.subclass))key='def';
+    if(!item.craftedForClass&&mems.some(m=>m.tags?.includes('combat'))&&cls==='Wojownik')key='str';
+    if(!item.craftedForClass&&mems.some(m=>m.tags?.includes('path'))&&(cls==='Łotrzyk'||cls==='Łucznik'))key='dex';
     // Wyposażenie ma realny wpływ: jeżeli bohater ma wyposażony zestaw,
     // dominujący stat wyposażenia może przejąć profil personalizacji.
-    if(equipmentTotal>0&&equipmentFocus[equipmentKey]>=Math.max(3, equipmentTotal*.45))key=equipmentKey;
+    if(!item.craftedForClass&&equipmentTotal>0&&equipmentFocus[equipmentKey]>=Math.max(3, equipmentTotal*.45))key=equipmentKey;
     const rarityBonus={common:0,uncommon:.005,rare:.01,epic:.015,legendary:.02}[smith.talent?.rarity]||0;
     const starBonus=Math.min(.02,Math.max(0,smith.stars-4)*.005);
     const skillBonus=Math.min(.015,rank.active*.005);
@@ -9716,7 +9738,7 @@ function updateUI() {
     else if(key==='def')s.def=(s.def||0)+Math.max(1,Math.floor((s.def||1)*mult));
     else if(key==='mdef')s.mdef=(s.mdef||0)+Math.max(1,Math.floor((s.mdef||1)*mult));
     if(cls==='Łucznik'||cls==='Łotrzyk')s.crit=Math.min(.18,(s.crit||0)+.01+Math.min(.02,rank.passive1*.005));
-    item.personalized={forHeroId:smith.id,heroClass:cls,subclass:smith.subclass||null,talent:smith.talent?.name||null,memoryCount:mems.length,skillRanks:rank,role:smith.role||null,stars:smith.stars,statFocus:key,equipmentFocus, equipmentTotal, equipmentBonus};
+    item.personalized={forHeroId:smith.id,heroClass:cls,craftedForClass:item.craftedForClass||null,subclass:smith.subclass||null,talent:smith.talent?.name||null,memoryCount:mems.length,skillRanks:rank,role:smith.role||null,stars:smith.stars,statFocus:key,equipmentFocus, equipmentTotal, equipmentBonus};
     item.name=`${item.name} • ${smith.name}`;
     return item;
   }
