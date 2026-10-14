@@ -1,9 +1,34 @@
-/* Wieża PWA service worker — release 0.138.
+/* Wieża PWA service worker — release 0.138.2.
  * BUILD_ID musi odpowiadać PWA_BUILD/GAME_VERSION w index.html.
  */
-const BUILD_ID = '0.138';
+const BUILD_ID = '0.138.2';
 const CACHE_NAME = 'wieza-pwa-' + BUILD_ID;
-const CORE_ASSETS = ['./index.html', './manifest.webmanifest', './opening_1080p.mp4'];
+const CORE_ASSETS = ['./index.html', './manifest.webmanifest', './opening_1080p.mp4',
+  './hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_1star.png',
+  './hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_2star.png',
+  './hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_3star.png',
+  './hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_4star.png',
+  './hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_5star.png',
+  './hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_6star.png',
+  './hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_7star_al_kahf.png',
+  './hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_7star_al_kahhar.png',
+  './hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_7star_shams.png',
+  './hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_1star.png',
+  './hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_2star.png',
+  './hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_3star.png',
+  './hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_4star.png',
+  './hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_5star.png',
+  './hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_6star.png',
+  './hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_durga.png',
+  './hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_lakshmi.png',
+  './hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_saraswati.png',
+  './enemy-portraits/draugry_zardzewialy_pancerz.png',
+  './enemy-portraits/draugry_kosciany_lucznik.png',
+  './enemy-portraits/draugry_nekromanta_kurhanu.png',
+  './enemy-portraits/draugry_zmrozony_topornik.png',
+  './enemy-portraits/draugry_glamr.png',
+  './enemy-portraits/draugry_haugbui.png',
+  './enemy-portraits/draugry_krol_draugrow.png'];
 
 async function cacheIndividually(cache, urls) {
   for (const url of urls) {
