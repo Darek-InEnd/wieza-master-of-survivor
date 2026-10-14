@@ -1,5 +1,5 @@
-/* Wieża PWA service worker — release 0.136.2. */
-const BUILD_ID = '0.136.2';
+/* Wieża PWA service worker — release 0.136.3. */
+const BUILD_ID = '0.136.3';
 const CACHE_NAME = 'wieza-pwa-' + BUILD_ID;
 const CORE_ASSETS = ['./index.html','./manifest.webmanifest','./opening_1080p.mp4'];
 async function cacheIndividually(cache, urls) { for (const url of urls) { try { await cache.add(url); } catch (error) { console.warn('[Wieża SW] Pominięto plik podczas instalacji:', url, error); } } }
