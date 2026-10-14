@@ -492,6 +492,11 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 .biome-boss-floor button,.biome-boss-floor select,.biome-boss-floor .tab-btn{border-color:var(--biome-boss-accent,var(--biome-accent));}
 @keyframes biomeBossPulse{0%,100%{box-shadow:0 0 0 rgba(255,255,255,0)}50%{box-shadow:0 0 14px var(--biome-glow,rgba(255,255,255,.08));}}
 .biome-boss-floor #game-container{animation:biomeBossPulse 3.2s ease-in-out infinite;}
+
+/* v0.136.7: widoczny poziom rzadkości i licznik duplikatów wspomnień */
+.memory-rarity-progress{box-sizing:border-box;line-height:1.35;overflow-wrap:anywhere}
+.hero-v2-memory .memory-rarity-progress b{font-size:.86em}
+
 </style>
 <style>
 /* ETAP 3A — Wyprawa 2.0 */
@@ -595,7 +600,7 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 <script>
 /* Prosty mechanizm aktualizacji PWA: sprawdzenie SW przy starcie + automatyczne przeładowanie po przejęciu aplikacji przez nowy SW. */
 if ('serviceWorker' in navigator) {
-  const PWA_BUILD = '0.136.6';
+  const PWA_BUILD = '0.136.7';
   let registration = null;
   let reloadDone = false;
   const hadController = !!navigator.serviceWorker.controller;
@@ -1118,7 +1123,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.136.6';
+const GAME_VERSION = '0.136.7';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -1212,6 +1217,22 @@ const TALENTS = [
   {id:'predestined',name:'Ostatnia Przewaga',rarity:'legendary',affinity:{dex:4,str:3},effect:{bossDamage:1.18,dodge:-.04},text:'+18% obrażeń przeciw bossom. Cena: -4% uniku.',legendary:true}
 ];
 const MEMORY_RARITIES={memory:{name:'Wspomnienie',color:'#7ec8c8'},trauma:{name:'Trauma',color:'#d96b6b'},insight:{name:'Przełom',color:'#c7a55b'}};
+// Rzadkość jest osobną osią od typu: Wspomnienie / Trauma / Przełom.
+const MEMORY_TIER_DEFS=[
+ {tier:1,id:'common',name:'Zwykłe',color:'#b8bec7',chance:.50,duplicatesToNext:1},
+ {tier:2,id:'uncommon',name:'Niezwykłe',color:'#65c9a5',chance:.27,duplicatesToNext:2},
+ {tier:3,id:'rare',name:'Rzadkie',color:'#65a8ff',chance:.15,duplicatesToNext:3},
+ {tier:4,id:'epic',name:'Epickie',color:'#bd83ff',chance:.06,duplicatesToNext:4},
+ {tier:5,id:'legendary',name:'Legendarne',color:'#ffc857',chance:.02,duplicatesToNext:0}
+];
+const MEMORY_DUPLICATE_ROLL_CHANCE=.05;
+function getMemoryTier(m){const n=Math.max(1,Math.min(5,Number(m?.tier)||({common:1,uncommon:2,rare:3,epic:4,legendary:5}[m?.rarity]||1)));return MEMORY_TIER_DEFS[n-1];}
+function memoryRarityRoll(){const r=Math.random();let sum=0;for(const t of MEMORY_TIER_DEFS){sum+=t.chance;if(r<sum)return t.tier;}return 1;}
+function normalizeExplorationMemory(m){if(!m||!m.id)return m;const tier=getMemoryTier(m).tier;return {...m,tier,rarity:MEMORY_TIER_DEFS[tier-1].id,duplicateProgress:Math.max(0,Math.floor(Number(m.duplicateProgress)||0)),perks:Array.isArray(m.perks)?m.perks:[],selectedPerks:m.selectedPerks&&typeof m.selectedPerks==='object'?m.selectedPerks:{}};}
+function getMemoryProgressText(m){const t=getMemoryTier(m);if(t.tier>=5)return 'Maksymalna rzadkość';return `Duplikaty: ${Math.min(t.duplicatesToNext,Number(m?.duplicateProgress)||0)}/${t.duplicatesToNext} do poziomu ${t.tier+1} (${MEMORY_TIER_DEFS[t.tier].name})`;}
+function getMemoryRarityHtml(m){const t=getMemoryTier(m);return `<div class="memory-rarity-progress" style="margin:5px 0;padding:6px 8px;border:1px solid ${t.color}66;border-radius:7px;background:#10151c"><b style="color:${t.color}">◆ ${t.name} · poziom ${t.tier}/5</b><div style="font-size:.82em;color:#c5c6c7;margin-top:3px">${getMemoryProgressText(m)}</div></div>`;}
+function advanceMemoryDuplicate(h,m){if(!m)return {kind:'none'};m=normalizeExplorationMemory(m);if(m.tier>=5)return {kind:'maxed',memory:m};m.duplicateProgress=(Number(m.duplicateProgress)||0)+1;const required=MEMORY_TIER_DEFS[m.tier-1].duplicatesToNext;if(m.duplicateProgress<required)return {kind:'duplicate',memory:m,progress:m.duplicateProgress,required};m.duplicateProgress-=required;m.tier++;m.rarity=MEMORY_TIER_DEFS[m.tier-1].id;m.perks=Array.isArray(m.perks)?m.perks:[];const perk={tier:m.tier,id:`memory_perk_${m.id}_${m.tier}`,name:m.tier===2?'Utrwalona nauka':m.tier===3?'Mistrzostwo doświadczenia':m.tier===4?'Pamięć epicka':'Cena legendy',text:m.tier===5?'Silniejszy efekt, ale koszt pozostaje aktywny.':'Dodatkowy atut wynikający z utrwalonego doświadczenia.',effect:{}};if(!m.perks.some(p=>p.tier===m.tier))m.perks.push(perk);return {kind:'upgrade',memory:m,perk};}
+
 
 // ŚCIEŻKI DOŚWIADCZENIA — bohater nie wybiera ich ręcznie.
 // Profil powstaje z trwałych wspomnień i wpływa na kolejne etapy ewolucji.
@@ -1439,17 +1460,33 @@ function memoryCandidateWeight(m,h,e,action){
 function tryGainExplorationMemory(h,e,action){
   if(!h||!h.isAlive)return null;
   if(!Array.isArray(h.explorationMemories))h.explorationMemories=[];
-  if(h.explorationMemories.length>=3)return null;
-  const slot=h.explorationMemories.length;
+  h.explorationMemories=h.explorationMemories.map(normalizeExplorationMemory);
+  e=e||{};
+  // Jedna nagroda pamięciowa na bohatera w ramach tej wyprawy, także gdy nagrodą jest awans.
+  if(!e.memoryAwardedHeroIds||typeof e.memoryAwardedHeroIds!=='object')e.memoryAwardedHeroIds={};
+  const heroKey=String(h.id??h.name??'unknown');
+  if(e.memoryAwardedHeroIds[heroKey])return null;
+  const slot=Math.min(h.explorationMemories.length,2);
   const chance=MEMORY_CHANCE_BY_SLOT[slot]||0;
   if(Math.random()>=chance)return null;
+  const eligibleDuplicates=h.explorationMemories.filter(m=>getMemoryTier(m).tier<5);
+  // Duplikat ma 5% szansy tylko wtedy, gdy istnieje wspomnienie możliwe do rozwinięcia.
+  if(eligibleDuplicates.length&&Math.random()<MEMORY_DUPLICATE_ROLL_CHANCE){
+    const target=weightedPick(eligibleDuplicates,m=>memoryCandidateWeight(MEMORIES.find(d=>d.id===m.id)||m,h,e,action));
+    if(!target)return null;
+    const result=advanceMemoryDuplicate(h,target);
+    const targetIndex=h.explorationMemories.findIndex(m=>m.id===target.id);if(targetIndex>=0)h.explorationMemories[targetIndex]=result.memory||target;
+    e.memoryAwardedHeroIds[heroKey]=true;
+    return {...result,kind:result.kind==='upgrade'?'upgrade':'duplicate',name:target.name,type:target.type,memory:target};
+  }
+  if(h.explorationMemories.length>=3)return null;
   const used=new Set(h.explorationMemories.map(m=>m.id));
   const pool=MEMORIES.filter(m=>!used.has(m.id));
   const picked=weightedPick(pool,m=>memoryCandidateWeight(m,h,e,action));
   if(!picked)return null;
-  const memory={id:picked.id,name:picked.name,type:picked.type,tags:[...(picked.tags||[])],effect:{...(picked.effect||{})},text:picked.text,source:{floor:e?.floor||1,event:e?.event?.id||null,stop:e?.stop?.id||null,action:action||null}};
-  h.explorationMemories.push(memory);
-  return memory;
+  const tier=memoryRarityRoll();
+  const memory=normalizeExplorationMemory({id:picked.id,name:picked.name,type:picked.type,tags:[...(picked.tags||[])],effect:{...(picked.effect||{})},text:picked.text,tier,rarity:MEMORY_TIER_DEFS[tier-1].id,duplicateProgress:0,perks:[],selectedPerks:{},source:{floor:e?.floor||1,event:e?.event?.id||null,stop:e?.stop?.id||null,action:action||null}});
+  h.explorationMemories.push(memory);e.memoryAwardedHeroIds[heroKey]=true;return {...memory,kind:'new',memory};
 }
 function memoryChanceText(h){const n=Array.isArray(h?.explorationMemories)?h.explorationMemories.length:0;return n>=3?'Pełna kronika (3/3)':`Szansa na kolejne: ${Math.round((MEMORY_CHANCE_BY_SLOT[n]||0)*100)}%`;}
 function getMemoryEffectText(m){
@@ -3978,7 +4015,7 @@ function normalizeHero(h, inventory) {
   if (!h.statuses) h.statuses = [];
   h.explorationExp=Math.max(0,Number(h.explorationExp)||0);
   if(!Array.isArray(h.explorationMemories)) h.explorationMemories=[];
-  h.explorationMemories=h.explorationMemories.filter(m=>m&&m.id&&m.name&&MEMORIES.some(def=>def.id===m.id)).slice(0,3).map(m=>({...m,effect:{...(m.effect||{})},tags:Array.isArray(m.tags)?m.tags:[]}));
+  h.explorationMemories=h.explorationMemories.filter(m=>m&&m.id&&m.name&&MEMORIES.some(def=>def.id===m.id)).slice(0,3).map(m=>normalizeExplorationMemory({...m,effect:{...(m.effect||{})},tags:Array.isArray(m.tags)?m.tags:[]}));
   if(!h.talent){ h.talent=rollTalentForHero(h); h._talentMigrated=true; }
   if(h.talent && !TALENT_RARITIES[h.talent.rarity]) h.talent.rarity='common';
   if(h.talent) normalizeTalentEffect(h.talent);
@@ -6688,7 +6725,7 @@ function applyExplorationOutcome(outcome,party){
  if(outcome.battleDef){e.explorationEffects.def=Math.min(.25,(e.explorationEffects.def||0)+outcome.battleDef);parts.push(`🛡️ +${Math.round(outcome.battleDef*100)}% obrony w następnej walce`);}
  if(outcome.battleEnemyAtk){e.explorationEffects.enemyAtk=Math.max(-.25,Math.min(.25,(e.explorationEffects.enemyAtk||0)+outcome.battleEnemyAtk));const pct=Math.round(Math.abs(outcome.battleEnemyAtk)*100);parts.push(outcome.battleEnemyAtk>0?`⚠️ wrogowie +${pct}% obrażeń w następnej walce`:`🧭 wrogowie -${pct}% obrażeń w następnej walce`);}
  let memoryParts=[];
- party.filter(h=>h&&h.isAlive).forEach(h=>{ const gained=tryGainExplorationMemory(h,e,outcome.memoryAction||e.eventChoice||e.stopChoice||'event'); if(gained) memoryParts.push(`🧠 <b>${h.name}</b> zapamiętał: <span style="color:${MEMORY_RARITIES[gained.type]?.color||'#c7a55b'}">${gained.name}</span>${gained.type==='trauma'?' ⚠️':''}`); });
+ party.filter(h=>h&&h.isAlive).forEach(h=>{ const gained=tryGainExplorationMemory(h,e,outcome.memoryAction||e.eventChoice||e.stopChoice||'event'); if(gained){const mem=gained.memory||gained;const tier=getMemoryTier(mem);const detail=gained.kind==='upgrade'?` awansował do rzadkości <b>${tier.name}</b> (poziom ${tier.tier}/5)`:gained.kind==='duplicate'?` zebrał duplikat (${getMemoryProgressText(mem)})`:` zdobył rzadkość <b>${tier.name}</b> (poziom ${tier.tier}/5)`;memoryParts.push(`🧠 <b>${h.name}</b>: <span style="color:${tier.color}">${battleEsc(mem.name||gained.name)}</span>${detail}${mem.type==='trauma'?' ⚠️':''}`);} });
  if(memoryParts.length) parts.push(...memoryParts);
  const summary=parts.length?`<br><b>Efekt:</b> ${parts.join(' • ')}`:'';
  log((outcome.msg||'🧭 Drużyna kontynuuje wyprawę.')+(parts.length?` [${parts.join(' | ')}]`:''),'info');
@@ -9343,7 +9380,7 @@ function updateUI() {
         if(h.statuses?.length)h.statuses.forEach(st=>tags+=`<span class="hero-v2-tag">${battleEsc(st.name)}</span>`);
         const talentLabel=getTalentLabel(h);
         const talentHtml=h.talent?`<div class="hero-v2-talent" style="border-color:${talentLabel.color};"><span>${talentLabel.icon}</span> <b style="color:${talentLabel.color}">${battleEsc(talentLabel.name)}</b> · <strong>${battleEsc(h.talent.name)}</strong>${h.talent.legendary||talentLabel.name==='Legendarny'?` <span class="talent-legendary-badge">SUPER PERK + CENA</span>`:''}<div class="hero-v2-talent-text">${battleEsc(h.talent.text||'')}</div>${getTalentEffectText(h)?`<div class="hero-v2-memory-effect" style="margin-top:5px;"><b>⚡ Efekt:</b> ${getTalentEffectText(h)}</div>`:''}</div>`:'';
-        const memoryHtml=Array.isArray(h.explorationMemories)&&h.explorationMemories.length?`<div class="hero-v2-memories"><b>🧠 Wspomnienia ${h.explorationMemories.length}/3</b>${h.explorationMemories.map(m=>`<div class="hero-v2-memory ${m.type==='trauma'?'trauma':''}"><span>${m.type==='trauma'?'⚠️':m.type==='insight'?'✨':'📜'}</span><b>${battleEsc(m.name)}</b><small>${battleEsc(m.text||'')}</small>${getMemoryEffectText(m)}</div>`).join('')}</div>`:`<div class="hero-v2-memories empty"><b>🧠 Wspomnienia 0/3</b><small>Pierwsze wspomnienie może pojawić się podczas eksploracji.</small></div>`;
+        const memoryHtml=Array.isArray(h.explorationMemories)&&h.explorationMemories.length?`<div class="hero-v2-memories"><b>🧠 Wspomnienia ${h.explorationMemories.length}/3</b>${h.explorationMemories.map(m=>`<div class="hero-v2-memory ${m.type==='trauma'?'trauma':''}"><span>${m.type==='trauma'?'⚠️':m.type==='insight'?'✨':'📜'}</span><b>${battleEsc(m.name)}</b>${getMemoryRarityHtml(m)}<small>${battleEsc(m.text||'')}</small>${getMemoryEffectText(m)}</div>`).join('')}</div>`:`<div class="hero-v2-memories empty"><b>🧠 Wspomnienia 0/3</b><small>Pierwsze wspomnienie może pojawić się podczas eksploracji.</small></div>`;
         const experienceProfile=getExperienceProfile(h);
         let experienceHtml='';
         if(h.stars>=3&&experienceProfile.primary.score>0){
