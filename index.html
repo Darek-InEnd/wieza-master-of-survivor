@@ -595,7 +595,7 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 <script>
 /* Prosty mechanizm aktualizacji PWA: sprawdzenie SW przy starcie + automatyczne przeładowanie po przejęciu aplikacji przez nowy SW. */
 if ('serviceWorker' in navigator) {
-  const PWA_BUILD = '0.136.4';
+  const PWA_BUILD = '0.136.5';
   let registration = null;
   let reloadDone = false;
   const hadController = !!navigator.serviceWorker.controller;
@@ -1094,7 +1094,14 @@ const ENEMY_PORTRAITS = {
   'Jötunnie::Lodowy Zgniatacz': 'enemy-portraits/jotunn_lodowy_zgniatacz_tier4.png?v=0.135.9',
   'Jötunnie::Król Zmarzliny': 'enemy-portraits/jotunn_krol_zmarzliny_boss.png?v=0.135.9',
   'Jötunnie::Ymir': 'enemy-portraits/jotunn_ymir_boss.png?v=0.135.9',
-  'Jötunnie::Runiczny Jötunn': 'enemy-portraits/jotunn_runiczny_jotunn_boss.png?v=0.135.9'
+  'Jötunnie::Runiczny Jötunn': 'enemy-portraits/jotunn_runiczny_jotunn_boss.png?v=0.136.5',
+  'Spriggany::Dębowy Kolos': 'enemy-portraits/spriggany_debowy_kolos.png?v=0.136.5',
+  'Spriggany::Ciskacz Cierni': 'enemy-portraits/spriggany_ciskacz_cierni.png?v=0.136.5',
+  'Spriggany::Druid Wieży': 'enemy-portraits/spriggany_druid_wiezy.png?v=0.136.5',
+  'Spriggany::Ożywiony Konar': 'enemy-portraits/spriggany_ozywiony_konar.png?v=0.136.5',
+  'Spriggany::Greenman': 'enemy-portraits/spriggany_greenman.png?v=0.136.5',
+  'Spriggany::Dębowy Król': 'enemy-portraits/spriggany_debowy_krol.png?v=0.136.5',
+  'Spriggany::Cierniowy Władca': 'enemy-portraits/spriggany_cierniowy_wladca.png?v=0.136.5'
 };
 function getEnemyPortraitUrl(path){
   if(!path)return '';
@@ -1104,7 +1111,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.136.4';
+const GAME_VERSION = '0.136.5';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
