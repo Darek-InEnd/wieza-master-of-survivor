@@ -1,4 +1,4 @@
-/* Wieża PWA service worker — release 0.138.2.
+/* Wieża PWA service worker — release 0.138.
  * BUILD_ID musi odpowiadać PWA_BUILD/GAME_VERSION w index.html.
  */
 const BUILD_ID = '0.138.2';
