@@ -595,7 +595,7 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 <script>
 /* Prosty mechanizm aktualizacji PWA: sprawdzenie SW przy starcie + automatyczne przeładowanie po przejęciu aplikacji przez nowy SW. */
 if ('serviceWorker' in navigator) {
-  const PWA_BUILD = '0.136.5';
+  const PWA_BUILD = '0.136.6';
   let registration = null;
   let reloadDone = false;
   const hadController = !!navigator.serviceWorker.controller;
@@ -1101,7 +1101,14 @@ const ENEMY_PORTRAITS = {
   'Spriggany::Ożywiony Konar': 'enemy-portraits/spriggany_ozywiony_konar.png?v=0.136.5',
   'Spriggany::Greenman': 'enemy-portraits/spriggany_greenman.png?v=0.136.5',
   'Spriggany::Dębowy Król': 'enemy-portraits/spriggany_debowy_krol.png?v=0.136.5',
-  'Spriggany::Cierniowy Władca': 'enemy-portraits/spriggany_cierniowy_wladca.png?v=0.136.5'
+  'Spriggany::Cierniowy Władca': 'enemy-portraits/spriggany_cierniowy_wladca.png?v=0.136.5',
+  'Anunnaki::Gwiezdny Strażnik': 'enemy-portraits/anunnaki_gwiezdny_straznik.png?v=0.136.6',
+  'Anunnaki::Promienny Strzelec': 'enemy-portraits/anunnaki_promienny_strzelec.png?v=0.136.6',
+  'Anunnaki::Archanioł Kosmosu': 'enemy-portraits/anunnaki_archaniol_kosmosu.png?v=0.136.6',
+  'Anunnaki::Ostrze Niebios': 'enemy-portraits/anunnaki_ostrze_niebios.png?v=0.136.6',
+  'Anunnaki::Enlil': 'enemy-portraits/anunnaki_enlil.png?v=0.136.6',
+  'Anunnaki::Ninurta': 'enemy-portraits/anunnaki_ninurta.png?v=0.136.6',
+  'Anunnaki::Utu': 'enemy-portraits/anunnaki_utu.png?v=0.136.6'
 };
 function getEnemyPortraitUrl(path){
   if(!path)return '';
@@ -1111,7 +1118,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.136.5';
+const GAME_VERSION = '0.136.6';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
