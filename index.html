@@ -600,7 +600,7 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 <script>
 /* Prosty mechanizm aktualizacji PWA: sprawdzenie SW przy starcie + automatyczne przeładowanie po przejęciu aplikacji przez nowy SW. */
 if ('serviceWorker' in navigator) {
-  const PWA_BUILD = '0.138.11';
+  const PWA_BUILD = '0.138.12';
   let registration = null;
   let reloadDone = false;
   const hadController = !!navigator.serviceWorker.controller;
@@ -1092,21 +1092,21 @@ const BESTIARY = [
 ];
 // Portrety przeciwników — ujawniane dopiero po faktycznym spotkaniu w walce.
 const ENEMY_PORTRAITS = {
-  'Jötunnie::Mroźny Osłonik': 'enemy-portraits/jotunn_mrozny_oslonik_tier1.png?v=0.138.11',
-  'Jötunnie::Ciskacz Gromów': 'enemy-portraits/jotunn_ciskacz_gromow_tier2.png?v=0.138.11',
-  'Jötunnie::Rzucacz Głazów': 'enemy-portraits/jotunn_rzucacz_glazow_tier2.png?v=0.138.11',
-  'Jötunnie::Runotwórca Mrozu': 'enemy-portraits/jotunn_runotworca_mrozu_tier3.png?v=0.138.11',
-  'Jötunnie::Lodowy Zgniatacz': 'enemy-portraits/jotunn_lodowy_zgniatacz_tier4.png?v=0.138.11',
-  'Jötunnie::Król Zmarzliny': 'enemy-portraits/jotunn_krol_zmarzliny_boss.png?v=0.138.11',
-  'Jötunnie::Ymir': 'enemy-portraits/jotunn_ymir_boss.png?v=0.138.11',
-  'Jötunnie::Runiczny Jötunn': 'enemy-portraits/jotunn_runiczny_jotunn_boss.png?v=0.138.11',
-  'Spriggany::Dębowy Kolos': 'enemy-portraits/spriggany_debowy_kolos.png?v=0.138.11',
-  'Spriggany::Ciskacz Cierni': 'enemy-portraits/spriggany_ciskacz_cierni.png?v=0.138.11',
-  'Spriggany::Druid Wieży': 'enemy-portraits/spriggany_druid_wiezy.png?v=0.138.11',
-  'Spriggany::Ożywiony Konar': 'enemy-portraits/spriggany_ozywiony_konar.png?v=0.138.11',
-  'Spriggany::Greenman': 'enemy-portraits/spriggany_greenman.png?v=0.138.11',
-  'Spriggany::Dębowy Król': 'enemy-portraits/spriggany_debowy_krol.png?v=0.138.11',
-  'Spriggany::Cierniowy Władca': 'enemy-portraits/spriggany_cierniowy_wladca.png?v=0.138.11',
+  'Jötunnie::Mroźny Osłonik': 'enemy-portraits/jotunn_mrozny_oslonik_tier1.png?v=0.138.7',
+  'Jötunnie::Ciskacz Gromów': 'enemy-portraits/jotunn_ciskacz_gromow_tier2.png?v=0.138.7',
+  'Jötunnie::Rzucacz Głazów': 'enemy-portraits/jotunn_rzucacz_glazow_tier2.png?v=0.138.7',
+  'Jötunnie::Runotwórca Mrozu': 'enemy-portraits/jotunn_runotworca_mrozu_tier3.png?v=0.138.7',
+  'Jötunnie::Lodowy Zgniatacz': 'enemy-portraits/jotunn_lodowy_zgniatacz_tier4.png?v=0.138.7',
+  'Jötunnie::Król Zmarzliny': 'enemy-portraits/jotunn_krol_zmarzliny_boss.png?v=0.138.7',
+  'Jötunnie::Ymir': 'enemy-portraits/jotunn_ymir_boss.png?v=0.138.7',
+  'Jötunnie::Runiczny Jötunn': 'enemy-portraits/jotunn_runiczny_jotunn_boss.png?v=0.138.7',
+  'Spriggany::Dębowy Kolos': 'enemy-portraits/spriggany_debowy_kolos.png?v=0.138.7',
+  'Spriggany::Ciskacz Cierni': 'enemy-portraits/spriggany_ciskacz_cierni.png?v=0.138.7',
+  'Spriggany::Druid Wieży': 'enemy-portraits/spriggany_druid_wiezy.png?v=0.138.7',
+  'Spriggany::Ożywiony Konar': 'enemy-portraits/spriggany_ozywiony_konar.png?v=0.138.7',
+  'Spriggany::Greenman': 'enemy-portraits/spriggany_greenman.png?v=0.138.7',
+  'Spriggany::Dębowy Król': 'enemy-portraits/spriggany_debowy_krol.png?v=0.138.7',
+  'Spriggany::Cierniowy Władca': 'enemy-portraits/spriggany_cierniowy_wladca.png?v=0.138.7',
   'Anunnaki::Gwiezdny Strażnik': 'enemy-portraits/anunnaki_gwiezdny_straznik.png?v=0.136.6',
   'Anunnaki::Promienny Strzelec': 'enemy-portraits/anunnaki_promienny_strzelec.png?v=0.136.6',
   'Anunnaki::Archanioł Kosmosu': 'enemy-portraits/anunnaki_archaniol_kosmosu.png?v=0.136.6',
@@ -1115,27 +1115,27 @@ const ENEMY_PORTRAITS = {
   'Anunnaki::Ninurta': 'enemy-portraits/anunnaki_ninurta.png?v=0.136.6',
   'Anunnaki::Utu': 'enemy-portraits/anunnaki_utu.png?v=0.136.6',
   // Przywrócone portrety Draugrów, Centaurów i Nagów. Klucze zgodne z BESTIARY.
-  'Draugry::Zardzewiały Pancerz': 'enemy-portraits/draugi_zardzewialy_pancerz.png?v=0.138.11',
-  'Draugry::Koścany Łucznik': 'enemy-portraits/draugi_kosciany_lucznik.png?v=0.138.11',
-  'Draugry::Nekromanta Kurhanu': 'enemy-portraits/draugi_nekromanta_kurhanu.png?v=0.138.11',
-  'Draugry::Zmrożony Topornik': 'enemy-portraits/draugi_zamrozony_topornik.png?v=0.138.11',
-  'Draugry::Glamr': 'enemy-portraits/draugi_glamr.png?v=0.138.11',
-  'Draugry::Haugbui': 'enemy-portraits/draugi_haugbui.png?v=0.138.11',
-  'Draugry::Król Draugrów': 'enemy-portraits/draugi_krol_draugrow.png?v=0.138.11',
-  'Centaury::Opancerzony Stratywąż': 'enemy-portraits/centaurowie_opancerzony_stratywaz.png?v=0.138.11',
-  'Centaury::Komandor Łuków': 'enemy-portraits/centaurowie_komandor_lukow.png?v=0.138.11',
-  'Centaury::Szaman Kopyt': 'enemy-portraits/centaurowie_szaman_kopyt.png?v=0.138.11',
-  'Centaury::Stratujący Szarżownik': 'enemy-portraits/centaurowie_startujacy_szazownik.png?v=0.138.11',
-  'Centaury::Chiron': 'enemy-portraits/centaurowie_chiron.png?v=0.138.11',
-  'Centaury::Nessos': 'enemy-portraits/centaurowie_nessos.png?v=0.138.11',
-  'Centaury::Pholos': 'enemy-portraits/centaurowie_pholos.png?v=0.138.11',
-  'Nagowie::Królewski Wąż': 'enemy-portraits/naga_krolewski_waz.png?v=0.138.11',
-  'Nagowie::Zmyślny Łucznik': 'enemy-portraits/naga_zmyslny_lucznik.png?v=0.138.11',
-  'Nagowie::Kobra Magus': 'enemy-portraits/naga_kobra_magus.png?v=0.138.11',
-  'Nagowie::Wężowy Zbrojny': 'enemy-portraits/naga_wezowy_zbrojny.png?v=0.138.11',
-  'Nagowie::Shesha': 'enemy-portraits/naga_shesha.png?v=0.138.11',
-  'Nagowie::Takshaka': 'enemy-portraits/naga_takshaka.png?v=0.138.11',
-  'Nagowie::Vasuki': 'enemy-portraits/naga_vasuki.png?v=0.138.11',
+  'Draugry::Zardzewiały Pancerz': 'enemy-portraits/draugi_zardzewialy_pancerz.png?v=0.138.7',
+  'Draugry::Koścany Łucznik': 'enemy-portraits/draugi_kosciany_lucznik.png?v=0.138.7',
+  'Draugry::Nekromanta Kurhanu': 'enemy-portraits/draugi_nekromanta_kurhanu.png?v=0.138.7',
+  'Draugry::Zmrożony Topornik': 'enemy-portraits/draugi_zamrozony_topornik.png?v=0.138.7',
+  'Draugry::Glamr': 'enemy-portraits/draugi_glamr.png?v=0.138.7',
+  'Draugry::Haugbui': 'enemy-portraits/draugi_haugbui.png?v=0.138.7',
+  'Draugry::Król Draugrów': 'enemy-portraits/draugi_krol_draugrow.png?v=0.138.7',
+  'Centaury::Opancerzony Stratywąż': 'enemy-portraits/centaurowie_opancerzony_stratywaz.png?v=0.138.7',
+  'Centaury::Komandor Łuków': 'enemy-portraits/centaurowie_komandor_lukow.png?v=0.138.7',
+  'Centaury::Szaman Kopyt': 'enemy-portraits/centaurowie_szaman_kopyt.png?v=0.138.7',
+  'Centaury::Stratujący Szarżownik': 'enemy-portraits/centaurowie_startujacy_szazownik.png?v=0.138.7',
+  'Centaury::Chiron': 'enemy-portraits/centaurowie_chiron.png?v=0.138.7',
+  'Centaury::Nessos': 'enemy-portraits/centaurowie_nessos.png?v=0.138.7',
+  'Centaury::Pholos': 'enemy-portraits/centaurowie_pholos.png?v=0.138.7',
+  'Nagowie::Królewski Wąż': 'enemy-portraits/naga_krolewski_waz.png?v=0.138.7',
+  'Nagowie::Zmyślny Łucznik': 'enemy-portraits/naga_zmyslny_lucznik.png?v=0.138.7',
+  'Nagowie::Kobra Magus': 'enemy-portraits/naga_kobra_magus.png?v=0.138.7',
+  'Nagowie::Wężowy Zbrojny': 'enemy-portraits/naga_wezowy_zbrojny.png?v=0.138.7',
+  'Nagowie::Shesha': 'enemy-portraits/naga_shesha.png?v=0.138.7',
+  'Nagowie::Takshaka': 'enemy-portraits/naga_takshaka.png?v=0.138.7',
+  'Nagowie::Vasuki': 'enemy-portraits/naga_vasuki.png?v=0.138.7',
 };
 function getEnemyPortraitUrl(path){
   if(!path)return '';
@@ -1145,7 +1145,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.138.11';
+const GAME_VERSION = '0.138.12';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -1758,18 +1758,18 @@ const INDIA_WARRIOR_PORTRAITS = {
 // v0.135.8 — Hinduski Obrońca, mężczyzna, Tank: portrety zewnętrzne z repozytorium GitHub.
 // Stare obrazy base64 zostały usunięte z kodu gry.
 const INDIA_DEFENDER_PORTRAITS = {
-  1: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_1star.png?v=0.138.11',
-  2: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_2star.png?v=0.138.11',
-  3: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_3star.png?v=0.138.11',
-  4: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_4star.png?v=0.138.11',
-  5: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_5star.png?v=0.138.11',
-  6: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_6star.png?v=0.138.11'
+  1: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_1star.png?v=0.138.7',
+  2: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_2star.png?v=0.138.7',
+  3: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_3star.png?v=0.138.7',
+  4: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_4star.png?v=0.138.7',
+  5: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_5star.png?v=0.138.7',
+  6: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_6star.png?v=0.138.7'
 };
 
 const INDIA_DEFENDER_INCARNATION_PORTRAITS = {
-  durga: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_7star_durga.png?v=0.138.11',
-  vishnu: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_7star_vishnu.png?v=0.138.11',
-  shiva: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_7star_shiva.png?v=0.138.11'
+  durga: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_7star_durga.png?v=0.138.7',
+  vishnu: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_7star_vishnu.png?v=0.138.7',
+  shiva: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_7star_shiva.png?v=0.138.7'
 };
 
 function getIndiaDefenderIncarnationPortrait(h){
@@ -1864,16 +1864,16 @@ const INDIA_DEFENDER_TRAINER_MALE_PORTRAITS = {
 // AZTEK — ŁOTRZYK, KOBIETA, DPS — portrety 1★–6★ oraz 3 warianty 7★.
 // Assety są zewnętrzne, dzięki czemu można je łatwo podmieniać na GitHubie.
 const AZTEC_ROGUE_FEMALE_DPS_PORTRAITS = {
-  1: 'hero-portraits/aztekow/lotrzyk_kobieta_dps/aztec_rogue_female_1star.png?v=0.138.11',
-  2: 'hero-portraits/aztekow/lotrzyk_kobieta_dps/aztec_rogue_female_2star.png?v=0.138.11',
-  3: 'hero-portraits/aztekow/lotrzyk_kobieta_dps/aztec_rogue_female_3star.png?v=0.138.11',
-  4: 'hero-portraits/aztekow/lotrzyk_kobieta_dps/aztec_rogue_female_4star.png?v=0.138.11',
-  5: 'hero-portraits/aztekow/lotrzyk_kobieta_dps/aztec_rogue_female_5star.png?v=0.138.11',
-  6: 'hero-portraits/aztekow/lotrzyk_kobieta_dps/aztec_rogue_female_6star.png?v=0.138.11',
+  1: 'hero-portraits/aztekow/lotrzyk_kobieta_dps/aztec_rogue_female_1star.png?v=0.138.7',
+  2: 'hero-portraits/aztekow/lotrzyk_kobieta_dps/aztec_rogue_female_2star.png?v=0.138.7',
+  3: 'hero-portraits/aztekow/lotrzyk_kobieta_dps/aztec_rogue_female_3star.png?v=0.138.7',
+  4: 'hero-portraits/aztekow/lotrzyk_kobieta_dps/aztec_rogue_female_4star.png?v=0.138.7',
+  5: 'hero-portraits/aztekow/lotrzyk_kobieta_dps/aztec_rogue_female_5star.png?v=0.138.7',
+  6: 'hero-portraits/aztekow/lotrzyk_kobieta_dps/aztec_rogue_female_6star.png?v=0.138.7',
   7: {
-    tezcatlipoki: 'hero-portraits/aztekow/lotrzyk_kobieta_dps/aztec_rogue_female_7star_tezcatlipoki.png?v=0.138.11',
-    xolotla: 'hero-portraits/aztekow/lotrzyk_kobieta_dps/aztec_rogue_female_7star_xolotla.png?v=0.138.11',
-    quetzalcoatla: 'hero-portraits/aztekow/lotrzyk_kobieta_dps/aztec_rogue_female_7star_quetzalcoatla.png?v=0.138.11'
+    tezcatlipoki: 'hero-portraits/aztekow/lotrzyk_kobieta_dps/aztec_rogue_female_7star_tezcatlipoki.png?v=0.138.7',
+    xolotla: 'hero-portraits/aztekow/lotrzyk_kobieta_dps/aztec_rogue_female_7star_xolotla.png?v=0.138.7',
+    quetzalcoatla: 'hero-portraits/aztekow/lotrzyk_kobieta_dps/aztec_rogue_female_7star_quetzalcoatla.png?v=0.138.7'
   }
 };
 function getAztecRogueFemaleDpsPortrait(h){
@@ -1898,16 +1898,16 @@ function getAztecRogueFemaleDpsPortrait(h){
 // SŁOWIANIE — WOJOWNIK, MĘŻCZYZNA, DPS — portrety 1★–6★ oraz 3 warianty 7★.
 // 7★: Perun / Swaróg / Jarowit — wybór zgodny z Inkarnacją/Aspektem.
 const SLAVIC_WARRIOR_MALE_DPS_PORTRAITS = {
-  1: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_1star.png?v=0.138.11',
-  2: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_2star.png?v=0.138.11',
-  3: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_3star.png?v=0.138.11',
-  4: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_4star.png?v=0.138.11',
-  5: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_5star.png?v=0.138.11',
-  6: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_6star.png?v=0.138.11',
+  1: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_1star.png?v=0.138.7',
+  2: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_2star.png?v=0.138.7',
+  3: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_3star.png?v=0.138.7',
+  4: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_4star.png?v=0.138.7',
+  5: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_5star.png?v=0.138.7',
+  6: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_6star.png?v=0.138.7',
   7: {
-    perun: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_7star_perun.png?v=0.138.11',
-    swarog: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_7star_swarog.png?v=0.138.11',
-    jarowit: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_7star_jarowit.png?v=0.138.11'
+    perun: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_7star_perun.png?v=0.138.7',
+    swarog: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_7star_swarog.png?v=0.138.7',
+    jarowit: 'hero-portraits/slowian/wojownik_mezczyzna_dps/slavic_warrior_male_dps_7star_jarowit.png?v=0.138.7'
   }
 };
 
@@ -1942,16 +1942,16 @@ function getSlavicWarriorMaleDpsPortrait(h){
 // CELTOWIE — MAG, MĘŻCZYZNA, SUPPORT — portrety 1★–6★ oraz 3 warianty 7★.
 // 7★: Brigid / Lugh / Morrigan — wybór zgodny z Inkarnacją/Aspektem.
 const CELT_MAGE_MALE_SUPPORT_PORTRAITS = {
-  1: 'hero-portraits/celtow/mag_mezczyzna_support/celt_mage_male_support_1star.png?v=0.138.11',
-  2: 'hero-portraits/celtow/mag_mezczyzna_support/celt_mage_male_support_2star.png?v=0.138.11',
-  3: 'hero-portraits/celtow/mag_mezczyzna_support/celt_mage_male_support_3star.png?v=0.138.11',
-  4: 'hero-portraits/celtow/mag_mezczyzna_support/celt_mage_male_support_4star.png?v=0.138.11',
-  5: 'hero-portraits/celtow/mag_mezczyzna_support/celt_mage_male_support_5star.png?v=0.138.11',
-  6: 'hero-portraits/celtow/mag_mezczyzna_support/celt_mage_male_support_6star.png?v=0.138.11',
+  1: 'hero-portraits/celtow/mag_mezczyzna_support/celt_mage_male_support_1star.png?v=0.138.7',
+  2: 'hero-portraits/celtow/mag_mezczyzna_support/celt_mage_male_support_2star.png?v=0.138.7',
+  3: 'hero-portraits/celtow/mag_mezczyzna_support/celt_mage_male_support_3star.png?v=0.138.7',
+  4: 'hero-portraits/celtow/mag_mezczyzna_support/celt_mage_male_support_4star.png?v=0.138.7',
+  5: 'hero-portraits/celtow/mag_mezczyzna_support/celt_mage_male_support_5star.png?v=0.138.7',
+  6: 'hero-portraits/celtow/mag_mezczyzna_support/celt_mage_male_support_6star.png?v=0.138.7',
   7: {
-    brigid: 'hero-portraits/celtow/mag_mezczyzna_support/celt_mage_male_support_7star_brigid.png?v=0.138.11',
-    lugh: 'hero-portraits/celtow/mag_mezczyzna_support/celt_mage_male_support_7star_lugh.png?v=0.138.11',
-    morrigan: 'hero-portraits/celtow/mag_mezczyzna_support/celt_mage_male_support_7star_morrigan.png?v=0.138.11'
+    brigid: 'hero-portraits/celtow/mag_mezczyzna_support/celt_mage_male_support_7star_brigid.png?v=0.138.7',
+    lugh: 'hero-portraits/celtow/mag_mezczyzna_support/celt_mage_male_support_7star_lugh.png?v=0.138.7',
+    morrigan: 'hero-portraits/celtow/mag_mezczyzna_support/celt_mage_male_support_7star_morrigan.png?v=0.138.7'
   }
 };
 
@@ -1982,88 +1982,32 @@ function getCeltMageMaleSupportPortrait(h){
   return {src:CELT_MAGE_MALE_SUPPORT_PORTRAITS[7].brigid,key:'Brigid'};
 }
 
-// Portrety zewnętrzne: nowe zestawy Azteków i Celtów. Build 0.138.11.
-// Pliki PNG są przechowywane w repozytorium, a nie osadzane w HTML.
-const AZTEC_MAGE_FEMALE_DPS_EXTERNAL_PORTRAITS = {
-  1: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_1star.png?v=0.138.11',
-  2: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_2star.png?v=0.138.11',
-  3: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_3star.png?v=0.138.11',
-  4: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_4star.png?v=0.138.11',
-  5: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_5star.png?v=0.138.11',
-  6: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_6star.png?v=0.138.11',
-  7: {
-    metztli: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_metztli.png?v=0.138.11',
-    tonatiuh: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_tonatiuh.png?v=0.138.11',
-    xiuhcatl: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_xiuhcatl.png?v=0.138.11'
-  }
-};
-const CELT_ROGUE_MALE_DPS_EXTERNAL_PORTRAITS = {
-  1: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_1star.png?v=0.138.11',
-  2: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_2star.png?v=0.138.11',
-  3: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_3star.png?v=0.138.11',
-  4: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_4star.png?v=0.138.11',
-  5: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_5star.png?v=0.138.11',
-  6: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_6star.png?v=0.138.11',
-  7: {
-    ballor: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_ballor.png?v=0.138.11',
-    cernunnos: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_cernunnos.png?v=0.138.11',
-    mannan_mac_lir: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_mannan_mac_lir.png?v=0.138.11'
-  }
-};
-function getExternalIncarnationPortrait(h, variants, fallbackKey, aliases = {}) {
-  const norm = v => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-  const inc = h?.incarnation || {};
-  const text = norm([inc.title, inc.aspect, inc.name, inc.deity, h?.incarnationTitle, h?.aspect].filter(Boolean).join(' '));
-  for (const [key, names] of Object.entries(aliases)) {
-    if (names.some(name => text.includes(norm(name)))) return { src: variants[7][key], key };
-  }
-  for (const key of Object.keys(variants[7])) {
-    if (text.includes(norm(key.replace(/_/g, ' ')))) return { src: variants[7][key], key };
-  }
-  // Gdy stary zapis nie zawiera nazwy inkarnacji, użyj pierwszego wariantu 7★.
-  return { src: variants[7][fallbackKey], key: fallbackKey };
-}
-function getAztecMageFemaleDpsPortrait(h) {
-  const star = Math.max(1, Math.min(7, Number(h?.stars) || 1));
-  if (star < 7) return { src: AZTEC_MAGE_FEMALE_DPS_EXTERNAL_PORTRAITS[star], key: `${star}★` };
-  return getExternalIncarnationPortrait(h, AZTEC_MAGE_FEMALE_DPS_EXTERNAL_PORTRAITS, 'metztli', {
-    metztli: ['Metztli'], tonatiuh: ['Tonatiuh'], xiuhcatl: ['Xiuhcatl', 'Xiuhcoatl']
-  });
-}
-function getCeltRogueMaleDpsPortrait(h) {
-  const star = Math.max(1, Math.min(7, Number(h?.stars) || 1));
-  if (star < 7) return { src: CELT_ROGUE_MALE_DPS_EXTERNAL_PORTRAITS[star], key: `${star}★` };
-  return getExternalIncarnationPortrait(h, CELT_ROGUE_MALE_DPS_EXTERNAL_PORTRAITS, 'ballor', {
-    ballor: ['Ballor', 'Balor', 'Balar'], cernunnos: ['Cernunnos'], mannan_mac_lir: ['Mannan mac Lir', 'Manannan mac Lir', 'Manannán mac Lir']
-  });
-}
-
 // Portrety zewnętrzne: hinduska łuczniczka Support oraz arabski obrońca Tank.
 // Progresja 1★–6★ i trzy niezależne aspekty 7★ dla każdej postaci.
 const INDI_ARCHER_FEMALE_SUPPORT_PORTRAITS = {
-  1: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_1star.png?v=0.138.11',
-  2: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_2star.png?v=0.138.11',
-  3: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_3star.png?v=0.138.11',
-  4: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_4star.png?v=0.138.11',
-  5: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_5star.png?v=0.138.11',
-  6: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_6star.png?v=0.138.11',
+  1: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_1star.png?v=0.138.7',
+  2: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_2star.png?v=0.138.7',
+  3: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_3star.png?v=0.138.7',
+  4: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_4star.png?v=0.138.7',
+  5: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_5star.png?v=0.138.7',
+  6: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_6star.png?v=0.138.7',
   7: {
-    lakshmi: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_lakshmi.png?v=0.138.11',
-    saraswati: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_saraswati.png?v=0.138.11',
-    durga: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_durga.png?v=0.138.11'
+    lakshmi: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_7star_lakshmi.png?v=0.138.7',
+    saraswati: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_7star_saraswati.png?v=0.138.7',
+    durga: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_7star_durga.png?v=0.138.7'
   }
 };
 const ARABIAN_DEFENDER_TANK_PORTRAITS = {
-  1: 'hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_1star.png?v=0.138.11',
-  2: 'hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_2star.png?v=0.138.11',
-  3: 'hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_3star.png?v=0.138.11',
-  4: 'hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_4star.png?v=0.138.11',
-  5: 'hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_5star.png?v=0.138.11',
-  6: 'hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_6star.png?v=0.138.11',
+  1: 'hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_1star.png?v=0.138.7',
+  2: 'hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_2star.png?v=0.138.7',
+  3: 'hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_3star.png?v=0.138.7',
+  4: 'hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_4star.png?v=0.138.7',
+  5: 'hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_5star.png?v=0.138.7',
+  6: 'hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_6star.png?v=0.138.7',
   7: {
-    shams: 'hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_7star_shams.png?v=0.138.11',
-    al_kahf: 'hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_7star_al_kahf.png?v=0.138.11',
-    al_kahhar: 'hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_7star_al_kahhar.png?v=0.138.11'
+    shams: 'hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_7star_shams.png?v=0.138.7',
+    al_kahf: 'hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_7star_al_kahf.png?v=0.138.7',
+    al_kahhar: 'hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_7star_al_kahhar.png?v=0.138.7'
   }
 };
 function getNamedIncarnationPortrait(h, variants, fallbackKey) {
@@ -2092,11 +2036,60 @@ function getArabianDefenderTankPortrait(h) {
   return star < 7 ? ARABIAN_DEFENDER_TANK_PORTRAITS[star] : getNamedIncarnationPortrait(h, ARABIAN_DEFENDER_TANK_PORTRAITS[7], 'shams');
 }
 
+// Portrety zewnętrzne 0.138.12. Nazwy i katalogi odpowiadają assetom w repozytorium.
+const CELT_ROGUE_MALE_DPS_PORTRAITS = {
+  1: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_1star.png?v=0.138.12',
+  2: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_2star.png?v=0.138.12',
+  3: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_3star.png?v=0.138.12',
+  4: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_4star.png?v=0.138.12',
+  5: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_5star.png?v=0.138.12',
+  6: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_6star.png?v=0.138.12',
+  7: {
+    ballor: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_ballor.png?v=0.138.12',
+    cernunnos: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_cernunnos.png?v=0.138.12',
+    mannan_mac_lir: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_mannan_mac_lir.png?v=0.138.12'
+  }
+};
+const AZTEC_MAGE_FEMALE_DPS_PORTRAITS = {
+  1: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_1star.png?v=0.138.12',
+  2: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_2star.png?v=0.138.12',
+  3: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_3star.png?v=0.138.12',
+  4: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_4star.png?v=0.138.12',
+  5: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_5star.png?v=0.138.12',
+  6: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_6star.png?v=0.138.12',
+  7: {
+    metztli: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_metztli.png?v=0.138.12',
+    tonatiuh: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_tonatiuh.png?v=0.138.12',
+    xiuhcatl: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_xiuhcatl.png?v=0.138.12'
+  }
+};
+function getExternalPortraitForStars(h, portraits, fallbackKey, aliases) {
+  const star = Math.max(1, Math.min(7, Number(h?.stars) || 1));
+  if (star < 7) return portraits[star];
+  const norm = value => String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ł/g,'l').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  const inc = h?.incarnation || {};
+  const text = norm([inc.title, inc.aspect, inc.name, inc.deity, h?.incarnationTitle, h?.aspect].filter(Boolean).join(' '));
+  for (const [key, names] of Object.entries(aliases)) {
+    if (names.some(name => text.includes(norm(name)))) return portraits[7][key];
+  }
+  return portraits[7][fallbackKey];
+}
+function getCeltRogueMaleDpsPortrait(h) {
+  return getExternalPortraitForStars(h, CELT_ROGUE_MALE_DPS_PORTRAITS, 'ballor', {
+    ballor: ['Ballor', 'Balor', 'Balar'], cernunnos: ['Cernunnos'], mannan_mac_lir: ['Mannan mac Lir', 'Manannan mac Lir', 'Manannán mac Lir']
+  });
+}
+function getAztecMageFemaleDpsPortrait(h) {
+  return getExternalPortraitForStars(h, AZTEC_MAGE_FEMALE_DPS_PORTRAITS, 'metztli', {
+    metztli: ['Metztli'], tonatiuh: ['Tonatiuh'], xiuhcatl: ['Xiuhcatl', 'Xiuhcoatl']
+  });
+}
+
 function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
   if(!h) return `<div class="hero-v2-portrait">${fallback}</div>`;
   const star=Math.max(1,Math.min(7,Number(h.stars)||1));
   let src=null, alt="";
-  const norm = v => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/ł/g,'l').trim();
+  const norm = v => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
   const raceNorm = norm([h.race, h.origin, h.culture, h.raceId, h.raceName, h.cultureId, h.originName, h.ethnicity, h.faction].filter(Boolean).join(' '));
   const genderNorm = norm(h.gender);
   const classNorm = norm(h.heroClass);
@@ -2115,7 +2108,7 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
   // Priorytetowe dopasowanie portretu: hinduska kobieta-łucznik Support.
   // Role bywa puste lub zapisane w innym polu, więc nie blokujemy portretu,
   // jeśli rasa, płeć i klasa jednoznacznie wskazują tę postać.
-  const isArcherClass = /(lucz|lucznik|archer|luk|strzelec)/.test(archerClassNorm);
+  const isArcherClass = /(lucz|archer|luk|strzelec)/.test(archerClassNorm);
   const isSupportRole = /(support|wspar|pomoc)/.test(roleAllNorm) || roleAllNorm === '';
   // W tej grze ta dedykowana grafika należy do hinduskiej kobiety-łucznika Support.
   // Najpierw korzystamy ze wszystkich dostępnych pól rasy/kultury; jeśli stary zapis
@@ -2123,7 +2116,16 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
   const isIndiArcherSupport = !isMale && isArcherClass && (isIndia || (!raceNorm && isFemale)) &&
     (isFemale || !genderNorm) && (isSupportRole || isFemale);
   const isArabianDefenderTank = isMale && norm(h.race).includes('arab') && classNorm === 'obronca' && (roleNorm.includes('tank') || roleNorm === '' || roleNorm.includes('obron'));
-  if (isIndiArcherSupport) {
+  const identityNorm = norm([h.race,h.origin,h.culture,h.raceId,h.raceName,h.cultureId,h.heroClass,h.class,h.className,h.role,h.specialization,h.gender].filter(Boolean).join(' ')).replace(/ł/g,'l');
+  const isCeltRogueMaleDps = /celt|celta|celty/.test(identityNorm) && /mesk|mezczyzna|male|man/.test(norm(h.gender)) && /lotrzyk|rogue/.test(identityNorm) && /dps|damage/.test(identityNorm) && !h.isTrainer;
+  const isAztecMageFemaleDps = /aztek|aztec/.test(identityNorm) && /zenska|kobieta|female|woman/.test(norm(h.gender)) && /mag|mage/.test(identityNorm) && /dps|damage/.test(identityNorm) && !h.isTrainer;
+  if (isCeltRogueMaleDps) {
+    src = getCeltRogueMaleDpsPortrait(h);
+    alt = `Portret celtyckiego łotrzyka DPS, ${star} gwiazdek`;
+  } else if (isAztecMageFemaleDps) {
+    src = getAztecMageFemaleDpsPortrait(h);
+    alt = `Portret azteckiej magini DPS, ${star} gwiazdek`;
+  } else if (isIndiArcherSupport) {
     src = getIndiArcherSupportPortrait(h);
     const inc = h.incarnation?.title || h.incarnation?.aspect || 'Inkarnacja';
     alt = star >= 7 ? `Portret hinduskiej łuczniczki Support, ${inc}` : `Portret hinduskiej łuczniczki Support, ${star} gwiazdek`;
@@ -2152,17 +2154,6 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
   } else if(h.gender==="Żeńska" && h.race==="Celtów" && h.heroClass==="Łucznik") {
     src=CELT_LUCZNIK_FEMALE_PORTRAITS[star];
     alt=`Portret łuczniczki z Celtów, ${star} gwiazdek`;
-  } else if(h.gender==="Żeńska" && h.race==="Azteków" && h.heroClass==="Mag" && h.role==="DPS") {
-    const aztecMageDps=getAztecMageFemaleDpsPortrait(h);
-    src=aztecMageDps.src;
-    alt=`Portret azteckiej magini DPS — ${aztecMageDps.key}`;
-  } else if((/celt|celto|celtow/.test(norm([h.race,h.origin,h.culture,h.raceId,h.raceName,h.cultureId,h.originName,h.faction].filter(Boolean).join(' '))) || /celt/.test(norm(h.race))) &&
-            /^(meska|mezczyzna|male|man|m)$/.test(norm(h.gender)) &&
-            /^(lotrzyk|rogue|zlodziej)$/.test(norm([h.heroClass,h.class,h.className,h.heroClassId].filter(Boolean).join(' '))) &&
-            (/dps|damage|obrazenia/.test(norm([h.role,h.specialization,h.roleName,h.specializationName].filter(Boolean).join(' '))) || !h.role)) {
-    const celtRogueDps=getCeltRogueMaleDpsPortrait(h);
-    src=celtRogueDps.src;
-    alt=`Portret celtyckiego łotrzyka DPS — ${celtRogueDps.key}`;
   } else if(h.gender==="Męska" && h.race==="Azteków" && h.heroClass==="Wojownik") {
     src=AZTEC_WARRIOR_MALE_PORTRAITS[star];
     alt=`Portret wojownika z Azteków, ${star} gwiazdek`;
@@ -2189,7 +2180,7 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
     alt=`Portret łotra-trenera z Nordów, ${star} gwiazdek`;
   }
   if(!src) return `<div class="hero-v2-portrait">${fallback}</div>`;
-  return `<img class="hero-v2-portrait${h.race==='Grekii'&&h.heroClass==='Łotrzyk'&&h.gender==='Żeńska'?' greece-portrait':''}${h.race==='Grekii'&&h.heroClass==='Mag'&&h.gender==='Żeńska'&&h.role==='Support'?' greece-mage-support-portrait':''}${h.race==='Celtów'&&h.heroClass==='Łucznik'&&h.gender==='Żeńska'?' celt-portrait':''}${isIndiaDefenderTrainer?' india-defender-trainer-portrait':''}${h.race==='Azteków'&&h.heroClass==='Wojownik'&&h.gender==='Męska'?' aztec-portrait':''}${h.race==='Azteków'&&h.heroClass==='Łotrzyk'&&h.gender==='Żeńska'&&h.role==='DPS'?' aztec-rogue-dps-portrait':''}${h.race==='Arabii'&&h.heroClass==='Łotrzyk'&&h.gender==='Żeńska'?' arabia-rogue-portrait':''}${h.race==='Celtów'&&h.heroClass==='Mag'&&h.gender==='Męska'&&h.role==='Support'?' celt-mage-support-portrait':''}${h.race==='Celtów'&&h.heroClass==='Mag'&&h.gender==='Męska'&&h.isTrainer?' celt-mage-trainer-portrait':''}${h.race==='Nordów'&&h.heroClass==='Łotrzyk'&&h.gender==='Męska'&&h.isTrainer?' nord-rogue-trainer-portrait':''}" src="${src}" alt="${alt}" onerror="if(!this.dataset.retry){this.dataset.retry='1';this.src=this.src.split('?')[0]}else{this.onerror=null;this.replaceWith(document.createTextNode('⚔️'))}">`;
+  return `<img class="hero-v2-portrait${isCeltRogueMaleDps?' celt-rogue-male-dps-portrait':''}${isAztecMageFemaleDps?' aztec-mage-female-dps-portrait':''}${h.race==='Grekii'&&h.heroClass==='Łotrzyk'&&h.gender==='Żeńska'?' greece-portrait':''}${h.race==='Grekii'&&h.heroClass==='Mag'&&h.gender==='Żeńska'&&h.role==='Support'?' greece-mage-support-portrait':''}${h.race==='Celtów'&&h.heroClass==='Łucznik'&&h.gender==='Żeńska'?' celt-portrait':''}${isIndiaDefenderTrainer?' india-defender-trainer-portrait':''}${h.race==='Azteków'&&h.heroClass==='Wojownik'&&h.gender==='Męska'?' aztec-portrait':''}${h.race==='Azteków'&&h.heroClass==='Łotrzyk'&&h.gender==='Żeńska'&&h.role==='DPS'?' aztec-rogue-dps-portrait':''}${h.race==='Arabii'&&h.heroClass==='Łotrzyk'&&h.gender==='Żeńska'?' arabia-rogue-portrait':''}${h.race==='Celtów'&&h.heroClass==='Mag'&&h.gender==='Męska'&&h.role==='Support'?' celt-mage-support-portrait':''}${h.race==='Celtów'&&h.heroClass==='Mag'&&h.gender==='Męska'&&h.isTrainer?' celt-mage-trainer-portrait':''}${h.race==='Nordów'&&h.heroClass==='Łotrzyk'&&h.gender==='Męska'&&h.isTrainer?' nord-rogue-trainer-portrait':''}" src="${src}" alt="${alt}" onerror="if(!this.dataset.retry){this.dataset.retry='1';this.src=this.src.split('?')[0]}else{this.onerror=null;this.replaceWith(document.createTextNode('⚔️'))}">`;
 }
 // Portrety MAGA z ARABII, mężczyzna, 1★–7★.
 // Źródło: dostarczony arkusz graficzny. Liczba gwiazdek nadrukowana przy każdym
@@ -9276,52 +9267,22 @@ ${['zbroja','dodatek'].includes(item.type)?`<button class="btn-small" data-tower
 function renderEquipment(hero){
   const container=document.createElement('div'); container.className='equip-panel'; container.style.marginTop='6px';
   const slots=[{key:'hand1',label:'🤚 Ręka 1'},{key:'hand2',label:'🤚 Ręka 2'},{key:'armor',label:'🛡️ Zbroja'},{key:'accessory1',label:'💍 Dodatek 1'},{key:'accessory2',label:'💍 Dodatek 2'}];
-  const eq=hero.equipped||(hero.equipped={hand1:null,hand2:null,armor:null,accessory1:null,accessory2:null}); const inventory=state.inventory||[];
-  if(!('hand1' in eq))eq.hand1=null; if(!('hand2' in eq))eq.hand2=null;
-  // Repair legacy/inconsistent saves: a 2H weapon is stored once in hand1 and clears hand2.
-  let hand1Item=inventory.find(i=>i.id===eq.hand1);
-  let hand2Item=inventory.find(i=>i.id===eq.hand2);
-  if(isTwoHandedWeapon(hand2Item)){
-    if(hand1Item && hand1Item.id!==hand2Item.id) hand1Item.equippedBy=null;
-    eq.hand1=hand2Item.id; eq.hand2=null; hand1Item=hand2Item; hand2Item=null;
-  }
-  if(isTwoHandedWeapon(hand1Item) && eq.hand2){const extra=inventory.find(i=>i.id===eq.hand2);if(extra&&extra.id!==hand1Item.id)extra.equippedBy=null;eq.hand2=null;}
-  const twoHandedEquipped=heroHasTwoHandedWeapon(hero);
+  const eq=hero.equipped||{hand1:null,hand2:null,armor:null,accessory1:null,accessory2:null}; const inventory=state.inventory||[];
+  const setType=item=>item.type==='broń'||item.type==='tarcza';
   slots.forEach(slot=>{
-    const div=document.createElement('div'); div.className='equip-slot'; const label=document.createElement('label'); label.textContent=slot.label; const select=document.createElement('select');
+    const div=document.createElement('div'); div.className='equip-slot';
+    const label=document.createElement('label'); label.textContent=slot.label; const select=document.createElement('select');
+    const empty=document.createElement('option'); empty.value=''; empty.textContent='-- puste --'; select.appendChild(empty);
     const currentId=eq[slot.key];
-    const blockedHand2=slot.key==='hand2' && twoHandedEquipped;
-    const empty=document.createElement('option'); empty.value=''; empty.textContent=blockedHand2?'🔒 Zablokowana przez broń dwuręczną':'-- puste --'; select.appendChild(empty);
-    if(!blockedHand2){
-      inventory.forEach(item=>{
-        const matches=slot.key.startsWith('hand')? (item.type==='broń'||item.type==='tarcza'):slot.key==='armor'?item.type==='zbroja':item.type==='dodatek'; if(!matches)return;
-        if(slot.key.startsWith('hand') && isTwoHandedWeapon(item) && (eq.hand1||eq.hand2) && currentId!==item.id)return;
-        if(item.equippedBy!=null&&item.equippedBy!==hero.id)return;
-        const usedOther=Object.keys(eq).some(k=>k!==slot.key&&eq[k]===item.id); if(usedOther)return;
-        const opt=document.createElement('option'); opt.value=item.id; opt.textContent=`${item.rarityName} ${item.name}${item.type==='tarcza'?' 🛡️':''}${isTwoHandedWeapon(item)?' 👐 2H':''}${currentId===item.id?' ✅':''}`; if(currentId===item.id)opt.selected=true; select.appendChild(opt);
-      });
-    }
-    if(blockedHand2){select.disabled=true;select.title='Broń dwuręczna zajmuje obie ręce.';}
+    inventory.forEach(item=>{
+      const matches=slot.key.startsWith('hand')?setType(item):slot.key==='armor'?item.type==='zbroja':item.type==='dodatek'; if(!matches)return; if(slot.key.startsWith('hand') && isTwoHandedWeapon(item) && (eq.hand1||eq.hand2) && currentId!==item.id)return;
+      if(item.equippedBy!=null&&item.equippedBy!==hero.id)return;
+      const usedOther=Object.keys(eq).some(k=>k!==slot.key&&eq[k]===item.id); if(usedOther)return;
+      const opt=document.createElement('option'); opt.value=item.id; opt.textContent=`${item.rarityName} ${item.name}${item.type==='tarcza'?' 🛡️':''}${isTwoHandedWeapon(item)?' 👐 2H':''}${currentId===item.id?' ✅':''}`; if(currentId===item.id)opt.selected=true; select.appendChild(opt);
+    });
     select.addEventListener('change',function(){
-      const val=this.value,oldId=eq[slot.key];
-      const item=val?inventory.find(i=>String(i.id)===String(val)):null;
-      if(slot.key.startsWith('hand')){
-        if(item && isTwoHandedWeapon(item)){
-          if((eq.hand1&&eq.hand1!==item.id)||(eq.hand2&&eq.hand2!==item.id)){log('❌ Najpierw zwolnij obie ręce, aby założyć broń dwuręczną.','warn');updateUI();return;}
-          [eq.hand1,eq.hand2].forEach(id=>{if(id&&id!==item.id){const prev=inventory.find(x=>x.id===id);if(prev)prev.equippedBy=null;}});
-          eq.hand1=item.id;eq.hand2=null;item.equippedBy=hero.id;
-        } else if(slot.key==='hand2' && heroHasTwoHandedWeapon(hero)){
-          log('❌ Broń dwuręczna blokuje drugi slot dłoni.','warn');updateUI();return;
-        } else {
-          const replacingTwoHanded = slot.key==='hand1' && isTwoHandedWeapon(inventory.find(i=>i.id===eq.hand1));
-          if(item && heroHasTwoHandedWeapon(hero) && !replacingTwoHanded){log('❌ Broń dwuręczna zajmuje obie ręce.','warn');updateUI();return;}
-          if(oldId&&oldId!=val){const old=inventory.find(i=>String(i.id)===String(oldId));if(old)old.equippedBy=null;}
-          if(item){Object.keys(eq).forEach(k=>{if(k!==slot.key&&eq[k]===item.id)eq[k]=null;});eq[slot.key]=item.id;item.equippedBy=hero.id;}else eq[slot.key]=null;
-        }
-      } else {
-        if(oldId&&oldId!=val){const old=inventory.find(i=>String(i.id)===String(oldId));if(old)old.equippedBy=null;}
-        if(item){Object.keys(eq).forEach(k=>{if(k!==slot.key&&eq[k]===item.id)eq[k]=null;});eq[slot.key]=item.id;item.equippedBy=hero.id;}else eq[slot.key]=null;
-      }
+      const val=this.value,oldId=eq[slot.key]; if(oldId&&oldId!=val){const old=inventory.find(i=>i.id===oldId);if(old)old.equippedBy=null;}
+      if(val){const item=inventory.find(i=>i.id==val);if(item){Object.keys(eq).forEach(k=>{if(k!==slot.key&&eq[k]===item.id)eq[k]=null;});eq[slot.key]=item.id;item.equippedBy=hero.id;}}else eq[slot.key]=null;
       saveGame();updateUI();
     });
     div.appendChild(label);div.appendChild(select);
@@ -9330,7 +9291,7 @@ function renderEquipment(hero){
   });
   const handItems=getHeroHandItems(hero);
   const info=document.createElement('div'); info.style.marginTop='6px';info.style.fontSize='.82em';info.style.color='#aaa';
-  info.innerHTML=`<b>👐 Ręce:</b> ${heroHasTwoHandedWeapon(hero)?'2/2 zajęte':' '+handItems.length+'/2 zajęte'} — ${heroHasTwoHandedWeapon(hero)?'broń dwuręczna blokuje oba sloty dłoni.':'broń i tarcze korzystają z rąk.'} <span style="color:#777">Łuki, kusze, kostury i broń 2H zajmują obie ręce. Zbroja nie obejmuje tarcz.</span>`; container.appendChild(info);
+  info.innerHTML=`<b>👐 Ręce:</b> ${handItems.length}/2 zajęte — broń i tarcze korzystają z rąk. <span style="color:#777">Łuki, kusze, kostury i broń 2H zajmują obie ręce. Zbroja nie obejmuje tarcz.</span>`; container.appendChild(info);
   return container;
 }
 
