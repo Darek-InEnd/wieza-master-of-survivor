@@ -1962,7 +1962,7 @@ function getCeltMageMaleSupportPortrait(h){
 
 // Portrety zewnętrzne: hinduska łuczniczka Support oraz arabski obrońca Tank.
 // Progresja 1★–6★ i trzy niezależne aspekty 7★ dla każdej postaci.
-const INDIAN_ARCHER_SUPPORT_PORTRAITS = {
+const INDIAN_ARCHER_SUPPORT_FEMALE_PORTRAITS = {
   1: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_1star.png?v=0.138.3',
   2: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_2star.png?v=0.138.3',
   3: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_3star.png?v=0.138.3',
@@ -2007,7 +2007,7 @@ function getNamedIncarnationPortrait(h, variants, fallbackKey) {
 }
 function getIndianArcherSupportPortrait(h) {
   const star = Math.max(1, Math.min(7, Number(h?.stars) || 1));
-  return star < 7 ? INDIAN_ARCHER_SUPPORT_PORTRAITS[star] : getNamedIncarnationPortrait(h, INDIAN_ARCHER_SUPPORT_PORTRAITS[7], 'lakshmi');
+  return star < 7 ? INDIAN_ARCHER_SUPPORT_FEMALE_PORTRAITS[star] : getNamedIncarnationPortrait(h, INDIAN_ARCHER_SUPPORT_FEMALE_PORTRAITS[7], 'lakshmi');
 }
 function getArabianDefenderTankPortrait(h) {
   const star = Math.max(1, Math.min(7, Number(h?.stars) || 1));
