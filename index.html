@@ -600,7 +600,7 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 <script>
 /* Prosty mechanizm aktualizacji PWA: sprawdzenie SW przy starcie + automatyczne przeładowanie po przejęciu aplikacji przez nowy SW. */
 if ('serviceWorker' in navigator) {
-  const PWA_BUILD = '0.138.5';
+  const PWA_BUILD = '0.138.6';
   let registration = null;
   let reloadDone = false;
   const hadController = !!navigator.serviceWorker.controller;
@@ -1115,27 +1115,27 @@ const ENEMY_PORTRAITS = {
   'Anunnaki::Ninurta': 'enemy-portraits/anunnaki_ninurta.png?v=0.136.6',
   'Anunnaki::Utu': 'enemy-portraits/anunnaki_utu.png?v=0.136.6',
   // Przywrócone portrety Draugrów, Centaurów i Nagów. Klucze zgodne z BESTIARY.
-  'Draugry::Zardzewiały Pancerz': 'enemy-portraits/draugi_zardzewialy_pancerz.png?v=0.138.5',
-  'Draugry::Koścany Łucznik': 'enemy-portraits/draugi_kosciany_lucznik.png?v=0.138.5',
-  'Draugry::Nekromanta Kurhanu': 'enemy-portraits/draugi_nekromanta_kurhanu.png?v=0.138.5',
-  'Draugry::Zmrożony Topornik': 'enemy-portraits/draugi_zamrozony_topornik.png?v=0.138.5',
-  'Draugry::Glamr': 'enemy-portraits/draugi_glamr.png?v=0.138.5',
-  'Draugry::Haugbui': 'enemy-portraits/draugi_haugbui.png?v=0.138.5',
-  'Draugry::Król Draugrów': 'enemy-portraits/draugi_krol_draugrow.png?v=0.138.5',
-  'Centaury::Opancerzony Stratywąż': 'enemy-portraits/centaurowie_opancerzony_stratywaz.png?v=0.138.5',
-  'Centaury::Komandor Łuków': 'enemy-portraits/centaurowie_komandor_lukow.png?v=0.138.5',
-  'Centaury::Szaman Kopyt': 'enemy-portraits/centaurowie_szaman_kopyt.png?v=0.138.5',
-  'Centaury::Stratujący Szarżownik': 'enemy-portraits/centaurowie_startujacy_szazownik.png?v=0.138.5',
-  'Centaury::Chiron': 'enemy-portraits/centaurowie_chiron.png?v=0.138.5',
-  'Centaury::Nessos': 'enemy-portraits/centaurowie_nessos.png?v=0.138.5',
-  'Centaury::Pholos': 'enemy-portraits/centaurowie_pholos.png?v=0.138.5',
-  'Nagowie::Królewski Wąż': 'enemy-portraits/naga_krolewski_waz.png?v=0.138.5',
-  'Nagowie::Zmyślny Łucznik': 'enemy-portraits/naga_zmyslny_lucznik.png?v=0.138.5',
-  'Nagowie::Kobra Magus': 'enemy-portraits/naga_kobra_magus.png?v=0.138.5',
-  'Nagowie::Wężowy Zbrojny': 'enemy-portraits/naga_wezowy_zbrojny.png?v=0.138.5',
-  'Nagowie::Shesha': 'enemy-portraits/naga_shesha.png?v=0.138.5',
-  'Nagowie::Takshaka': 'enemy-portraits/naga_takshaka.png?v=0.138.5',
-  'Nagowie::Vasuki': 'enemy-portraits/naga_vasuki.png?v=0.138.5',
+  'Draugry::Zardzewiały Pancerz': 'enemy-portraits/draugi_zardzewialy_pancerz.png?v=0.138.6',
+  'Draugry::Koścany Łucznik': 'enemy-portraits/draugi_kosciany_lucznik.png?v=0.138.6',
+  'Draugry::Nekromanta Kurhanu': 'enemy-portraits/draugi_nekromanta_kurhanu.png?v=0.138.6',
+  'Draugry::Zmrożony Topornik': 'enemy-portraits/draugi_zamrozony_topornik.png?v=0.138.6',
+  'Draugry::Glamr': 'enemy-portraits/draugi_glamr.png?v=0.138.6',
+  'Draugry::Haugbui': 'enemy-portraits/draugi_haugbui.png?v=0.138.6',
+  'Draugry::Król Draugrów': 'enemy-portraits/draugi_krol_draugrow.png?v=0.138.6',
+  'Centaury::Opancerzony Stratywąż': 'enemy-portraits/centaurowie_opancerzony_stratywaz.png?v=0.138.6',
+  'Centaury::Komandor Łuków': 'enemy-portraits/centaurowie_komandor_lukow.png?v=0.138.6',
+  'Centaury::Szaman Kopyt': 'enemy-portraits/centaurowie_szaman_kopyt.png?v=0.138.6',
+  'Centaury::Stratujący Szarżownik': 'enemy-portraits/centaurowie_startujacy_szazownik.png?v=0.138.6',
+  'Centaury::Chiron': 'enemy-portraits/centaurowie_chiron.png?v=0.138.6',
+  'Centaury::Nessos': 'enemy-portraits/centaurowie_nessos.png?v=0.138.6',
+  'Centaury::Pholos': 'enemy-portraits/centaurowie_pholos.png?v=0.138.6',
+  'Nagowie::Królewski Wąż': 'enemy-portraits/naga_krolewski_waz.png?v=0.138.6',
+  'Nagowie::Zmyślny Łucznik': 'enemy-portraits/naga_zmyslny_lucznik.png?v=0.138.6',
+  'Nagowie::Kobra Magus': 'enemy-portraits/naga_kobra_magus.png?v=0.138.6',
+  'Nagowie::Wężowy Zbrojny': 'enemy-portraits/naga_wezowy_zbrojny.png?v=0.138.6',
+  'Nagowie::Shesha': 'enemy-portraits/naga_shesha.png?v=0.138.6',
+  'Nagowie::Takshaka': 'enemy-portraits/naga_takshaka.png?v=0.138.6',
+  'Nagowie::Vasuki': 'enemy-portraits/naga_vasuki.png?v=0.138.6',
 };
 function getEnemyPortraitUrl(path){
   if(!path)return '';
@@ -1145,7 +1145,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.138.5';
+const GAME_VERSION = '0.138.6';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -1984,17 +1984,17 @@ function getCeltMageMaleSupportPortrait(h){
 
 // Portrety zewnętrzne: hinduska łuczniczka Support oraz arabski obrońca Tank.
 // Progresja 1★–6★ i trzy niezależne aspekty 7★ dla każdej postaci.
-const INDIAN_ARCHER_SUPPORT_PORTRAITS = {
-  1: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_1star.png?v=0.138.4',
-  2: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_2star.png?v=0.138.4',
-  3: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_3star.png?v=0.138.4',
-  4: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_4star.png?v=0.138.4',
-  5: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_5star.png?v=0.138.4',
-  6: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_6star.png?v=0.138.4',
+const INDI_ARCHER_FEMALE_SUPPORT_PORTRAITS = {
+  1: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_1star.png?v=0.138.6',
+  2: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_2star.png?v=0.138.6',
+  3: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_3star.png?v=0.138.6',
+  4: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_4star.png?v=0.138.6',
+  5: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_5star.png?v=0.138.6',
+  6: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_6star.png?v=0.138.6',
   7: {
-    lakshmi: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_lakshmi.png?v=0.138.4',
-    saraswati: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_saraswati.png?v=0.138.4',
-    durga: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_durga.png?v=0.138.4'
+    lakshmi: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_lakshmi.png?v=0.138.6',
+    saraswati: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_saraswati.png?v=0.138.6',
+    durga: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_durga.png?v=0.138.6'
   }
 };
 const ARABIAN_DEFENDER_TANK_PORTRAITS = {
@@ -2029,7 +2029,7 @@ function getNamedIncarnationPortrait(h, variants, fallbackKey) {
 }
 function getIndianArcherSupportPortrait(h) {
   const star = Math.max(1, Math.min(7, Number(h?.stars) || 1));
-  return star < 7 ? INDIAN_ARCHER_SUPPORT_PORTRAITS[star] : getNamedIncarnationPortrait(h, INDIAN_ARCHER_SUPPORT_PORTRAITS[7], 'lakshmi');
+  return star < 7 ? INDI_ARCHER_FEMALE_SUPPORT_PORTRAITS[star] : getNamedIncarnationPortrait(h, INDI_ARCHER_FEMALE_SUPPORT_PORTRAITS[7], 'lakshmi');
 }
 function getArabianDefenderTankPortrait(h) {
   const star = Math.max(1, Math.min(7, Number(h?.stars) || 1));
@@ -2041,11 +2041,11 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
   const star=Math.max(1,Math.min(7,Number(h.stars)||1));
   let src=null, alt="";
   const norm = v => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
-  const raceNorm = norm([h.race, h.origin, h.culture].filter(Boolean).join(' '));
+  const raceNorm = norm([h.race, h.origin, h.culture, h.raceId, h.raceName, h.cultureId, h.originName, h.ethnicity, h.faction].filter(Boolean).join(' '));
   const genderNorm = norm(h.gender);
   const classNorm = norm(h.heroClass);
   const formerClassNorm = norm(h.trainerFormerClass);
-  const isIndia = /indi|hindus|hinduska|hinduski|hindusow/.test(raceNorm);
+  const isIndia = /indi|hind|bharat/.test(raceNorm) || [h.raceId,h.raceName,h.cultureId,h.originName,h.ethnicity,h.faction].some(v => /^(indi|hind|bharat)/i.test(String(v ?? '').trim()));
   const isMale = genderNorm === 'meska' || genderNorm === 'mezczyzna' || genderNorm.startsWith('mes');
   const isDefender = classNorm === 'obronca' || formerClassNorm === 'obronca';
   const isTrainer = h.isTrainer===true || h.isTrainer==='true' || !!h.trainerFormerClass;
@@ -2053,15 +2053,19 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
   // Uwzględniamy także starsze zapisy, w których race mogła występować jako "Indie".
   const isIndiaDefenderTrainer = isMale && isIndia && isDefender && isTrainer;
   const roleNorm = norm(h.role);
-  const isFemale = ['zenska','kobieta','female','woman','f'].includes(genderNorm) || /^(zen|kob|fem)/.test(genderNorm);
-  const archerClassNorm = norm([h.heroClass, h.class, h.trainerFormerClass, h.subclass].filter(Boolean).join(' '));
-  const roleAllNorm = norm([h.role, h.specialization, h.subclass, h.trainerFormerRole].filter(Boolean).join(' '));
+  const isFemale = ['zenska','kobieta','female','woman','f','0'].includes(genderNorm) || /^(zen|kob|fem|wom)/.test(genderNorm) || h.isFemale === true || h.genderFemale === true;
+  const archerClassNorm = norm([h.heroClass, h.class, h.trainerFormerClass, h.subclass, h.className, h.heroClassId, h.weaponType].filter(Boolean).join(' '));
+  const roleAllNorm = norm([h.role, h.specialization, h.subclass, h.trainerFormerRole, h.roleName, h.specializationName].filter(Boolean).join(' '));
   // Priorytetowe dopasowanie portretu: hinduska kobieta-łucznik Support.
   // Role bywa puste lub zapisane w innym polu, więc nie blokujemy portretu,
   // jeśli rasa, płeć i klasa jednoznacznie wskazują tę postać.
-  const isIndianArcherSupport = !isMale && (isFemale || !genderNorm) && isIndia &&
-    /(lucz|archer|luk)/.test(archerClassNorm) &&
-    (roleAllNorm.includes('support') || roleAllNorm.includes('wspar') || roleNorm === '' || isFemale);
+  const isArcherClass = /(lucz|archer|luk|strzelec)/.test(archerClassNorm);
+  const isSupportRole = /(support|wspar|pomoc)/.test(roleAllNorm) || roleAllNorm === '';
+  // W tej grze ta dedykowana grafika należy do hinduskiej kobiety-łucznika Support.
+  // Najpierw korzystamy ze wszystkich dostępnych pól rasy/kultury; jeśli stary zapis
+  // nie ma identyfikatora rasy, nie blokujemy grafiki, gdy klasa i płeć pasują.
+  const isIndianArcherSupport = !isMale && isArcherClass && (isIndia || (!raceNorm && isFemale)) &&
+    (isFemale || !genderNorm) && (isSupportRole || isFemale);
   const isArabianDefenderTank = isMale && norm(h.race).includes('arab') && classNorm === 'obronca' && (roleNorm.includes('tank') || roleNorm === '' || roleNorm.includes('obron'));
   if (isIndianArcherSupport) {
     src = getIndianArcherSupportPortrait(h);

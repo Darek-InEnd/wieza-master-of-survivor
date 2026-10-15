@@ -1,7 +1,7 @@
 /* Wieża PWA service worker — release 0.138.
  * BUILD_ID musi odpowiadać PWA_BUILD/GAME_VERSION w index.html.
  */
-const BUILD_ID = '0.138.5';
+const BUILD_ID = '0.138.6';
 const CACHE_NAME = 'wieza-pwa-' + BUILD_ID;
 const CORE_ASSETS = ['./index.html', './manifest.webmanifest', './opening_1080p.mp4',
   './hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_1star.png',
