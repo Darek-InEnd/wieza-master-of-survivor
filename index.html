@@ -600,7 +600,7 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 <script>
 /* Prosty mechanizm aktualizacji PWA: sprawdzenie SW przy starcie + automatyczne przeładowanie po przejęciu aplikacji przez nowy SW. */
 if ('serviceWorker' in navigator) {
-  const PWA_BUILD = '0.138.16';
+  const PWA_BUILD = '0.138.17';
   let registration = null;
   let reloadDone = false;
   const hadController = !!navigator.serviceWorker.controller;
@@ -1145,7 +1145,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.138.16';
+const GAME_VERSION = '0.138.17';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -1985,16 +1985,16 @@ function getCeltMageMaleSupportPortrait(h){
 // Portrety zewnętrzne: hinduska łuczniczka Support oraz arabski obrońca Tank.
 // Progresja 1★–6★ i trzy niezależne aspekty 7★ dla każdej postaci.
 const INDI_ARCHER_FEMALE_SUPPORT_PORTRAITS = {
-  1: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_1star.png?v=0.138.16',
-  2: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_2star.png?v=0.138.16',
-  3: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_3star.png?v=0.138.16',
-  4: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_4star.png?v=0.138.16',
-  5: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_5star.png?v=0.138.16',
-  6: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_6star.png?v=0.138.16',
+  1: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_1star.png?v=0.138.7',
+  2: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_2star.png?v=0.138.7',
+  3: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_3star.png?v=0.138.7',
+  4: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_4star.png?v=0.138.7',
+  5: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_5star.png?v=0.138.7',
+  6: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_6star.png?v=0.138.7',
   7: {
-    lakshmi: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_lakshmi.png?v=0.138.16',
-    saraswati: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_saraswati.png?v=0.138.16',
-    durga: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_durga.png?v=0.138.16'
+    lakshmi: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_7star_lakshmi.png?v=0.138.7',
+    saraswati: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_7star_saraswati.png?v=0.138.7',
+    durga: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_7star_durga.png?v=0.138.7'
   }
 };
 const ARABIAN_DEFENDER_TANK_PORTRAITS = {
@@ -2036,97 +2036,11 @@ function getArabianDefenderTankPortrait(h) {
   return star < 7 ? ARABIAN_DEFENDER_TANK_PORTRAITS[star] : getNamedIncarnationPortrait(h, ARABIAN_DEFENDER_TANK_PORTRAITS[7], 'shams');
 }
 
-// Portrety zewnętrzne 0.138.16. Nazwy i katalogi odpowiadają assetom w repozytorium.
-const CELT_ROGUE_MALE_DPS_PORTRAITS = {
-  1: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_1star.png?v=0.138.16',
-  2: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_2star.png?v=0.138.16',
-  3: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_3star.png?v=0.138.16',
-  4: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_4star.png?v=0.138.16',
-  5: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_5star.png?v=0.138.16',
-  6: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_6star.png?v=0.138.16',
-  7: {
-    ballor: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_ballor.png?v=0.138.16',
-    cernunnos: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_cernunnos.png?v=0.138.16',
-    mannan_mac_lir: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_mannan_mac_lir.png?v=0.138.16'
-  }
-};
-const AZTEC_MAGE_FEMALE_DPS_PORTRAITS = {
-  1: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_1star.png?v=0.138.16',
-  2: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_2star.png?v=0.138.16',
-  3: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_3star.png?v=0.138.16',
-  4: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_4star.png?v=0.138.16',
-  5: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_5star.png?v=0.138.16',
-  6: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_6star.png?v=0.138.16',
-  7: {
-    metztli: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_metztli.png?v=0.138.16',
-    tonatiuh: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_tonatiuh.png?v=0.138.16',
-    xiuhcatl: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_xiuhcatl.png?v=0.138.16'
-  }
-};
-const JAPANESE_WARRIOR_MALE_DPS_PORTRAITS = {
-  1: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_1star.png?v=0.138.16',
-  2: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_2star.png?v=0.138.16',
-  3: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_3star.png?v=0.138.16',
-  4: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_4star.png?v=0.138.16',
-  5: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_5star.png?v=0.138.16',
-  6: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_6star.png?v=0.138.16',
-  7: {
-    futsunushi: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_7star_futsunushi.png?v=0.138.16',
-    takemikazuchi: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_7star_takemikazuchi.png?v=0.138.16',
-    yamato_takeru: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_7star_yamato_takeru.png?v=0.138.16'
-  }
-};
-const GREEK_MAGE_FEMALE_DPS_PORTRAITS = {
-  1: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_1star.png?v=0.138.16',
-  2: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_2star.png?v=0.138.16',
-  3: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_3star.png?v=0.138.16',
-  4: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_4star.png?v=0.138.16',
-  5: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_5star.png?v=0.138.16',
-  6: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_6star.png?v=0.138.16',
-  7: {
-    eris: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_7star_eris.png?v=0.138.16',
-    hekate: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_7star_hekate.png?v=0.138.16',
-    nyks: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_7star_nyks.png?v=0.138.16'
-  }
-};
-function getJapaneseWarriorMaleDpsPortrait(h) {
-  return getExternalPortraitForStars(h, JAPANESE_WARRIOR_MALE_DPS_PORTRAITS, 'futsunushi', {
-    futsunushi: ['Futsunushi'], takemikazuchi: ['Takemikazuchi'], yamato_takeru: ['Yamato Takeru']
-  });
-}
-function getGreekMageFemaleDpsPortrait(h) {
-  return getExternalPortraitForStars(h, GREEK_MAGE_FEMALE_DPS_PORTRAITS, 'eris', {
-    eris: ['Eris'], hekate: ['Hekate', 'Hecate'], nyks: ['Nyks', 'Nyx']
-  });
-}
-
-function getExternalPortraitForStars(h, portraits, fallbackKey, aliases) {
-  const star = Math.max(1, Math.min(7, Number(h?.stars) || 1));
-  if (star < 7) return portraits[star];
-  const norm = value => String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ł/g,'l').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-  const inc = h?.incarnation || {};
-  const text = norm([inc.title, inc.aspect, inc.name, inc.deity, h?.incarnationTitle, h?.aspect].filter(Boolean).join(' '));
-  for (const [key, names] of Object.entries(aliases)) {
-    if (names.some(name => text.includes(norm(name)))) return portraits[7][key];
-  }
-  return portraits[7][fallbackKey];
-}
-function getCeltRogueMaleDpsPortrait(h) {
-  return getExternalPortraitForStars(h, CELT_ROGUE_MALE_DPS_PORTRAITS, 'ballor', {
-    ballor: ['Ballor', 'Balor', 'Balar'], cernunnos: ['Cernunnos'], mannan_mac_lir: ['Mannan mac Lir', 'Manannan mac Lir', 'Manannán mac Lir']
-  });
-}
-function getAztecMageFemaleDpsPortrait(h) {
-  return getExternalPortraitForStars(h, AZTEC_MAGE_FEMALE_DPS_PORTRAITS, 'metztli', {
-    metztli: ['Metztli'], tonatiuh: ['Tonatiuh'], xiuhcatl: ['Xiuhcatl', 'Xiuhcoatl']
-  });
-}
-
 function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
   if(!h) return `<div class="hero-v2-portrait">${fallback}</div>`;
   const star=Math.max(1,Math.min(7,Number(h.stars)||1));
   let src=null, alt="";
-  const norm = v => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ł/g,'l').replace(/Ł/g,'l').toLowerCase().trim();
+  const norm = v => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
   const raceNorm = norm([h.race, h.origin, h.culture, h.raceId, h.raceName, h.cultureId, h.originName, h.ethnicity, h.faction].filter(Boolean).join(' '));
   const genderNorm = norm(h.gender);
   const classNorm = norm(h.heroClass);
@@ -2153,50 +2067,7 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
   const isIndiArcherSupport = !isMale && isArcherClass && (isIndia || (!raceNorm && isFemale)) &&
     (isFemale || !genderNorm) && (isSupportRole || isFemale);
   const isArabianDefenderTank = isMale && norm(h.race).includes('arab') && classNorm === 'obronca' && (roleNorm.includes('tank') || roleNorm === '' || roleNorm.includes('obron'));
-  // Zbieramy warianty ze wszystkich pól spotykanych w starszych i nowszych zapisach bohaterów.
-  // Normalizacja usuwa też polskie ł, którego NFD nie rozkłada na znak bazowy.
-  const identityNorm = norm([h.race,h.origin,h.culture,h.raceId,h.raceName,h.cultureId,h.originName,h.faction,h.ethnicity,
-    h.heroClass,h.class,h.className,h.heroClassId,h.trainerFormerClass,h.subclass,
-    h.role,h.specialization,h.roleName,h.specializationName,h.roleId,h.trainerFormerRole,
-    h.gender,h.sex,h.genderName].filter(Boolean).join(' '));
-  const genderIdentityNorm = norm([h.gender,h.sex,h.genderName,h.genderId].filter(Boolean).join(' '));
-  const roleIdentityNorm = norm([h.role,h.specialization,h.roleName,h.specializationName,h.roleId,h.trainerFormerRole].filter(Boolean).join(' '));
-  // Celtowie: nie uzależniamy portretu od pola role, bo w danych bohatera
-  // może ono zawierać specjalizację „Tropiciel”, podczas gdy DPS jest osobnym oznaczeniem.
-  // Rasa + płeć + klasa identyfikują zestaw; role/specjalizacje nie mogą go blokować.
-  const isCeltRogueMaleDps = /celt|celta|celty/.test(identityNorm)
-    && /mesk|mezczyzna|male|man/.test(genderIdentityNorm)
-    && /lotrzyk|rogue/.test(identityNorm)
-    && !(h.isTrainer===true || h.isTrainer==='true');
-  const isAztecMageFemaleDps = /aztek|aztec/.test(identityNorm)
-    && /zenska|kobieta|female|woman|fem/.test(genderIdentityNorm)
-    && /mag|mage/.test(identityNorm)
-    && (!roleIdentityNorm || /dps|damage|obrazen|obrazenia/.test(roleIdentityNorm) || /dps|damage/.test(identityNorm))
-    && !(h.isTrainer===true || h.isTrainer==='true');
-  const isJapaneseWarriorMaleDps = /japon|japan|nippon/.test(identityNorm)
-    && /mesk|mezczyzna|male|man/.test(genderIdentityNorm)
-    && /wojownik|warrior/.test(identityNorm)
-    && (!roleIdentityNorm || /dps|damage|obrazen|obrazenia/.test(roleIdentityNorm) || /dps|damage/.test(identityNorm))
-    && !(h.isTrainer===true || h.isTrainer==='true');
-  const isGreekMageFemaleDps = /grek|grec|greek|grekii|hellen/.test(identityNorm)
-    && /zenska|kobieta|female|woman|fem/.test(genderIdentityNorm)
-    && /mag|mage/.test(identityNorm)
-    && /dps|damage|obrazen|obrazenia/.test(roleIdentityNorm)
-    && !/support|wspar|pomoc/.test(roleIdentityNorm)
-    && !(h.isTrainer===true || h.isTrainer==='true');
-  if (isCeltRogueMaleDps) {
-    src = getCeltRogueMaleDpsPortrait(h);
-    alt = `Portret celtyckiego łotrzyka DPS, ${star} gwiazdek`;
-  } else if (isAztecMageFemaleDps) {
-    src = getAztecMageFemaleDpsPortrait(h);
-    alt = `Portret azteckiej magini DPS, ${star} gwiazdek`;
-  } else if (isJapaneseWarriorMaleDps) {
-    src = getJapaneseWarriorMaleDpsPortrait(h);
-    alt = `Portret japońskiego wojownika DPS, ${star} gwiazdek`;
-  } else if (isGreekMageFemaleDps) {
-    src = getGreekMageFemaleDpsPortrait(h);
-    alt = `Portret greckiej magini DPS, ${star} gwiazdek`;
-  } else if (isIndiArcherSupport) {
+  if (isIndiArcherSupport) {
     src = getIndiArcherSupportPortrait(h);
     const inc = h.incarnation?.title || h.incarnation?.aspect || 'Inkarnacja';
     alt = star >= 7 ? `Portret hinduskiej łuczniczki Support, ${inc}` : `Portret hinduskiej łuczniczki Support, ${star} gwiazdek`;
@@ -2251,7 +2122,7 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
     alt=`Portret łotra-trenera z Nordów, ${star} gwiazdek`;
   }
   if(!src) return `<div class="hero-v2-portrait">${fallback}</div>`;
-  return `<img class="hero-v2-portrait${isCeltRogueMaleDps?' celt-rogue-male-dps-portrait':''}${isAztecMageFemaleDps?' aztec-mage-female-dps-portrait':''}${h.race==='Grekii'&&h.heroClass==='Łotrzyk'&&h.gender==='Żeńska'?' greece-portrait':''}${h.race==='Grekii'&&h.heroClass==='Mag'&&h.gender==='Żeńska'&&h.role==='Support'?' greece-mage-support-portrait':''}${h.race==='Celtów'&&h.heroClass==='Łucznik'&&h.gender==='Żeńska'?' celt-portrait':''}${isIndiaDefenderTrainer?' india-defender-trainer-portrait':''}${h.race==='Azteków'&&h.heroClass==='Wojownik'&&h.gender==='Męska'?' aztec-portrait':''}${h.race==='Azteków'&&h.heroClass==='Łotrzyk'&&h.gender==='Żeńska'&&h.role==='DPS'?' aztec-rogue-dps-portrait':''}${h.race==='Arabii'&&h.heroClass==='Łotrzyk'&&h.gender==='Żeńska'?' arabia-rogue-portrait':''}${h.race==='Celtów'&&h.heroClass==='Mag'&&h.gender==='Męska'&&h.role==='Support'?' celt-mage-support-portrait':''}${h.race==='Celtów'&&h.heroClass==='Mag'&&h.gender==='Męska'&&h.isTrainer?' celt-mage-trainer-portrait':''}${h.race==='Nordów'&&h.heroClass==='Łotrzyk'&&h.gender==='Męska'&&h.isTrainer?' nord-rogue-trainer-portrait':''}" src="${src}" alt="${alt}" onerror="if(!this.dataset.retry){this.dataset.retry='1';this.src=this.src.split('?')[0]}else{this.onerror=null;this.replaceWith(document.createTextNode('⚔️'))}">`;
+  return `<img class="hero-v2-portrait${h.race==='Grekii'&&h.heroClass==='Łotrzyk'&&h.gender==='Żeńska'?' greece-portrait':''}${h.race==='Grekii'&&h.heroClass==='Mag'&&h.gender==='Żeńska'&&h.role==='Support'?' greece-mage-support-portrait':''}${h.race==='Celtów'&&h.heroClass==='Łucznik'&&h.gender==='Żeńska'?' celt-portrait':''}${isIndiaDefenderTrainer?' india-defender-trainer-portrait':''}${h.race==='Azteków'&&h.heroClass==='Wojownik'&&h.gender==='Męska'?' aztec-portrait':''}${h.race==='Azteków'&&h.heroClass==='Łotrzyk'&&h.gender==='Żeńska'&&h.role==='DPS'?' aztec-rogue-dps-portrait':''}${h.race==='Arabii'&&h.heroClass==='Łotrzyk'&&h.gender==='Żeńska'?' arabia-rogue-portrait':''}${h.race==='Celtów'&&h.heroClass==='Mag'&&h.gender==='Męska'&&h.role==='Support'?' celt-mage-support-portrait':''}${h.race==='Celtów'&&h.heroClass==='Mag'&&h.gender==='Męska'&&h.isTrainer?' celt-mage-trainer-portrait':''}${h.race==='Nordów'&&h.heroClass==='Łotrzyk'&&h.gender==='Męska'&&h.isTrainer?' nord-rogue-trainer-portrait':''}" src="${src}" alt="${alt}" onerror="if(!this.dataset.retry){this.dataset.retry='1';this.src=this.src.split('?')[0]}else{this.onerror=null;this.replaceWith(document.createTextNode('⚔️'))}">`;
 }
 // Portrety MAGA z ARABII, mężczyzna, 1★–7★.
 // Źródło: dostarczony arkusz graficzny. Liczba gwiazdek nadrukowana przy każdym
@@ -5627,10 +5498,15 @@ function deleteTeam(teamId) {
   const removed=state.teams.find(t=>t.id===teamId);
   state.teams=state.teams.filter(t=>t.id!==teamId);
   state.selectedTeamIds=(state.selectedTeamIds||[]).filter(id=>id!==teamId);
-  if(removed) state.selectedHeroIds=(state.selectedHeroIds||[]).filter(id=>!removed.heroIds.includes(id));
+  if(removed){
+    const removedIds=new Set((removed.heroIds||[]).map(Number));
+    const stillAssignedIds=new Set((state.teams||[]).flatMap(team=>Array.isArray(team.heroIds)?team.heroIds.map(Number):[]));
+    state.selectedHeroIds=(state.selectedHeroIds||[]).filter(id=>!removedIds.has(Number(id))||stillAssignedIds.has(Number(id)));
+  }
+  renderTeamSelects();
   renderTeamsList();
   saveGame();
-  log('Drużyna usunięta.','warn');
+  log('Drużyna usunięta. Bohaterowie ponownie są dostępni do tworzenia drużyn.','warn');
 }
 
 function selectTeamForMission(teamId) {
@@ -5677,11 +5553,24 @@ function renderTeamSelects() {
   const container=document.getElementById('team-hero-selects');
   if(!container)return;
   container.innerHTML='';
+
+  // Bohater może należeć tylko do jednej zapisanej drużyny.
+  // Zbieramy ID ze wszystkich drużyn i wykluczamy je z nowych selektorów.
+  const assignedHeroIds=new Set(
+    (state.teams||[]).flatMap(team=>
+      Array.isArray(team.heroIds)?team.heroIds.map(id=>Number(id)):[]
+    )
+  );
+  const availableHeroes=(state.heroes||[]).filter(h=>
+    h && h.isAlive && !h.isTrainer && !h.isBlacksmith &&
+    !assignedHeroIds.has(Number(h.id))
+  );
+
   for(let i=0;i<3;i++){
     const select=document.createElement('select');
     select.className='select-style';
     select.innerHTML='<option value="0">-- Wybierz bohatera '+(i+1)+' --</option>';
-    state.heroes.filter(h=>h.isAlive&&!h.isTrainer&&!h.isBlacksmith).forEach(h=>{
+    availableHeroes.forEach(h=>{
       const opt=document.createElement('option');
       opt.value=h.id;
       opt.textContent=`${h.name} (${h.heroClass||'?'}, ${h.role||'?'}) ⭐${h.stars}`;
