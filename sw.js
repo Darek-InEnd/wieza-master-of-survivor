@@ -1,7 +1,7 @@
 /* Wieża PWA service worker — release 0.138.
  * BUILD_ID musi odpowiadać PWA_BUILD/GAME_VERSION w index.html.
  */
-const BUILD_ID = '0.138.4';
+const BUILD_ID = '0.138.5';
 const CACHE_NAME = 'wieza-pwa-' + BUILD_ID;
 const CORE_ASSETS = ['./index.html', './manifest.webmanifest', './opening_1080p.mp4',
   './hero-portraits/arabii/obronca_mezczyzna_tank/arabian_defender_tank_1star.png',
@@ -21,7 +21,42 @@ const CORE_ASSETS = ['./index.html', './manifest.webmanifest', './opening_1080p.
   './hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_6star.png',
   './hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_durga.png',
   './hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_lakshmi.png',
-  './hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_saraswati.png'];
+  './hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_saraswati.png',
+  './enemy-portraits/draugi_zardzewialy_pancerz.png',
+  './enemy-portraits/anunnaki_archaniol_kosmosu.png',
+  './enemy-portraits/anunnaki_enlil.png',
+  './enemy-portraits/anunnaki_gwiezdny_straznik.png',
+  './enemy-portraits/anunnaki_ninurta.png',
+  './enemy-portraits/anunnaki_ostrze_niebios.png',
+  './enemy-portraits/anunnaki_promienny_strzelec.png',
+  './enemy-portraits/anunnaki_utu.png',
+  './enemy-portraits/spriggany_cierniowy_wladca.png',
+  './enemy-portraits/spriggany_ciskacz_cierni.png',
+  './enemy-portraits/spriggany_debowy_kolos.png',
+  './enemy-portraits/spriggany_debowy_krol.png',
+  './enemy-portraits/spriggany_druid_wiezy.png',
+  './enemy-portraits/spriggany_greenman.png',
+  './enemy-portraits/spriggany_ozywiony_konar.png',
+  './enemy-portraits/draugi_kosciany_lucznik.png',
+  './enemy-portraits/draugi_nekromanta_kurhanu.png',
+  './enemy-portraits/draugi_zamrozony_topornik.png',
+  './enemy-portraits/draugi_glamr.png',
+  './enemy-portraits/draugi_haugbui.png',
+  './enemy-portraits/draugi_krol_draugrow.png',
+  './enemy-portraits/centaurowie_opancerzony_stratywaz.png',
+  './enemy-portraits/centaurowie_komandor_lukow.png',
+  './enemy-portraits/centaurowie_szaman_kopyt.png',
+  './enemy-portraits/centaurowie_startujacy_szazownik.png',
+  './enemy-portraits/centaurowie_chiron.png',
+  './enemy-portraits/centaurowie_nessos.png',
+  './enemy-portraits/centaurowie_pholos.png',
+  './enemy-portraits/naga_krolewski_waz.png',
+  './enemy-portraits/naga_zmyslny_lucznik.png',
+  './enemy-portraits/naga_kobra_magus.png',
+  './enemy-portraits/naga_wezowy_zbrojny.png',
+  './enemy-portraits/naga_shesha.png',
+  './enemy-portraits/naga_takshaka.png',
+  './enemy-portraits/naga_vasuki.png'];
 
 async function cacheIndividually(cache, urls) {
   for (const url of urls) {
@@ -64,7 +99,7 @@ self.addEventListener('fetch', event => {
     }).catch(() => caches.match(event.request).then(cached => cached || caches.match('./index.html'))));
     return;
   }
-  event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
+  event.respondWith(caches.match(event.request, { ignoreSearch: true }).then(cached => cached || fetch(event.request).then(response => {
     if (response && response.ok) {
       const copy = response.clone();
       caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy)).catch(() => {});
