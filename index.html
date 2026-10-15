@@ -600,7 +600,7 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 <script>
 /* Prosty mechanizm aktualizacji PWA: sprawdzenie SW przy starcie + automatyczne przeładowanie po przejęciu aplikacji przez nowy SW. */
 if ('serviceWorker' in navigator) {
-  const PWA_BUILD = '0.138.17';
+  const PWA_BUILD = '0.138.18';
   let registration = null;
   let reloadDone = false;
   const hadController = !!navigator.serviceWorker.controller;
@@ -1145,7 +1145,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.138.17';
+const GAME_VERSION = '0.138.18';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -5451,25 +5451,54 @@ function getRaceCategory(race) {
   return race || "Inne";
 }
 
+// Bonusy narodowe są liczone na podstawie średniej liczby gwiazdek całej trójki.
+// Wartość bazowa odpowiada średniej 3★; skala rośnie liniowo od 1★ do 7★.
+const RACIAL_TEAM_BONUSES = {
+  "Japonii": { type:"spdPct", base:10, label:"Szybkość", icon:"⚡" },
+  "Nordów":  { type:"hpFlat", base:30, label:"HP", icon:"❤️" },
+  "Celtów":  { type:"critPct", base:5, label:"Szansa krytyczna", icon:"💥" },
+  "Grekii":  { type:"dmgPct", base:8, label:"Obrażenia", icon:"🔥" },
+  "Indii":   { type:"defPct", base:8, label:"Redukcja obrażeń", icon:"🛡️" },
+  "Słowian": { type:"expPct", base:8, label:"Doświadczenie", icon:"✨" },
+  "Arabii":  { type:"dmgPct", base:8, label:"Obrażenia", icon:"☀️" },
+  "Azteków": { type:"critPct", base:8, label:"Szansa krytyczna", icon:"🌞" }
+};
+
+function getRacialTeamBonus(heroes) {
+  if(!Array.isArray(heroes)||heroes.length!==3||heroes.some(h=>!h))return null;
+  const race=String(heroes[0].race||'');
+  if(!race||!heroes.every(h=>String(h.race||'')===race))return null;
+  const def=RACIAL_TEAM_BONUSES[race];
+  if(!def)return null;
+  const avgStars=heroes.reduce((sum,h)=>sum+Math.max(1,Math.min(7,Number(h.stars)||1)),0)/3;
+  const scale=avgStars/3;
+  const value=def.type==='hpFlat' ? Math.round(def.base*scale) : Math.round(def.base*scale*10)/10;
+  return {race,type:def.type,base:def.base,value,avgStars:Math.round(avgStars*100)/100,scale,label:def.label,icon:def.icon};
+}
+
+function formatRacialTeamBonus(bonus) {
+  if(!bonus)return '';
+  const amount=Number.isInteger(bonus.value)?String(bonus.value):bonus.value.toFixed(1);
+  const suffix=bonus.type==='hpFlat'?' HP': '%';
+  return `${bonus.icon} ${bonus.race}: ${bonus.label} +${amount}${suffix} (średnio ${bonus.avgStars.toFixed(1)}★)`;
+}
+
 function calculateTeamBonuses(teamId) {
-  const team=state.teams.find(t=>t.id===teamId);
-  if(!team||!Array.isArray(team.heroIds)||team.heroIds.length!==3)return{dmg:0,def:0,exp:0};
-  const heroes=team.heroIds.map(id=>state.heroes.find(h=>h.id===id)).filter(h=>h);
-  if(heroes.length!==3)return{dmg:0,def:0,exp:0};
-  
+  const team=(state.teams||[]).find(t=>t.id===teamId);
+  if(!team||!Array.isArray(team.heroIds)||team.heroIds.length!==3)return{dmg:0,def:0,exp:0,racialBonus:null,avgStars:0};
+  const heroes=team.heroIds.map(id=>state.heroes.find(h=>Number(h.id)===Number(id))).filter(Boolean);
+  if(heroes.length!==3)return{dmg:0,def:0,exp:0,racialBonus:null,avgStars:0};
   let dmgBonus=0,defBonus=0,expBonus=0;
-  
   const roles=heroes.map(h=>h.role);
   if(roles.includes("Tank")&&roles.includes("DPS")&&roles.includes("Support")){
     dmgBonus+=10;defBonus+=10;expBonus+=15;
   }
-  
   const races=heroes.map(h=>h.race);
   if(races[0]===races[1]&&races[1]===races[2]&&races[0]){
     dmgBonus+=5;defBonus+=5;expBonus+=10;
   }
-  
-  return{dmg:dmgBonus,def:defBonus,exp:expBonus};
+  const avgStars=heroes.reduce((sum,h)=>sum+Math.max(1,Math.min(7,Number(h.stars)||1)),0)/3;
+  return{dmg:dmgBonus,def:defBonus,exp:expBonus,racialBonus:getRacialTeamBonus(heroes),avgStars:Math.round(avgStars*100)/100};
 }
 
 function createTeamUI() {
@@ -5601,6 +5630,7 @@ function renderTeamsList() {
               ${bonuses.dmg>0?`🔥 Obrażenia +${bonuses.dmg}% `:``}
               ${bonuses.def>0?`🛡️ Obrona +${bonuses.def}% `:``}
               ${bonuses.exp>0?`✨ Doświadczenie +${bonuses.exp}% `:``}
+              ${bonuses.racialBonus?`<br><span title="Bonus rasowy skaluje się ze średnią gwiazdek trójki">${battleEsc(formatRacialTeamBonus(bonuses.racialBonus))}</span>`:``}
             </small>
           </div>
           <div style="display:flex;gap:4px;">
@@ -7311,6 +7341,14 @@ function startBattleCombat(phase='final') {
       log(`🔗 SYNERGIA DRUŻYNY${teamBonus.dmg>0?` — +${teamBonus.dmg}% Obrażeń`:''}${teamBonus.def>0?` — +${teamBonus.def}% Obrony`:''}${teamBonus.exp>0?` — +${teamBonus.exp}% Doświadczenia`:''}!`,'success');
     }
     currentBattleTeamBonus=teamBonus;
+    const racialBonusByHeroId=new Map();
+    const selectedRacialTeams=(state.selectedTeamIds||[]).map(id=>(state.teams||[]).find(t=>Number(t.id)===Number(id))).filter(Boolean);
+    selectedRacialTeams.forEach(team=>{
+      const bonus=calculateTeamBonuses(team.id).racialBonus;
+      if(!bonus)return;
+      (team.heroIds||[]).forEach(id=>racialBonusByHeroId.set(Number(id),bonus));
+      log(`🏵️ <b>WIĘŹ NARODU:</b> ${formatRacialTeamBonus(bonus)}. Bonus obejmuje trzech członków tej drużyny.`,'success');
+    });
     
     const explorationEffects=!isEntry ? (state.exploration?.explorationEffects||{}) : {};
     if(!isEntry && (explorationEffects.dmg||explorationEffects.def||explorationEffects.enemyAtk)){
@@ -7344,8 +7382,15 @@ function startBattleCombat(phase='final') {
       // Equipment HP is a transient battle modifier. Never use an already
       // equipment-augmented maxHp as the next battle's base value.
       if (!Number.isFinite(h._baseMaxHp)) h._baseMaxHp = h.maxHp;
-      h.maxHp = h._baseMaxHp + (eqBonus.hp || 0);
-      h.hp = Math.min(h.hp, h.maxHp);
+      const racialBonus=racialBonusByHeroId.get(Number(h.id))||null;
+      h._racialSpdBonus=racialBonus?.type==='spdPct'?(racialBonus.value/100):0;
+      h._racialCritBonus=racialBonus?.type==='critPct'?(racialBonus.value/100):0;
+      h._racialDamageBonus=racialBonus?.type==='dmgPct'?(racialBonus.value/100):0;
+      h._racialDefBonus=racialBonus?.type==='defPct'?(racialBonus.value/100):0;
+      h._racialExpBonus=racialBonus?.type==='expPct'?(racialBonus.value/100):0;
+      h._racialHpBonus=racialBonus?.type==='hpFlat'?racialBonus.value:0;
+      h.maxHp = h._baseMaxHp + (eqBonus.hp || 0) + h._racialHpBonus;
+      h.hp = Math.min(h.hp + h._racialHpBonus, h.maxHp);
       h._eqBonus = eqBonus;
       ensureHeroSkillState(h).cooldown=0;
       h._s11517UsedRounds=[]; h._s11517LastTargetId=null; h._relationshipDamageMod=1;
@@ -7373,7 +7418,7 @@ function startBattleCombat(phase='final') {
           }
           updateUI(); updateExplorationPanel(); battleTickBusy=false; return;
         }
-        log(`<b>SUKCES!</b> Misja ${MISSION_TYPES[type].name} zakończona w ${round} turach!`,'success'); addMissionRewards(floor,type); aliveParty.forEach(h=>addExp(h,Math.floor(80*Math.pow(floor,1.2)*MISSION_TYPES[type].reward*(1+currentBattleTeamBonus.exp/100)))); if(floor===state.maxUnlockedFloor){ state.maxUnlockedFloor++; state.selectedFloor=state.maxUnlockedFloor; state.floor=state.maxUnlockedFloor; log(`<b>ODBLOKOWANO PIĘTRO ${state.maxUnlockedFloor}!</b>`,'success'); } if(type==='boss') showTowerMilestone(floor); recordMissionIntel(floor,type); finishBattle(true,floor,type,deadCount); battleTickBusy=false; return; }
+        log(`<b>SUKCES!</b> Misja ${MISSION_TYPES[type].name} zakończona w ${round} turach!`,'success'); addMissionRewards(floor,type); aliveParty.forEach(h=>addExp(h,Math.floor(80*Math.pow(floor,1.2)*MISSION_TYPES[type].reward*(1+currentBattleTeamBonus.exp/100)*(1+(h._racialExpBonus||0))))); if(floor===state.maxUnlockedFloor){ state.maxUnlockedFloor++; state.selectedFloor=state.maxUnlockedFloor; state.floor=state.maxUnlockedFloor; log(`<b>ODBLOKOWANO PIĘTRO ${state.maxUnlockedFloor}!</b>`,'success'); } if(type==='boss') showTowerMilestone(floor); recordMissionIntel(floor,type); finishBattle(true,floor,type,deadCount); battleTickBusy=false; return; }
       const allAlive = [...aliveParty, ...enemies.filter(e => e.hp > 0)];
       allAlive.forEach(entity => {
         const result = processStatuses(entity);
@@ -7407,8 +7452,8 @@ function startBattleCombat(phase='final') {
       const ordered = [...aliveParty].sort((a,b) => {
         const eqA = a._eqBonus || applyItemStats(a, state.inventory);
         const eqB = b._eqBonus || applyItemStats(b, state.inventory);
-        const spdA = a.spd*(1+(a._statMods?.spd || 0)) + (eqA.spd || 0);
-        const spdB = b.spd*(1+(b._statMods?.spd || 0)) + (eqB.spd || 0);
+        const spdA = a.spd*(1+(a._statMods?.spd || 0))*(1+(a._racialSpdBonus||0)) + (eqA.spd || 0);
+        const spdB = b.spd*(1+(b._statMods?.spd || 0))*(1+(b._racialSpdBonus||0)) + (eqB.spd || 0);
         return (spdB + synergy*.15) - (spdA + synergy*.15);
       });
       
@@ -7521,7 +7566,7 @@ function startBattleCombat(phase='final') {
           log(`<b>${h.name}</b> próbuje rzucić zaklęcie, ale jest UCISZONY!`,'warn');
           continue;
         }
-        dmg = Math.floor(baseAtk * totalDamageMod * (1-damageMitigation(effDefense,mitigD)));
+        dmg = Math.floor(baseAtk * totalDamageMod * (1+(h._racialDamageBonus||0)) * (1-damageMitigation(effDefense,mitigD)));
         dmg = Math.max(3, Math.floor(dmg * (.85 + Math.random() * .3) * (1 + currentBattleTeamBonus.dmg/100)));
         dmg = applyRuneOffense(h,target,dmg);
         if(attackProfile.kind==='physical'&&attackProfile.elementalBonus>0&&attackProfile.element){
@@ -7544,7 +7589,7 @@ function startBattleCombat(phase='final') {
         const fearStatus = h.statuses?.find(s=>s.name==='fear');
         if(fearStatus){ dmg=Math.max(1,Math.floor(dmg*(1-fearStatus.reduceDamage))); }
         
-        const critChance=Math.min(.75,cm.crit+rm.crit+h.dex*0.002+(eqBonus.crit||0)+skillPassive.crit+(h._statMods?.crit||0));
+        const critChance=Math.min(.75,cm.crit+rm.crit+h.dex*0.002+(eqBonus.crit||0)+skillPassive.crit+(h._statMods?.crit||0)+(h._racialCritBonus||0));
         let critMsg="";
         if(Math.random()<critChance){ dmg=Math.floor(dmg*1.7); h.criticalHits++; critMsg=" (krytyk!)"; }
         if(h.personality==='Porywczy')dmg=Math.floor(dmg*1.2);
@@ -7651,7 +7696,7 @@ function startBattleCombat(phase='final') {
           let supportLowHpMit=0;
           const defSupport=aliveParty.find(x=>x.isAlive&&x.role==='Support'&&x.heroClass==='Obrońca'&&getHeroSkillRanks(x).passive1);
           if(defSupport){const rr=getHeroSkillRanks(defSupport).passive1,pct=target.hp/target.maxHp;supportLowHpMit=pct<.40?[.07,.10,.14][rr-1]:pct<.70?[.03,.05,.07][rr-1]:0;}
-          incoming=Math.floor(incoming*identityTaken*(1+(target._statMods?.damageTaken||0)-supportLowHpMit));
+          incoming=Math.floor(incoming*identityTaken*(1+(target._statMods?.damageTaken||0)-supportLowHpMit)*(1-Math.min(.75,target._racialDefBonus||0)));
           if (enemy._critChance && Math.random() < enemy._critChance) { incoming = Math.floor(incoming * 1.5); log(`💥 <b>${enemy.name}</b> trafia krytycznie!`,'danger'); }
           incoming=Math.max(3,Math.floor(incoming*(.9+Math.random()*.2)*(1-currentBattleTeamBonus.def/100)));
           const defenderWeapon=chooseCombatWeaponType(target,round); target._activeCombatWeaponType=defenderWeapon; const defenderTraining=getWeaponTrainingClassBehavior(target,defenderWeapon);
@@ -7785,8 +7830,12 @@ function finishBattle(success,floor,type,deadCount) {
       h.maxHp = h._baseMaxHp;
       delete h._baseMaxHp;
     }
+    // Tymczasowe HP z wyposażenia i bonusów narodowych nie może zostać po walce.
+    if (!success) h.hp = Math.min(Number(h.hp)||0, Number(h.maxHp)||0);
     delete h._eqBonus;
     delete h._statMods;
+    delete h._racialSpdBonus; delete h._racialCritBonus; delete h._racialDamageBonus;
+    delete h._racialDefBonus; delete h._racialExpBonus; delete h._racialHpBonus;
     delete h._s11517UsedRounds; delete h._s11517LastTargetId; delete h._relationshipDamageMod;
   });
   
@@ -9326,7 +9375,7 @@ function renderQuickTeamSelect() {
     btn.disabled=!isComplete;
     const bonuses=calculateTeamBonuses(team.id);
     btn.textContent=`${isSelected?'☑️':'⬜'} ${team.name}`;
-    btn.title=`${team.heroIds.map(id=>state.heroes.find(h=>h.id===id)?.name||'?').join(', ')}${bonuses.dmg||bonuses.def||bonuses.exp?` | Bonus: ${bonuses.dmg?`DMG +${bonuses.dmg}% `:''}${bonuses.def?`DEF +${bonuses.def}% `:''}${bonuses.exp?`EXP +${bonuses.exp}%`:''}`:''}`;
+    btn.title=`${team.heroIds.map(id=>state.heroes.find(h=>h.id===id)?.name||'?').join(', ')}${bonuses.dmg||bonuses.def||bonuses.exp?` | Bonus: ${bonuses.dmg?`DMG +${bonuses.dmg}% `:''}${bonuses.def?`DEF +${bonuses.def}% `:''}${bonuses.exp?`EXP +${bonuses.exp}%`:''}`:''}${bonuses.racialBonus?` | ${formatRacialTeamBonus(bonuses.racialBonus)}`:''}`;
     btn.onclick=()=>{
       if(!isComplete){log(`⚠️ Party "${team.name}" ma niedostępnego członka.` ,'warn');return;}
       if(locked){log(`🔒 Maksymalnie ${maxTeams} party może brać udział w jednej wyprawie.` ,'warn');return;}
