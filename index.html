@@ -600,7 +600,7 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 <script>
 /* Prosty mechanizm aktualizacji PWA: sprawdzenie SW przy starcie + automatyczne przeładowanie po przejęciu aplikacji przez nowy SW. */
 if ('serviceWorker' in navigator) {
-  const PWA_BUILD = '0.138.12';
+  const PWA_BUILD = '0.138.13';
   let registration = null;
   let reloadDone = false;
   const hadController = !!navigator.serviceWorker.controller;
@@ -1145,7 +1145,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.138.12';
+const GAME_VERSION = '0.138.13';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -1985,16 +1985,16 @@ function getCeltMageMaleSupportPortrait(h){
 // Portrety zewnętrzne: hinduska łuczniczka Support oraz arabski obrońca Tank.
 // Progresja 1★–6★ i trzy niezależne aspekty 7★ dla każdej postaci.
 const INDI_ARCHER_FEMALE_SUPPORT_PORTRAITS = {
-  1: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_1star.png?v=0.138.7',
-  2: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_2star.png?v=0.138.7',
-  3: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_3star.png?v=0.138.7',
-  4: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_4star.png?v=0.138.7',
-  5: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_5star.png?v=0.138.7',
-  6: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_6star.png?v=0.138.7',
+  1: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_1star.png?v=0.138.13',
+  2: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_2star.png?v=0.138.13',
+  3: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_3star.png?v=0.138.13',
+  4: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_4star.png?v=0.138.13',
+  5: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_5star.png?v=0.138.13',
+  6: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_6star.png?v=0.138.13',
   7: {
-    lakshmi: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_7star_lakshmi.png?v=0.138.7',
-    saraswati: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_7star_saraswati.png?v=0.138.7',
-    durga: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_7star_durga.png?v=0.138.7'
+    lakshmi: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_lakshmi.png?v=0.138.13',
+    saraswati: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_saraswati.png?v=0.138.13',
+    durga: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_durga.png?v=0.138.13'
   }
 };
 const ARABIAN_DEFENDER_TANK_PORTRAITS = {
@@ -2036,31 +2036,31 @@ function getArabianDefenderTankPortrait(h) {
   return star < 7 ? ARABIAN_DEFENDER_TANK_PORTRAITS[star] : getNamedIncarnationPortrait(h, ARABIAN_DEFENDER_TANK_PORTRAITS[7], 'shams');
 }
 
-// Portrety zewnętrzne 0.138.12. Nazwy i katalogi odpowiadają assetom w repozytorium.
+// Portrety zewnętrzne 0.138.13. Nazwy i katalogi odpowiadają assetom w repozytorium.
 const CELT_ROGUE_MALE_DPS_PORTRAITS = {
-  1: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_1star.png?v=0.138.12',
-  2: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_2star.png?v=0.138.12',
-  3: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_3star.png?v=0.138.12',
-  4: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_4star.png?v=0.138.12',
-  5: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_5star.png?v=0.138.12',
-  6: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_6star.png?v=0.138.12',
+  1: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_1star.png?v=0.138.13',
+  2: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_2star.png?v=0.138.13',
+  3: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_3star.png?v=0.138.13',
+  4: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_4star.png?v=0.138.13',
+  5: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_5star.png?v=0.138.13',
+  6: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_6star.png?v=0.138.13',
   7: {
-    ballor: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_ballor.png?v=0.138.12',
-    cernunnos: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_cernunnos.png?v=0.138.12',
-    mannan_mac_lir: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_mannan_mac_lir.png?v=0.138.12'
+    ballor: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_ballor.png?v=0.138.13',
+    cernunnos: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_cernunnos.png?v=0.138.13',
+    mannan_mac_lir: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_mannan_mac_lir.png?v=0.138.13'
   }
 };
 const AZTEC_MAGE_FEMALE_DPS_PORTRAITS = {
-  1: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_1star.png?v=0.138.12',
-  2: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_2star.png?v=0.138.12',
-  3: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_3star.png?v=0.138.12',
-  4: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_4star.png?v=0.138.12',
-  5: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_5star.png?v=0.138.12',
-  6: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_6star.png?v=0.138.12',
+  1: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_1star.png?v=0.138.13',
+  2: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_2star.png?v=0.138.13',
+  3: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_3star.png?v=0.138.13',
+  4: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_4star.png?v=0.138.13',
+  5: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_5star.png?v=0.138.13',
+  6: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_6star.png?v=0.138.13',
   7: {
-    metztli: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_metztli.png?v=0.138.12',
-    tonatiuh: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_tonatiuh.png?v=0.138.12',
-    xiuhcatl: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_xiuhcatl.png?v=0.138.12'
+    metztli: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_metztli.png?v=0.138.13',
+    tonatiuh: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_tonatiuh.png?v=0.138.13',
+    xiuhcatl: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_xiuhcatl.png?v=0.138.13'
   }
 };
 function getExternalPortraitForStars(h, portraits, fallbackKey, aliases) {
@@ -2089,7 +2089,7 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
   if(!h) return `<div class="hero-v2-portrait">${fallback}</div>`;
   const star=Math.max(1,Math.min(7,Number(h.stars)||1));
   let src=null, alt="";
-  const norm = v => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+  const norm = v => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ł/g,'l').replace(/Ł/g,'l').toLowerCase().trim();
   const raceNorm = norm([h.race, h.origin, h.culture, h.raceId, h.raceName, h.cultureId, h.originName, h.ethnicity, h.faction].filter(Boolean).join(' '));
   const genderNorm = norm(h.gender);
   const classNorm = norm(h.heroClass);
@@ -2116,9 +2116,11 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
   const isIndiArcherSupport = !isMale && isArcherClass && (isIndia || (!raceNorm && isFemale)) &&
     (isFemale || !genderNorm) && (isSupportRole || isFemale);
   const isArabianDefenderTank = isMale && norm(h.race).includes('arab') && classNorm === 'obronca' && (roleNorm.includes('tank') || roleNorm === '' || roleNorm.includes('obron'));
-  const identityNorm = norm([h.race,h.origin,h.culture,h.raceId,h.raceName,h.cultureId,h.heroClass,h.class,h.className,h.role,h.specialization,h.gender].filter(Boolean).join(' ')).replace(/ł/g,'l');
-  const isCeltRogueMaleDps = /celt|celta|celty/.test(identityNorm) && /mesk|mezczyzna|male|man/.test(norm(h.gender)) && /lotrzyk|rogue/.test(identityNorm) && /dps|damage/.test(identityNorm) && !h.isTrainer;
-  const isAztecMageFemaleDps = /aztek|aztec/.test(identityNorm) && /zenska|kobieta|female|woman/.test(norm(h.gender)) && /mag|mage/.test(identityNorm) && /dps|damage/.test(identityNorm) && !h.isTrainer;
+  const identityNorm = norm([h.race,h.origin,h.culture,h.raceId,h.raceName,h.cultureId,h.heroClass,h.class,h.className,h.role,h.specialization,h.roleName,h.specializationName,h.gender].filter(Boolean).join(' '));
+  const genderIdentityNorm = norm([h.gender,h.sex,h.genderName].filter(Boolean).join(' '));
+  const roleIdentityNorm = norm([h.role,h.specialization,h.roleName,h.specializationName,h.trainerFormerRole].filter(Boolean).join(' '));
+  const isCeltRogueMaleDps = /celt|celta|celty/.test(identityNorm) && /mesk|mezczyzna|male|man/.test(genderIdentityNorm) && /lotrzyk|rogue/.test(identityNorm) && (/dps|damage|obrazen/.test(roleIdentityNorm) || /dps|damage/.test(identityNorm)) && !(h.isTrainer===true || h.isTrainer==='true');
+  const isAztecMageFemaleDps = /aztek|aztec/.test(identityNorm) && /zenska|kobieta|female|woman/.test(genderIdentityNorm) && /mag|mage/.test(identityNorm) && (/dps|damage|obrazen/.test(roleIdentityNorm) || /dps|damage/.test(identityNorm)) && !(h.isTrainer===true || h.isTrainer==='true');
   if (isCeltRogueMaleDps) {
     src = getCeltRogueMaleDpsPortrait(h);
     alt = `Portret celtyckiego łotrzyka DPS, ${star} gwiazdek`;
