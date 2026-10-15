@@ -1758,18 +1758,18 @@ const INDIA_WARRIOR_PORTRAITS = {
 // v0.135.8 — Hinduski Obrońca, mężczyzna, Tank: portrety zewnętrzne z repozytorium GitHub.
 // Stare obrazy base64 zostały usunięte z kodu gry.
 const INDIA_DEFENDER_PORTRAITS = {
-  1: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_1star.png?v=0.138.7',
-  2: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_2star.png?v=0.138.7',
-  3: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_3star.png?v=0.138.7',
-  4: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_4star.png?v=0.138.7',
-  5: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_5star.png?v=0.138.7',
-  6: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_6star.png?v=0.138.7'
+  1: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_1star.png?v=0.138.7',
+  2: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_2star.png?v=0.138.7',
+  3: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_3star.png?v=0.138.7',
+  4: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_4star.png?v=0.138.7',
+  5: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_5star.png?v=0.138.7',
+  6: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_6star.png?v=0.138.7'
 };
 
 const INDIA_DEFENDER_INCARNATION_PORTRAITS = {
-  durga: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_7star_durga.png?v=0.138.7',
-  vishnu: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_7star_vishnu.png?v=0.138.7',
-  shiva: 'hero-portraits/indii/obronca_mezczyzna/indian_defender_7star_shiva.png?v=0.138.7'
+  durga: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_7star_durga.png?v=0.138.7',
+  vishnu: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_7star_vishnu.png?v=0.138.7',
+  shiva: 'hero-portraits/indii/obronca_mezczyzna/indi_defender_7star_shiva.png?v=0.138.7'
 };
 
 function getIndiaDefenderIncarnationPortrait(h){
@@ -1985,16 +1985,16 @@ function getCeltMageMaleSupportPortrait(h){
 // Portrety zewnętrzne: hinduska łuczniczka Support oraz arabski obrońca Tank.
 // Progresja 1★–6★ i trzy niezależne aspekty 7★ dla każdej postaci.
 const INDI_ARCHER_FEMALE_SUPPORT_PORTRAITS = {
-  1: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_1star.png?v=0.138.7',
-  2: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_2star.png?v=0.138.7',
-  3: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_3star.png?v=0.138.7',
-  4: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_4star.png?v=0.138.7',
-  5: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_5star.png?v=0.138.7',
-  6: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_6star.png?v=0.138.7',
+  1: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_1star.png?v=0.138.7',
+  2: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_2star.png?v=0.138.7',
+  3: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_3star.png?v=0.138.7',
+  4: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_4star.png?v=0.138.7',
+  5: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_5star.png?v=0.138.7',
+  6: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_6star.png?v=0.138.7',
   7: {
-    lakshmi: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_lakshmi.png?v=0.138.7',
-    saraswati: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_saraswati.png?v=0.138.7',
-    durga: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_durga.png?v=0.138.7'
+    lakshmi: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_7star_lakshmi.png?v=0.138.7',
+    saraswati: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_7star_saraswati.png?v=0.138.7',
+    durga: 'hero-portraits/indii/lucznik_kobieta_support/indi_archer_support_7star_durga.png?v=0.138.7'
   }
 };
 const ARABIAN_DEFENDER_TANK_PORTRAITS = {
@@ -2027,7 +2027,7 @@ function getNamedIncarnationPortrait(h, variants, fallbackKey) {
   if (variants.al_kahhar && /alkahhar|al kahhar|kahhar/.test(text)) return variants.al_kahhar;
   return variants[fallbackKey];
 }
-function getIndianArcherSupportPortrait(h) {
+function getIndiArcherSupportPortrait(h) {
   const star = Math.max(1, Math.min(7, Number(h?.stars) || 1));
   return star < 7 ? INDI_ARCHER_FEMALE_SUPPORT_PORTRAITS[star] : getNamedIncarnationPortrait(h, INDI_ARCHER_FEMALE_SUPPORT_PORTRAITS[7], 'lakshmi');
 }
@@ -2064,11 +2064,11 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
   // W tej grze ta dedykowana grafika należy do hinduskiej kobiety-łucznika Support.
   // Najpierw korzystamy ze wszystkich dostępnych pól rasy/kultury; jeśli stary zapis
   // nie ma identyfikatora rasy, nie blokujemy grafiki, gdy klasa i płeć pasują.
-  const isIndianArcherSupport = !isMale && isArcherClass && (isIndia || (!raceNorm && isFemale)) &&
+  const isIndiArcherSupport = !isMale && isArcherClass && (isIndia || (!raceNorm && isFemale)) &&
     (isFemale || !genderNorm) && (isSupportRole || isFemale);
   const isArabianDefenderTank = isMale && norm(h.race).includes('arab') && classNorm === 'obronca' && (roleNorm.includes('tank') || roleNorm === '' || roleNorm.includes('obron'));
-  if (isIndianArcherSupport) {
-    src = getIndianArcherSupportPortrait(h);
+  if (isIndiArcherSupport) {
+    src = getIndiArcherSupportPortrait(h);
     const inc = h.incarnation?.title || h.incarnation?.aspect || 'Inkarnacja';
     alt = star >= 7 ? `Portret hinduskiej łuczniczki Support, ${inc}` : `Portret hinduskiej łuczniczki Support, ${star} gwiazdek`;
   } else if (isArabianDefenderTank) {
