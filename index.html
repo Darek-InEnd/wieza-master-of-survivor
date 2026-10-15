@@ -600,7 +600,7 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 <script>
 /* Prosty mechanizm aktualizacji PWA: sprawdzenie SW przy starcie + automatyczne przeładowanie po przejęciu aplikacji przez nowy SW. */
 if ('serviceWorker' in navigator) {
-  const PWA_BUILD = '0.138.4';
+  const PWA_BUILD = '0.138.5';
   let registration = null;
   let reloadDone = false;
   const hadController = !!navigator.serviceWorker.controller;
@@ -1113,7 +1113,29 @@ const ENEMY_PORTRAITS = {
   'Anunnaki::Ostrze Niebios': 'enemy-portraits/anunnaki_ostrze_niebios.png?v=0.136.6',
   'Anunnaki::Enlil': 'enemy-portraits/anunnaki_enlil.png?v=0.136.6',
   'Anunnaki::Ninurta': 'enemy-portraits/anunnaki_ninurta.png?v=0.136.6',
-  'Anunnaki::Utu': 'enemy-portraits/anunnaki_utu.png?v=0.136.6'
+  'Anunnaki::Utu': 'enemy-portraits/anunnaki_utu.png?v=0.136.6',
+  // Przywrócone portrety Draugrów, Centaurów i Nagów. Klucze zgodne z BESTIARY.
+  'Draugry::Zardzewiały Pancerz': 'enemy-portraits/draugi_zardzewialy_pancerz.png?v=0.138.5',
+  'Draugry::Koścany Łucznik': 'enemy-portraits/draugi_kosciany_lucznik.png?v=0.138.5',
+  'Draugry::Nekromanta Kurhanu': 'enemy-portraits/draugi_nekromanta_kurhanu.png?v=0.138.5',
+  'Draugry::Zmrożony Topornik': 'enemy-portraits/draugi_zamrozony_topornik.png?v=0.138.5',
+  'Draugry::Glamr': 'enemy-portraits/draugi_glamr.png?v=0.138.5',
+  'Draugry::Haugbui': 'enemy-portraits/draugi_haugbui.png?v=0.138.5',
+  'Draugry::Król Draugrów': 'enemy-portraits/draugi_krol_draugrow.png?v=0.138.5',
+  'Centaury::Opancerzony Stratywąż': 'enemy-portraits/centaurowie_opancerzony_stratywaz.png?v=0.138.5',
+  'Centaury::Komandor Łuków': 'enemy-portraits/centaurowie_komandor_lukow.png?v=0.138.5',
+  'Centaury::Szaman Kopyt': 'enemy-portraits/centaurowie_szaman_kopyt.png?v=0.138.5',
+  'Centaury::Stratujący Szarżownik': 'enemy-portraits/centaurowie_startujacy_szazownik.png?v=0.138.5',
+  'Centaury::Chiron': 'enemy-portraits/centaurowie_chiron.png?v=0.138.5',
+  'Centaury::Nessos': 'enemy-portraits/centaurowie_nessos.png?v=0.138.5',
+  'Centaury::Pholos': 'enemy-portraits/centaurowie_pholos.png?v=0.138.5',
+  'Nagowie::Królewski Wąż': 'enemy-portraits/naga_krolewski_waz.png?v=0.138.5',
+  'Nagowie::Zmyślny Łucznik': 'enemy-portraits/naga_zmyslny_lucznik.png?v=0.138.5',
+  'Nagowie::Kobra Magus': 'enemy-portraits/naga_kobra_magus.png?v=0.138.5',
+  'Nagowie::Wężowy Zbrojny': 'enemy-portraits/naga_wezowy_zbrojny.png?v=0.138.5',
+  'Nagowie::Shesha': 'enemy-portraits/naga_shesha.png?v=0.138.5',
+  'Nagowie::Takshaka': 'enemy-portraits/naga_takshaka.png?v=0.138.5',
+  'Nagowie::Vasuki': 'enemy-portraits/naga_vasuki.png?v=0.138.5',
 };
 function getEnemyPortraitUrl(path){
   if(!path)return '';
@@ -1123,7 +1145,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.138.4';
+const GAME_VERSION = '0.138.5';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -7908,7 +7930,39 @@ function getBestiaryKey(enemy){
 function ensureBestiaryState(){
   if(!state) return null;
   if(!state.bestiary || typeof state.bestiary!=='object' || Array.isArray(state.bestiary)) state.bestiary={};
-  return state.bestiary;
+  const b=state.bestiary;
+  // Jednorazowa migracja starszych nazw kluczy. Nie tworzy odkryć od zera,
+  // tylko przenosi istniejące statystyki spotkań do kanonicznych nazw BESTIARY.
+  const aliases={
+    'Draugi::Zardzewiały Pancerz':'Draugry::Zardzewiały Pancerz',
+    'Draugi::Kościany Łucznik':'Draugry::Koścany Łucznik',
+    'Draugry::Kościany Łucznik':'Draugry::Koścany Łucznik',
+    'Draugi::Nekromanta Kurhanu':'Draugry::Nekromanta Kurhanu',
+    'Draugi::Zmrożony Topornik':'Draugry::Zmrożony Topornik',
+    'Draugi::Glamr':'Draugry::Glamr', 'Draugi::Haugbui':'Draugry::Haugbui',
+    'Draugi::Król Draugrów':'Draugry::Król Draugrów',
+    'Kolosalni Centaurowie::Opancerzony stratywąż':'Centaury::Opancerzony Stratywąż',
+    'Kolosalni Centaurowie::Komandor łuków':'Centaury::Komandor Łuków',
+    'Kolosalni Centaurowie::Szaman kopyt':'Centaury::Szaman Kopyt',
+    'Kolosalni Centaurowie::Startujący szarżownik':'Centaury::Stratujący Szarżownik',
+    'Naga::Królewski Wąż':'Nagowie::Królewski Wąż', 'Naga::Zmyślny łucznik':'Nagowie::Zmyślny Łucznik',
+    'Naga::Kobra magus':'Nagowie::Kobra Magus', 'Naga::Wężowy zbrojny':'Nagowie::Wężowy Zbrojny',
+    'Naga::Shesha':'Nagowie::Shesha','Naga::Takshaka':'Nagowie::Takshaka','Naga::Vasuki':'Nagowie::Vasuki'
+  };
+  for(const [oldKey,newKey] of Object.entries(aliases)){
+    if(!b[oldKey] || typeof b[oldKey]!=='object') continue;
+    const old=b[oldKey]; const target=b[newKey]&&typeof b[newKey]==='object'?b[newKey]:{};
+    target.encounters=Math.max(0,Number(target.encounters)||0)+Math.max(0,Number(old.encounters)||0);
+    target.defeated=Math.max(0,Number(target.defeated)||0)+Math.max(0,Number(old.defeated)||0);
+    target.heroDeaths=Math.max(0,Number(target.heroDeaths)||0)+Math.max(0,Number(old.heroDeaths)||0);
+    if(!target.firstFloor || (old.firstFloor && Number(old.firstFloor)<Number(target.firstFloor))) target.firstFloor=old.firstFloor||target.firstFloor||null;
+    for(const field of ['observedAbilities','discoveredWeaknesses','discoveredResistances','observations']){
+      const vals=[...(Array.isArray(target[field])?target[field]:[]),...(Array.isArray(old[field])?old[field]:[])];
+      target[field]=vals.filter((v,i,a)=>v&&a.findIndex(x=>x.id===v.id)===i);
+    }
+    b[newKey]=target; delete b[oldKey];
+  }
+  return b;
 }
 function getBestiaryEntry(enemy){
   const key=getBestiaryKey(enemy);
