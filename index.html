@@ -1962,7 +1962,7 @@ function getCeltMageMaleSupportPortrait(h){
 
 // Portrety zewnętrzne: hinduska łuczniczka Support oraz arabski obrońca Tank.
 // Progresja 1★–6★ i trzy niezależne aspekty 7★ dla każdej postaci.
-const INDIAN_ARCHER_SUPPORT_FEMALE_PORTRAITS = {
+const INDIA_ARCHER_SUPPORT_FEMALE_PORTRAITS = {
   1: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_1star.png?v=0.138.3',
   2: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_2star.png?v=0.138.3',
   3: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_3star.png?v=0.138.3',
@@ -2005,9 +2005,9 @@ function getNamedIncarnationPortrait(h, variants, fallbackKey) {
   if (variants.al_kahhar && /alkahhar|al kahhar|kahhar/.test(text)) return variants.al_kahhar;
   return variants[fallbackKey];
 }
-function getIndianArcherSupportPortrait(h) {
+function getIndiaArcherSupportPortrait(h) {
   const star = Math.max(1, Math.min(7, Number(h?.stars) || 1));
-  return star < 7 ? INDIAN_ARCHER_SUPPORT_FEMALE_PORTRAITS[star] : getNamedIncarnationPortrait(h, INDIAN_ARCHER_SUPPORT_FEMALE_PORTRAITS[7], 'lakshmi');
+  return star < 7 ? INDIA_ARCHER_SUPPORT_FEMALE_PORTRAITS[star] : getNamedIncarnationPortrait(h, INDIAN_ARCHER_SUPPORT_FEMALE_PORTRAITS[7], 'lakshmi');
 }
 function getArabianDefenderTankPortrait(h) {
   const star = Math.max(1, Math.min(7, Number(h?.stars) || 1));
@@ -2032,12 +2032,12 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
   const isIndiaDefenderTrainer = isMale && isIndia && isDefender && isTrainer;
   const roleNorm = norm(h.role);
   const isFemale = ['zenska','kobieta','female','f'].includes(genderNorm) || genderNorm.startsWith('zen') || genderNorm.startsWith('kob');
-  const isIndianArcherSupport = !isMale && (isFemale || !genderNorm) && isIndia &&
+  const isIndiaArcherSupport = !isMale && (isFemale || !genderNorm) && isIndia &&
     (classNorm === 'lucznik' || classNorm === 'archer' || classNorm.includes('lucznik')) &&
     (roleNorm.includes('support') || roleNorm.includes('wspar') || roleNorm === '' || norm(h.trainerFormerRole).includes('support'));
   const isArabianDefenderTank = isMale && norm(h.race).includes('arab') && classNorm === 'obronca' && (roleNorm.includes('tank') || roleNorm === '' || roleNorm.includes('obron'));
-  if (isIndianArcherSupport) {
-    src = getIndianArcherSupportPortrait(h);
+  if (isIndiaArcherSupport) {
+    src = getIndiaArcherSupportPortrait(h);
     const inc = h.incarnation?.title || h.incarnation?.aspect || 'Inkarnacja';
     alt = star >= 7 ? `Portret hinduskiej łuczniczki Support, ${inc}` : `Portret hinduskiej łuczniczki Support, ${star} gwiazdek`;
   } else if (isArabianDefenderTank) {
