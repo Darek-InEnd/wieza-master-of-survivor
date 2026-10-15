@@ -600,7 +600,7 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 <script>
 /* Prosty mechanizm aktualizacji PWA: sprawdzenie SW przy starcie + automatyczne przeładowanie po przejęciu aplikacji przez nowy SW. */
 if ('serviceWorker' in navigator) {
-  const PWA_BUILD = '0.138.19';
+  const PWA_BUILD = '0.138.20';
   let registration = null;
   let reloadDone = false;
   const hadController = !!navigator.serviceWorker.controller;
@@ -1145,7 +1145,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.138.19';
+const GAME_VERSION = '0.138.20';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -1985,16 +1985,16 @@ function getCeltMageMaleSupportPortrait(h){
 // Portrety zewnętrzne: hinduska łuczniczka Support oraz arabski obrońca Tank.
 // Progresja 1★–6★ i trzy niezależne aspekty 7★ dla każdej postaci.
 const INDI_ARCHER_FEMALE_SUPPORT_PORTRAITS = {
-  1: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_1star.png?v=0.138.19',
-  2: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_2star.png?v=0.138.19',
-  3: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_3star.png?v=0.138.19',
-  4: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_4star.png?v=0.138.19',
-  5: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_5star.png?v=0.138.19',
-  6: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_6star.png?v=0.138.19',
+  1: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_1star.png?v=0.138.20',
+  2: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_2star.png?v=0.138.20',
+  3: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_3star.png?v=0.138.20',
+  4: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_4star.png?v=0.138.20',
+  5: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_5star.png?v=0.138.20',
+  6: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_6star.png?v=0.138.20',
   7: {
-    lakshmi: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_lakshmi.png?v=0.138.19',
-    saraswati: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_saraswati.png?v=0.138.19',
-    durga: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_durga.png?v=0.138.19'
+    lakshmi: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_lakshmi.png?v=0.138.20',
+    saraswati: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_saraswati.png?v=0.138.20',
+    durga: 'hero-portraits/indii/lucznik_kobieta_support/indian_archer_support_7star_durga.png?v=0.138.20'
   }
 };
 const ARABIAN_DEFENDER_TANK_PORTRAITS = {
@@ -2038,55 +2038,55 @@ function getArabianDefenderTankPortrait(h) {
 
 // Portrety zewnętrzne 0.138.16. Nazwy i katalogi odpowiadają assetom w repozytorium.
 const CELT_ROGUE_MALE_DPS_PORTRAITS = {
-  1: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_1star.png?v=0.138.19',
-  2: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_2star.png?v=0.138.19',
-  3: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_3star.png?v=0.138.19',
-  4: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_4star.png?v=0.138.19',
-  5: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_5star.png?v=0.138.19',
-  6: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_6star.png?v=0.138.19',
+  1: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_1star.png?v=0.138.20',
+  2: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_2star.png?v=0.138.20',
+  3: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_3star.png?v=0.138.20',
+  4: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_4star.png?v=0.138.20',
+  5: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_5star.png?v=0.138.20',
+  6: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_6star.png?v=0.138.20',
   7: {
-    ballor: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_ballor.png?v=0.138.19',
-    cernunnos: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_cernunnos.png?v=0.138.19',
-    mannan_mac_lir: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_mannan_mac_lir.png?v=0.138.19'
+    ballor: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_ballor.png?v=0.138.20',
+    cernunnos: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_cernunnos.png?v=0.138.20',
+    mannan_mac_lir: 'hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_mannan_mac_lir.png?v=0.138.20'
   }
 };
 const AZTEC_MAGE_FEMALE_DPS_PORTRAITS = {
-  1: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_1star.png?v=0.138.19',
-  2: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_2star.png?v=0.138.19',
-  3: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_3star.png?v=0.138.19',
-  4: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_4star.png?v=0.138.19',
-  5: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_5star.png?v=0.138.19',
-  6: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_6star.png?v=0.138.19',
+  1: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_1star.png?v=0.138.20',
+  2: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_2star.png?v=0.138.20',
+  3: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_3star.png?v=0.138.20',
+  4: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_4star.png?v=0.138.20',
+  5: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_5star.png?v=0.138.20',
+  6: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_6star.png?v=0.138.20',
   7: {
-    metztli: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_metztli.png?v=0.138.19',
-    tonatiuh: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_tonatiuh.png?v=0.138.19',
-    xiuhcatl: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_xiuhcatl.png?v=0.138.19'
+    metztli: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_metztli.png?v=0.138.20',
+    tonatiuh: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_tonatiuh.png?v=0.138.20',
+    xiuhcatl: 'hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_xiuhcatl.png?v=0.138.20'
   }
 };
 const JAPANESE_WARRIOR_MALE_DPS_PORTRAITS = {
-  1: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_1star.png?v=0.138.19',
-  2: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_2star.png?v=0.138.19',
-  3: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_3star.png?v=0.138.19',
-  4: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_4star.png?v=0.138.19',
-  5: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_5star.png?v=0.138.19',
-  6: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_6star.png?v=0.138.19',
+  1: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_1star.png?v=0.138.20',
+  2: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_2star.png?v=0.138.20',
+  3: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_3star.png?v=0.138.20',
+  4: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_4star.png?v=0.138.20',
+  5: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_5star.png?v=0.138.20',
+  6: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_6star.png?v=0.138.20',
   7: {
-    futsunushi: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_7star_futsunushi.png?v=0.138.19',
-    takemikazuchi: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_7star_takemikazuchi.png?v=0.138.19',
-    yamato_takeru: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_7star_yamato_takeru.png?v=0.138.19'
+    futsunushi: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_7star_futsunushi.png?v=0.138.20',
+    takemikazuchi: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_7star_takemikazuchi.png?v=0.138.20',
+    yamato_takeru: 'hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_7star_yamato_takeru.png?v=0.138.20'
   }
 };
 const GREEK_MAGE_FEMALE_DPS_PORTRAITS = {
-  1: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_1star.png?v=0.138.19',
-  2: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_2star.png?v=0.138.19',
-  3: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_3star.png?v=0.138.19',
-  4: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_4star.png?v=0.138.19',
-  5: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_5star.png?v=0.138.19',
-  6: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_6star.png?v=0.138.19',
+  1: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_1star.png?v=0.138.20',
+  2: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_2star.png?v=0.138.20',
+  3: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_3star.png?v=0.138.20',
+  4: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_4star.png?v=0.138.20',
+  5: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_5star.png?v=0.138.20',
+  6: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_6star.png?v=0.138.20',
   7: {
-    eris: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_7star_eris.png?v=0.138.19',
-    hekate: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_7star_hekate.png?v=0.138.19',
-    nyks: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_7star_nyks.png?v=0.138.19'
+    eris: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_7star_eris.png?v=0.138.20',
+    hekate: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_7star_hekate.png?v=0.138.20',
+    nyks: 'hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_7star_nyks.png?v=0.138.20'
   }
 };
 function getJapaneseWarriorMaleDpsPortrait(h) {
@@ -9404,20 +9404,48 @@ function renderEquipment(hero){
   const slots=[{key:'hand1',label:'🤚 Ręka 1'},{key:'hand2',label:'🤚 Ręka 2'},{key:'armor',label:'🛡️ Zbroja'},{key:'accessory1',label:'💍 Dodatek 1'},{key:'accessory2',label:'💍 Dodatek 2'}];
   const eq=hero.equipped||{hand1:null,hand2:null,armor:null,accessory1:null,accessory2:null}; const inventory=state.inventory||[];
   const setType=item=>item.type==='broń'||item.type==='tarcza';
+  // Uporządkuj starsze zapisy: broń dwuręczna ma być przechowywana w hand1.
+  if(eq.hand2){
+    const legacyTwoHander=inventory.find(i=>i.id===eq.hand2&&isTwoHandedWeapon(i));
+    if(legacyTwoHander&&!eq.hand1){eq.hand1=eq.hand2;eq.hand2=null;}
+  }
+  const twoHanderId=[eq.hand1,eq.hand2].find(id=>id&&isTwoHandedWeapon(inventory.find(i=>i.id===id)));
+  const twoHander=!!twoHanderId;
   slots.forEach(slot=>{
     const div=document.createElement('div'); div.className='equip-slot';
     const label=document.createElement('label'); label.textContent=slot.label; const select=document.createElement('select');
-    const empty=document.createElement('option'); empty.value=''; empty.textContent='-- puste --'; select.appendChild(empty);
     const currentId=eq[slot.key];
+    const isHand=slot.key==='hand1'||slot.key==='hand2';
+    const lockedByTwoHander=isHand && twoHander && slot.key!==(eq.hand1===twoHanderId?'hand1':'hand2');
+    const empty=document.createElement('option'); empty.value=''; empty.textContent=lockedByTwoHander?'🔒 Zablokowane przez broń dwuręczną':'-- puste --'; select.appendChild(empty);
     inventory.forEach(item=>{
-      const matches=slot.key.startsWith('hand')?setType(item):slot.key==='armor'?item.type==='zbroja':item.type==='dodatek'; if(!matches)return; if(slot.key.startsWith('hand') && isTwoHandedWeapon(item) && (eq.hand1||eq.hand2) && currentId!==item.id)return;
+      const matches=isHand?setType(item):slot.key==='armor'?item.type==='zbroja':item.type==='dodatek'; if(!matches)return;
+      if(isHand && lockedByTwoHander && item.id!==currentId)return;
+      if(isHand && isTwoHandedWeapon(item) && slot.key!=='hand1')return;
+      if(isHand && isTwoHandedWeapon(item) && ((eq.hand1&&eq.hand1!==currentId)||(eq.hand2&&eq.hand2!==currentId)))return;
       if(item.equippedBy!=null&&item.equippedBy!==hero.id)return;
       const usedOther=Object.keys(eq).some(k=>k!==slot.key&&eq[k]===item.id); if(usedOther)return;
-      const opt=document.createElement('option'); opt.value=item.id; opt.textContent=`${item.rarityName} ${item.name}${item.type==='tarcza'?' 🛡️':''}${isTwoHandedWeapon(item)?' 👐 2H':''}${currentId===item.id?' ✅':''}`; if(currentId===item.id)opt.selected=true; select.appendChild(opt);
+      const opt=document.createElement('option'); opt.value=item.id; opt.textContent=`${item.rarityName} ${item.name}${item.type==='tarcza'?' 🛡️':''}${isTwoHandedWeapon(item)?' 👐 2H — blokuje drugą rękę':''}${currentId===item.id?' ✅':''}`; if(currentId===item.id)opt.selected=true; select.appendChild(opt);
     });
+    if(lockedByTwoHander){select.disabled=true;select.title='Drugi slot ręki jest zablokowany przez broń dwuręczną.';div.classList.add('equip-slot-locked');}
     select.addEventListener('change',function(){
-      const val=this.value,oldId=eq[slot.key]; if(oldId&&oldId!=val){const old=inventory.find(i=>i.id===oldId);if(old)old.equippedBy=null;}
-      if(val){const item=inventory.find(i=>i.id==val);if(item){Object.keys(eq).forEach(k=>{if(k!==slot.key&&eq[k]===item.id)eq[k]=null;});eq[slot.key]=item.id;item.equippedBy=hero.id;}}else eq[slot.key]=null;
+      const val=this.value,oldId=eq[slot.key];
+      const newItem=val?inventory.find(i=>i.id==val):null;
+      if(newItem && isHand){
+        const otherKey=slot.key==='hand1'?'hand2':'hand1';
+        const otherId=eq[otherKey];
+        if(isTwoHandedWeapon(newItem) && otherId && otherId!==oldId){
+          log(`❌ <b>${newItem.name}</b> wymaga obu rąk. Najpierw zdejmij przedmiot z drugiego slotu.`,'warn');updateUI();return;
+        }
+        if(!isTwoHandedWeapon(newItem) && otherId && isTwoHandedWeapon(inventory.find(i=>i.id===otherId))){
+          log('❌ Drugi slot jest zablokowany przez broń dwuręczną.','warn');updateUI();return;
+        }
+        if(isTwoHandedWeapon(newItem) && slot.key!=='hand1'){
+          log('❌ Broń dwuręczną można założyć tylko do slotu Ręka 1, ponieważ zajmuje obie ręce.','warn');updateUI();return;
+        }
+      }
+      if(oldId&&oldId!=val){const old=inventory.find(i=>i.id===oldId);if(old)old.equippedBy=null;}
+      if(val&&newItem){Object.keys(eq).forEach(k=>{if(k!==slot.key&&eq[k]===newItem.id)eq[k]=null;});eq[slot.key]=newItem.id;newItem.equippedBy=hero.id;}else eq[slot.key]=null;
       saveGame();updateUI();
     });
     div.appendChild(label);div.appendChild(select);
