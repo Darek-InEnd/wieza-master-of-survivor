@@ -600,7 +600,7 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 <script>
 /* Prosty mechanizm aktualizacji PWA: sprawdzenie SW przy starcie + automatyczne przeładowanie po przejęciu aplikacji przez nowy SW. */
 if ('serviceWorker' in navigator) {
-  const PWA_BUILD = '0.139.2';
+  const PWA_BUILD = '0.139.3';
   let registration = null;
   let reloadDone = false;
   const hadController = !!navigator.serviceWorker.controller;
@@ -1084,7 +1084,7 @@ const BESTIARY = [
       { type: "strzelec", name: "Promienny Strzelec", ability: { name: "Promień Niebios", effect: "true_damage", value: 1 }, weaknesses: [{ name: "Przegrzanie", effect: "overheat", value: 1 }, { name: "Lód", effect: "ice_vulnerability", value: 1.4 }], hpMod:.7, atkMod:1.4, defMod:.5 },
       { type: "mag", name: "Archanioł Kosmosu", ability: { name: "Kosmiczny Reset", effect: "reset_cooldowns", value: 1 }, weaknesses: [{ name: "Podatność na Mrok", effect: "dark_vulnerability", value: 2 }, { name: "Błyskawica", effect: "lightning_vulnerability", value: 1.5 }], hpMod:.6, atkMod:.9, defMod:.5 },
       { type: "wojownik", name: "Ostrze Niebios", ability: { name: "Cięcie Przeznaczenia", effect: "ignore_all_def", value: 1 }, weaknesses: [{ name: "Słaba Wytrzymałość", effect: "low_hp", value: 1.5 }, { name: "Świętość", effect: "holy_vulnerability", value: 1.4 }], hpMod:.6, atkMod:1.5, defMod:.4 },
-      { type: "boss", name: "Enlil", ability: { name: "Sąd Niebios", effect: "divine_judgment", value: .5 }, weaknesses: [{ name: "Załamanie Grawitacji", effect: "earth_vulnerability", value: 2 }, { name: "Woda", effect: "water_vulnerability", value: 1.5 }], hpMod:3, atkMod:2, defMod:1.5 },
+      { type: "boss", name: "Enlil", ability: { name: "Sąd Niebios", effect: "divine_judgment", value: .30 }, weaknesses: [{ name: "Załamanie Grawitacji", effect: "earth_vulnerability", value: 2 }, { name: "Woda", effect: "water_vulnerability", value: 1.5 }], hpMod:3, atkMod:1.4, defMod:1.5 },
       { type: "boss", name: "Ninurta", ability: { name: "Gwiezdne Pole Bitwy", effect: "cosmic_field", value: 2.5 }, weaknesses: [{ name: "Zakłócenie Konstelacji", effect: "dark_vulnerability", value: 1.9 }], hpMod:3, atkMod:2, defMod:1.8 },
       { type: "boss", name: "Utu", ability: { name: "Promień Sądu", effect: "true_damage", value: 1 }, weaknesses: [{ name: "Zaćmienie", effect: "dark_vulnerability", value: 1.8 }], hpMod:2.9, atkMod:1.9, defMod:1.6 },
     ]
@@ -1145,7 +1145,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.139.2';
+const GAME_VERSION = '0.139.3';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -6838,7 +6838,7 @@ function getTowerDifficulty(floor) {
   return { boss, normalMult, bossMult };
 }
 
-// Balans bossów v0.138.22: AoE dzielone na żywych bohaterów, obrażenia prawdziwe bossów -20%.
+// Balans bossów v0.139.3: AoE dzielone na żywych bohaterów, obrażenia prawdziwe bossów -20%; Enlil dodatkowo osłabiony.
 const BOSS_BALANCE_PATCH = Object.freeze({
   bossHpMultiplier: 0.82,       // HP wszystkich bossów -18%
   maxHitOfHeroMaxHp: 0.25,      // pojedyncze trafienie bossa maks. 25% maks. HP celu
@@ -6899,7 +6899,9 @@ const BOSS_BALANCE_PATCH = Object.freeze({
 function isBalanceNerfedBoss(name) { return BOSS_BALANCE_PATCH.selectedBossNames.has(name); }
 function capBossHitDamage(enemy, target, damage) {
   if (!enemy?.boss || !target || !Number.isFinite(target.maxHp) || target.maxHp <= 0) return damage;
-  return Math.min(damage, Math.max(1, Math.floor(target.maxHp * BOSS_BALANCE_PATCH.maxHitOfHeroMaxHp)));
+  // Enlil ma osobny, ostrzejszy limit trafienia, bo jego ataki prawdziwe omijają obronę.
+  const hitRatio = enemy.name === "Enlil" ? 0.18 : BOSS_BALANCE_PATCH.maxHitOfHeroMaxHp;
+  return Math.min(damage, Math.max(1, Math.floor(target.maxHp * hitRatio)));
 }
 
 // Obrażenia obszarowe tworzą jedną pulę i są dzielone równo między żywych bohaterów.
