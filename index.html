@@ -414,7 +414,8 @@ button:hover:not(:disabled),.tab-btn:hover:not(.active){border-color:#c79b50;bac
 /* v0.139.6 — ramki kulturowe portretów jako warstwa nakładana; nie zmieniają wymiarów portretu ani gwiazdek. */
 .hero-portrait-frame-wrap{position:relative;display:inline-flex;flex:0 0 66px;width:66px;height:66px;align-items:center;justify-content:center;overflow:visible;vertical-align:middle;box-sizing:border-box;}
 .hero-portrait-frame-wrap>.hero-v2-portrait{position:relative;z-index:1;width:100%;height:100%;flex:0 0 100%;box-sizing:border-box;border:0;border-radius:0;background:transparent;}
-.hero-portrait-frame-overlay{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;z-index:2;}
+.hero-portrait-frame-overlay{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;z-index:2;transform-origin:center center;}
+/* v0.139.8: dopasowanie skali do rzeczywistego przezroczystego marginesu PNG. Skala dotyczy tylko nakładki, nie portretu ani karty. */ .hero-portrait-frame-overlay[src*="frame_1.png"]{transform:scale(1.10);} .hero-portrait-frame-overlay[src*="frame_2.png"],.hero-portrait-frame-overlay[src*="frame_3.png"]{transform:scale(1.06);} .hero-portrait-frame-overlay[src*="frame_4.png"]{transform:scale(1.02);} .hero-portrait-frame-overlay[src*="frame_5.png"]{transform:scale(1.00);} .hero-portrait-frame-overlay[src*="frame_6.png"],.hero-portrait-frame-overlay[src*="frame_7.png"]{transform:scale(.97);}
 @media(max-width:700px){.hero-portrait-frame-wrap{width:58px;height:58px;flex-basis:58px;}}
 
 .hero-v2-progression{margin:8px 0 0;padding:8px 9px;background:linear-gradient(180deg,#101217,#090a0d);border:1px solid #2d333b;border-radius:7px}.hero-v2-progression-head{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:.78em;color:#bdbdbd}.hero-v2-progression-title{color:#e0b65a;font-weight:800}.hero-v2-progressbar{height:7px;background:#1b1e23;border-radius:999px;overflow:hidden;margin:5px 0}.hero-v2-progressbar span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#45a29e,#b57ce0)}.hero-v2-progression-foot{display:flex;justify-content:space-between;gap:8px;font-size:.72em;color:#8f969e}.hero-v2-next{margin-top:6px;padding-top:6px;border-top:1px solid #252a30;font-size:.75em;color:#aaa}.hero-v2-next b{color:#e6e6e6}.hero-v2-milestone{display:inline-block;margin-left:5px;padding:2px 5px;border:1px solid #765a31;border-radius:999px;color:#e0b65a;background:#211c14;font-size:.9em;font-weight:700}.hero-v2-info{min-width:0;flex:1;padding-right:78px}.hero-v2-name{font-size:1.08em;font-weight:800;white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;line-height:1.18}.hero-v2-meta{font-size:.78em;color:#aaa;margin-top:4px;line-height:1.3;white-space:normal;overflow-wrap:anywhere}.hero-v2-level{white-space:nowrap;display:inline-block}.hero-v2-role{display:inline-block;margin-top:5px;padding:3px 7px;border-radius:999px;background:#211c14;border:1px solid #765a31;color:#e2c477;font-size:.72em;font-weight:700}
@@ -2265,7 +2266,7 @@ function getHeroPortraitFramePath(h) {
   else if (/japon|japan|japanc/.test(race)) culture = 'japonczycy';
   else if (/slow|slav|słow/.test(race)) culture = 'slowianie';
   else if (/arab/.test(race)) culture = 'arabowie';
-  return `hero-frames/${culture}/frame_${star}.png?v=0.139.6`;
+  return `hero-frames/${culture}/frame_${star}.png?v=0.139.8`;
 }
 function wrapHeroPortraitWithFrame(h, portraitHtml) {
   const frame=getHeroPortraitFramePath(h);
@@ -2273,7 +2274,7 @@ function wrapHeroPortraitWithFrame(h, portraitHtml) {
   return `<span class="hero-portrait-frame-wrap">${framed}<img class="hero-portrait-frame-overlay" src="${frame}" alt="" aria-hidden="true" onerror="this.style.display='none'"></span>`;
 }
 function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
-  if(!h) return `<span class="hero-portrait-frame-wrap"><div class="hero-v2-portrait">${fallback}</div><img class="hero-portrait-frame-overlay" src="hero-frames/arabowie/frame_1.png?v=0.139.6" alt="" aria-hidden="true" onerror="this.style.display='none'"></span>`;
+  if(!h) return `<span class="hero-portrait-frame-wrap"><div class="hero-v2-portrait">${fallback}</div><img class="hero-portrait-frame-overlay" src="hero-frames/arabowie/frame_1.png?v=0.139.8" alt="" aria-hidden="true" onerror="this.style.display='none'"></span>`;
   const star=Math.max(1,Math.min(7,Number(h.stars)||1));
   let src=null, alt="";
   const norm = v => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ł/g,'l').replace(/Ł/g,'l').toLowerCase().trim();
