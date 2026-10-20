@@ -413,7 +413,9 @@ button:hover:not(:disabled),.tab-btn:hover:not(.active){border-color:#c79b50;bac
 .hero-v2-portrait{width:66px;height:66px;border-radius:10px;object-fit:contain;border:1px solid #765a31;background:#090b0e;display:flex;align-items:center;justify-content:center;font-size:30px;flex:0 0 66px}
 /* v0.139.6 — ramki kulturowe portretów jako warstwa nakładana; nie zmieniają wymiarów portretu ani gwiazdek. */
 .hero-portrait-frame-wrap{position:relative;display:inline-flex;flex:0 0 66px;width:66px;height:66px;align-items:center;justify-content:center;overflow:visible;vertical-align:middle;box-sizing:border-box;}
-.hero-portrait-frame-wrap>.hero-v2-portrait{position:relative;z-index:1;width:100%;height:100%;flex:0 0 100%;box-sizing:border-box;border:0;border-radius:0;background:transparent;}
+.hero-portrait-frame-wrap>.hero-v2-portrait{position:relative;z-index:1;width:100% !important;height:100% !important;flex:0 0 100% !important;min-width:0;min-height:0;max-width:100%;max-height:100%;box-sizing:border-box;border:0;border-radius:0;background:transparent;object-fit:contain;object-position:50% 50%;}
+.hero-portrait-frame-wrap>.hero-portrait-frame-overlay{position:absolute !important;inset:0 !important;width:100% !important;height:100% !important;max-width:none !important;max-height:none !important;object-fit:fill !important;transform:none !important;}
+@media(max-width:700px){.hero-portrait-frame-wrap{width:58px !important;height:58px !important;flex:0 0 58px !important;}.hero-portrait-frame-wrap>.hero-v2-portrait{width:100% !important;height:100% !important;flex:0 0 100% !important;}}
 .hero-portrait-frame-overlay{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;z-index:2;transform-origin:center center;}
 /* v0.139.8: dopasowanie skali do rzeczywistego przezroczystego marginesu PNG. Skala dotyczy tylko nakładki, nie portretu ani karty. */ .hero-portrait-frame-overlay[src*="frame_1.png"]{transform:scale(1.10);} .hero-portrait-frame-overlay[src*="frame_2.png"],.hero-portrait-frame-overlay[src*="frame_3.png"]{transform:scale(1.06);} .hero-portrait-frame-overlay[src*="frame_4.png"]{transform:scale(1.02);} .hero-portrait-frame-overlay[src*="frame_5.png"]{transform:scale(1.00);} .hero-portrait-frame-overlay[src*="frame_6.png"],.hero-portrait-frame-overlay[src*="frame_7.png"]{transform:scale(.97);}
 @media(max-width:700px){.hero-portrait-frame-wrap{width:58px;height:58px;flex-basis:58px;}}
@@ -657,6 +659,13 @@ if ('serviceWorker' in navigator) {
 #tower-opening-start{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:none;padding:14px 22px;border:1px solid rgba(255,255,255,.55);border-radius:8px;background:rgba(0,0,0,.78);color:#fff;font:600 16px system-ui,sans-serif;letter-spacing:.04em;z-index:2}
 #tower-opening-start.visible{display:block}
 
+</style>
+<style id="hero-frame-alignment-v0-139-9">
+/* v0.139.9: ramka i portret muszą korzystać z dokładnie tego samego pola; nadpisuje starsze reguły width/height !important. */
+.hero-portrait-frame-wrap{position:relative !important;display:inline-flex !important;flex:0 0 66px !important;width:66px !important;height:66px !important;min-width:0 !important;min-height:0 !important;align-items:stretch !important;justify-content:stretch !important;overflow:visible !important;box-sizing:border-box !important;}
+.hero-portrait-frame-wrap>.hero-v2-portrait{position:relative !important;z-index:1 !important;width:100% !important;height:100% !important;min-width:0 !important;min-height:0 !important;max-width:100% !important;max-height:100% !important;flex:0 0 100% !important;box-sizing:border-box !important;border:0 !important;border-radius:0 !important;background:transparent !important;object-fit:contain !important;object-position:50% 50% !important;}
+.hero-portrait-frame-wrap>.hero-portrait-frame-overlay{position:absolute !important;z-index:2 !important;inset:0 !important;width:100% !important;height:100% !important;min-width:0 !important;min-height:0 !important;max-width:none !important;max-height:none !important;padding:0 !important;margin:0 !important;object-fit:fill !important;object-position:50% 50% !important;transform:none !important;pointer-events:none !important;}
+@media(max-width:700px){.hero-portrait-frame-wrap{width:58px !important;height:58px !important;flex:0 0 58px !important;}.hero-portrait-frame-wrap>.hero-v2-portrait{width:100% !important;height:100% !important;flex:0 0 100% !important;}}
 </style>
 </head>
 <body>
@@ -2266,7 +2275,7 @@ function getHeroPortraitFramePath(h) {
   else if (/japon|japan|japanc/.test(race)) culture = 'japonczycy';
   else if (/slow|slav|słow/.test(race)) culture = 'slowianie';
   else if (/arab/.test(race)) culture = 'arabowie';
-  return `hero-frames/${culture}/frame_${star}.png?v=0.139.8`;
+  return `hero-frames/${culture}/frame_${star}.png?v=0.139.9`;
 }
 function wrapHeroPortraitWithFrame(h, portraitHtml) {
   const frame=getHeroPortraitFramePath(h);
@@ -2274,7 +2283,7 @@ function wrapHeroPortraitWithFrame(h, portraitHtml) {
   return `<span class="hero-portrait-frame-wrap">${framed}<img class="hero-portrait-frame-overlay" src="${frame}" alt="" aria-hidden="true" onerror="this.style.display='none'"></span>`;
 }
 function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
-  if(!h) return `<span class="hero-portrait-frame-wrap"><div class="hero-v2-portrait">${fallback}</div><img class="hero-portrait-frame-overlay" src="hero-frames/arabowie/frame_1.png?v=0.139.8" alt="" aria-hidden="true" onerror="this.style.display='none'"></span>`;
+  if(!h) return `<span class="hero-portrait-frame-wrap"><div class="hero-v2-portrait">${fallback}</div><img class="hero-portrait-frame-overlay" src="hero-frames/arabowie/frame_1.png?v=0.139.9" alt="" aria-hidden="true" onerror="this.style.display='none'"></span>`;
   const star=Math.max(1,Math.min(7,Number(h.stars)||1));
   let src=null, alt="";
   const norm = v => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ł/g,'l').replace(/Ł/g,'l').toLowerCase().trim();
