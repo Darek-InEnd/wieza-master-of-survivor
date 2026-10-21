@@ -660,14 +660,20 @@ if ('serviceWorker' in navigator) {
 #tower-opening-start.visible{display:block}
 
 </style>
-<style id="hero-frame-fit-v0-140-0">
-/* Ramka jest nakładką na portret. Powiększamy wyłącznie warstwę ramki, nie kartę ani portret. */
-.hero-portrait-frame-wrap{position:relative!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;isolation:isolate!important;overflow:visible!important;vertical-align:middle!important;width:66px!important;height:66px!important;flex:0 0 66px!important;box-sizing:border-box!important;}
+<style id="hero-portrait-size-v0-141-3">
+/* Większe portrety: zwiększamy wspólny kontener, więc ramka i obraz rosną razem. */
+.hero-portrait-frame-wrap{position:relative!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;isolation:isolate!important;overflow:visible!important;vertical-align:middle!important;width:88px!important;height:88px!important;flex:0 0 88px!important;box-sizing:border-box!important;}
 .hero-portrait-frame-wrap>.hero-v2-portrait{position:relative!important;z-index:1!important;display:block!important;width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;max-width:100%!important;max-height:100%!important;flex:0 0 100%!important;box-sizing:border-box!important;object-fit:contain!important;object-position:50% 50%!important;margin:0!important;}
-.hero-portrait-frame-wrap>.hero-portrait-frame-overlay{position:absolute!important;z-index:2!important;inset:0!important;width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;max-width:none!important;max-height:none!important;padding:0!important;margin:0!important;object-fit:fill!important;object-position:50% 50%!important;transform-origin:50% 50%!important;pointer-events:none!important;}
-/* PNG mają przezroczysty margines ok. 2–4 px. Skala 1.14 wyrównuje widoczną obwódkę do krawędzi portretu. */
-.hero-portrait-frame-wrap>.hero-portrait-frame-overlay{transform:scale(1.25)!important;transform-origin:center center!important;}
-@media(max-width:700px){.hero-portrait-frame-wrap{width:58px!important;height:58px!important;flex:0 0 58px!important;}.hero-portrait-frame-wrap>.hero-v2-portrait{width:100%!important;height:100%!important;flex:0 0 100%!important;}}
+.hero-portrait-frame-wrap>.hero-portrait-frame-overlay{position:absolute!important;z-index:2!important;inset:0!important;width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;max-width:none!important;max-height:none!important;padding:0!important;margin:0!important;object-fit:fill!important;object-position:50% 50%!important;transform:scale(1.25)!important;transform-origin:50% 50%!important;pointer-events:none!important;}
+@media(max-width:700px){.hero-portrait-frame-wrap{width:78px!important;height:78px!important;flex:0 0 78px!important;}.hero-portrait-frame-wrap>.hero-v2-portrait{width:100%!important;height:100%!important;flex:0 0 100%!important;}}
+</style>
+
+<style id="hero-portrait-7star-size-v0-141-4">
+/* Tylko portrety 7★ są większe. Ramka używa tego samego kontenera, więc dopasowuje się automatycznie. */
+.hero-portrait-frame-wrap:has(> .hero-v2-portrait[src*="_7star_"]){width:112px!important;height:112px!important;flex:0 0 112px!important;}
+.hero-portrait-frame-wrap:has(> .hero-v2-portrait[src*="_7star_"])>.hero-v2-portrait{width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;}
+.hero-portrait-frame-wrap:has(> .hero-v2-portrait[src*="_7star_"])>.hero-portrait-frame-overlay{inset:0!important;width:100%!important;height:100%!important;transform:scale(1.25)!important;transform-origin:center center!important;}
+@media(max-width:700px){.hero-portrait-frame-wrap:has(> .hero-v2-portrait[src*="_7star_"]){width:98px!important;height:98px!important;flex:0 0 98px!important;}}
 </style>
 </head>
 <body>
@@ -1176,7 +1182,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.141.1';
+const GAME_VERSION = '0.141.4';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -2013,6 +2019,50 @@ function getCeltMageMaleSupportPortrait(h){
   return {src:CELT_MAGE_MALE_SUPPORT_PORTRAITS[7].brigid,key:'Brigid'};
 }
 
+// CELTOWIE — MAG, ROLA TANK, portrety 1★–6★ i trzy boskie aspekty 7★.
+const CELT_MAGE_MALE_TANK_PORTRAITS = {
+  1: 'hero-portraits/celtow/mag_mezczyzna_tank/celt_mage_male_tank_1star.png?v=0.141.4',
+  2: 'hero-portraits/celtow/mag_mezczyzna_tank/celt_mage_male_tank_2star.png?v=0.141.4',
+  3: 'hero-portraits/celtow/mag_mezczyzna_tank/celt_mage_male_tank_3star.png?v=0.141.4',
+  4: 'hero-portraits/celtow/mag_mezczyzna_tank/celt_mage_male_tank_4star.png?v=0.141.4',
+  5: 'hero-portraits/celtow/mag_mezczyzna_tank/celt_mage_male_tank_5star.png?v=0.141.4',
+  6: 'hero-portraits/celtow/mag_mezczyzna_tank/celt_mage_male_tank_6star.png?v=0.141.4',
+  7: {
+    donn: 'hero-portraits/celtow/mag_mezczyzna_tank/celt_mage_male_tank_7star_donn.png?v=0.141.4',
+    gwydion: 'hero-portraits/celtow/mag_mezczyzna_tank/celt_mage_male_tank_7star_gwydion.png?v=0.141.4',
+    indech: 'hero-portraits/celtow/mag_mezczyzna_tank/celt_mage_male_tank_7star_indech.png?v=0.141.4'
+  }
+};
+const CELT_MAGE_FEMALE_TANK_PORTRAITS = {
+  1: 'hero-portraits/celtow/mag_kobieta_tank/celt_mage_female_tank_1star.png?v=0.141.4',
+  2: 'hero-portraits/celtow/mag_kobieta_tank/celt_mage_female_tank_2star.png?v=0.141.4',
+  3: 'hero-portraits/celtow/mag_kobieta_tank/celt_mage_female_tank_3star.png?v=0.141.4',
+  4: 'hero-portraits/celtow/mag_kobieta_tank/celt_mage_female_tank_4star.png?v=0.141.4',
+  5: 'hero-portraits/celtow/mag_kobieta_tank/celt_mage_female_tank_5star.png?v=0.141.4',
+  6: 'hero-portraits/celtow/mag_kobieta_tank/celt_mage_female_tank_6star.png?v=0.141.4',
+  7: {
+    ceridwen: 'hero-portraits/celtow/mag_kobieta_tank/celt_mage_female_tank_7star_ceridwen.png?v=0.141.4',
+    danu: 'hero-portraits/celtow/mag_kobieta_tank/celt_mage_female_tank_7star_danu.png?v=0.141.4',
+    tailtiu: 'hero-portraits/celtow/mag_kobieta_tank/celt_mage_female_tank_7star_tailtiu.png?v=0.141.4'
+  }
+};
+function getCeltMageTankPortrait(h, gender) {
+  const portraits = gender === 'female' ? CELT_MAGE_FEMALE_TANK_PORTRAITS : CELT_MAGE_MALE_TANK_PORTRAITS;
+  const star = Math.max(1, Math.min(7, Number(h?.stars) || 1));
+  if (star < 7) return {src: portraits[star], key: `${star}★`};
+  const title = String(h?.incarnation?.title || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const aspect = String(h?.incarnation?.aspect || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const gods = gender === 'female' ? ['ceridwen','danu','tailtiu'] : ['donn','gwydion','indech'];
+  for (const god of gods) if (title.includes(god) || aspect.includes(god)) return {src: portraits[7][god], key: god[0].toUpperCase()+god.slice(1)};
+  try {
+    const pool = INCARNATION_TITLES?.['Celtów']?.['Mag'] || [];
+    const idx = typeof getIncarnationIndex === 'function' ? getIncarnationIndex(h, pool) : 0;
+    const god = gods[Math.max(0, Math.min(2, Number(idx) || 0))];
+    return {src: portraits[7][god], key: god[0].toUpperCase()+god.slice(1)};
+  } catch (_) {}
+  return {src: portraits[7][gods[0]], key: gods[0][0].toUpperCase()+gods[0].slice(1)};
+}
+
 // Portrety zewnętrzne: hinduska łuczniczka Support oraz arabski obrońca Tank.
 // Progresja 1★–6★ i trzy niezależne aspekty 7★ dla każdej postaci.
 const INDI_ARCHER_FEMALE_SUPPORT_PORTRAITS = {
@@ -2277,7 +2327,7 @@ function getHeroPortraitFramePath(h) {
   else if (/japon|japan|japanc/.test(race)) culture = 'japonczycy';
   else if (/slow|slav|słow/.test(race)) culture = 'slowianie';
   else if (/arab/.test(race)) culture = 'arabowie';
-  return `hero-frames/${culture}/frame_${star}.png?v=0.141.1`;
+  return `hero-frames/${culture}/frame_${star}.png?v=0.141.4`;
 }
 function wrapHeroPortraitWithFrame(h, portraitHtml) {
   const frame=getHeroPortraitFramePath(h);
@@ -2285,7 +2335,7 @@ function wrapHeroPortraitWithFrame(h, portraitHtml) {
   return `<span class="hero-portrait-frame-wrap">${framed}<img class="hero-portrait-frame-overlay" src="${frame}" alt="" aria-hidden="true" onerror="this.style.display='none'"></span>`;
 }
 function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
-  if(!h) return `<span class="hero-portrait-frame-wrap"><div class="hero-v2-portrait">${fallback}</div><img class="hero-portrait-frame-overlay" src="hero-frames/arabowie/frame_1.png?v=0.141.1" alt="" aria-hidden="true" onerror="this.style.display='none'"></span>`;
+  if(!h) return `<span class="hero-portrait-frame-wrap"><div class="hero-v2-portrait">${fallback}</div><img class="hero-portrait-frame-overlay" src="hero-frames/arabowie/frame_1.png?v=0.141.4" alt="" aria-hidden="true" onerror="this.style.display='none'"></span>`;
   const star=Math.max(1,Math.min(7,Number(h.stars)||1));
   let src=null, alt="";
   const norm = v => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ł/g,'l').replace(/Ł/g,'l').toLowerCase().trim();
@@ -2449,6 +2499,14 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
     const slavicWarriorDps=getSlavicWarriorMaleDpsPortrait(h);
     src=slavicWarriorDps.src;
     alt=`Portret słowiańskiego wojownika DPS — ${slavicWarriorDps.key}`;
+  } else if(h.gender==="Męska" && h.race==="Celtów" && h.heroClass==="Mag" && h.role==="Tank") {
+    const celtMageTank=getCeltMageTankPortrait(h, 'male');
+    src=celtMageTank.src;
+    alt=`Portret celtyckiego maga Tank — ${celtMageTank.key}`;
+  } else if(h.gender==="Żeńska" && h.race==="Celtów" && h.heroClass==="Mag" && h.role==="Tank") {
+    const celtMageTank=getCeltMageTankPortrait(h, 'female');
+    src=celtMageTank.src;
+    alt=`Portret celtyckiej magini Tank — ${celtMageTank.key}`;
   } else if(h.gender==="Męska" && h.race==="Celtów" && h.heroClass==="Mag" && h.role==="Support") {
     const celtMageSupport=getCeltMageMaleSupportPortrait(h);
     src=celtMageSupport.src;
