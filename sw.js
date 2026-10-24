@@ -1,14 +1,29 @@
-/* Wieża PWA Service Worker, build 0.141.7-frames-refresh. */
-const BUILD_ID = '0.141.7-frames-refresh';
+/* Wieża PWA Service Worker, build 0.141.8-frame-fit. */
+const BUILD_ID = '0.141.8-frame-fit';
 const CACHE_NAME = 'wieza-v' + BUILD_ID;
-const CORE_ASSETS = ['./', './index.html', './manifest.webmanifest', './hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_1star.png', './hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_2star.png', './hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_3star.png', './hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_4star.png', './hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_5star.png', './hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_6star.png', './hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_metztli.png', './hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_tonatiuh.png', './hero-portraits/aztekow/mag_kobieta_dps/aztec_mage_female_dps_7star_xiuhcatl.png', './hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_1star.png', './hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_2star.png', './hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_3star.png', './hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_4star.png', './hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_5star.png', './hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_6star.png', './hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_ballor.png', './hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_cernunnos.png', './hero-portraits/celtow/lotrzyk_mezczyzna_dps/celt_rogue_male_dps_7star_mannan_mac_lir.png', './hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_1star.png', './hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_2star.png', './hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_3star.png', './hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_4star.png', './hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_5star.png', './hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_6star.png', './hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_7star_eris.png', './hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_7star_hekate.png', './hero-portraits/grecji/mag_kobieta_dps/greek_mage_female_dps_7star_nyks.png', './hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_1star.png', './hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_2star.png', './hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_3star.png', './hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_4star.png', './hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_5star.png', './hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_6star.png', './hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_7star_futsunushi.png', './hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_7star_takemikazuchi.png', './hero-portraits/japonii/wojownik_mezczyzna_dps/japanese_warrior_male_dps_7star_yamato_takeru.png', './hero-portraits/celtow/lotrzyk_mezczyzna_tank/celt_rogue_male_tank_1star.png', './hero-portraits/celtow/lotrzyk_mezczyzna_tank/celt_rogue_male_tank_2star.png', './hero-portraits/celtow/lotrzyk_mezczyzna_tank/celt_rogue_male_tank_3star.png', './hero-portraits/celtow/lotrzyk_mezczyzna_tank/celt_rogue_male_tank_4star.png', './hero-portraits/celtow/lotrzyk_mezczyzna_tank/celt_rogue_male_tank_5star.png', './hero-portraits/celtow/lotrzyk_mezczyzna_tank/celt_rogue_male_tank_6star.png', './hero-portraits/celtow/lotrzyk_mezczyzna_tank/celt_rogue_male_tank_7star_dagda.png', './hero-portraits/celtow/lotrzyk_mezczyzna_tank/celt_rogue_male_tank_7star_fionn_mac_cumhaill.png', './hero-portraits/celtow/lotrzyk_mezczyzna_tank/celt_rogue_male_tank_7star_nuada_srebrnoreki.png', './hero-portraits/celtow/lotrzyk_kobieta_dps/celt_rogue_female_dps_1star.png', './hero-portraits/celtow/lotrzyk_kobieta_dps/celt_rogue_female_dps_2star.png', './hero-portraits/celtow/lotrzyk_kobieta_dps/celt_rogue_female_dps_3star.png', './hero-portraits/celtow/lotrzyk_kobieta_dps/celt_rogue_female_dps_4star.png', './hero-portraits/celtow/lotrzyk_kobieta_dps/celt_rogue_female_dps_5star.png', './hero-portraits/celtow/lotrzyk_kobieta_dps/celt_rogue_female_dps_6star.png', './hero-portraits/celtow/lotrzyk_kobieta_dps/celt_rogue_female_dps_7star_badb.png', './hero-portraits/celtow/lotrzyk_kobieta_dps/celt_rogue_female_dps_7star_rhiannon.png', './hero-portraits/celtow/lotrzyk_mezczyzna_support/celt_rogue_male_support_1star.png', './hero-portraits/celtow/lotrzyk_mezczyzna_support/celt_rogue_male_support_2star.png', './hero-portraits/celtow/lotrzyk_mezczyzna_support/celt_rogue_male_support_3star.png', './hero-portraits/celtow/lotrzyk_mezczyzna_support/celt_rogue_male_support_4star.png', './hero-portraits/celtow/lotrzyk_mezczyzna_support/celt_rogue_male_support_5star.png', './hero-portraits/celtow/lotrzyk_mezczyzna_support/celt_rogue_male_support_6star.png', './hero-portraits/celtow/lotrzyk_mezczyzna_support/celt_rogue_male_support_7star_aengus.png', './hero-portraits/celtow/lotrzyk_mezczyzna_support/celt_rogue_male_support_7star_ogma.png', './hero-portraits/celtow/lotrzyk_mezczyzna_support/celt_rogue_male_support_7star_tuan_mac_cairill.png', './hero-portraits/celtow/lotrzyk_kobieta_tank/celt_rogue_female_tank_1star.png', './hero-portraits/celtow/lotrzyk_kobieta_tank/celt_rogue_female_tank_2star.png', './hero-portraits/celtow/lotrzyk_kobieta_tank/celt_rogue_female_tank_3star.png', './hero-portraits/celtow/lotrzyk_kobieta_tank/celt_rogue_female_tank_4star.png', './hero-portraits/celtow/lotrzyk_kobieta_tank/celt_rogue_female_tank_5star.png', './hero-portraits/celtow/lotrzyk_kobieta_tank/celt_rogue_female_tank_6star.png', './hero-portraits/celtow/lotrzyk_kobieta_tank/celt_rogue_female_tank_7star_airmed.png', './hero-portraits/celtow/lotrzyk_kobieta_tank/celt_rogue_female_tank_7star_medb.png', './hero-portraits/celtow/lotrzyk_kobieta_tank/celt_rogue_female_tank_7star_nemain.png', './hero-portraits/celtow/mag_mezczyzna_dps/celt_mage_male_dps_1star.png', './hero-portraits/celtow/mag_mezczyzna_dps/celt_mage_male_dps_2star.png', './hero-portraits/celtow/mag_mezczyzna_dps/celt_mage_male_dps_3star.png', './hero-portraits/celtow/mag_mezczyzna_dps/celt_mage_male_dps_4star.png', './hero-portraits/celtow/mag_mezczyzna_dps/celt_mage_male_dps_5star.png', './hero-portraits/celtow/mag_mezczyzna_dps/celt_mage_male_dps_6star.png', './hero-portraits/celtow/mag_mezczyzna_dps/celt_mage_male_dps_7star_belenus.png', './hero-portraits/celtow/mag_mezczyzna_dps/celt_mage_male_dps_7star_math_fab_mathowy.png', './hero-portraits/celtow/mag_mezczyzna_dps/celt_mage_male_dps_7star_taranis.png', './hero-portraits/celtow/lotrzyk_kobieta_support/celt_rogue_female_support_1star.png', './hero-portraits/celtow/lotrzyk_kobieta_support/celt_rogue_female_support_2star.png', './hero-portraits/celtow/lotrzyk_kobieta_support/celt_rogue_female_support_3star.png', './hero-portraits/celtow/lotrzyk_kobieta_support/celt_rogue_female_support_4star.png', './hero-portraits/celtow/lotrzyk_kobieta_support/celt_rogue_female_support_5star.png', './hero-portraits/celtow/lotrzyk_kobieta_support/celt_rogue_female_support_6star.png', './hero-portraits/celtow/lotrzyk_kobieta_support/celt_rogue_female_support_7star_boann.png', './hero-portraits/celtow/lotrzyk_kobieta_support/celt_rogue_female_support_7star_cliodhna.png', './hero-portraits/celtow/lotrzyk_kobieta_support/celt_rogue_female_support_7star_eriu.png', './hero-frames/arabowie/frame_1.png?v=0.141.7', './hero-frames/arabowie/frame_2.png?v=0.141.7', './hero-frames/arabowie/frame_3.png?v=0.141.7', './hero-frames/arabowie/frame_4.png?v=0.141.7', './hero-frames/arabowie/frame_5.png?v=0.141.7', './hero-frames/arabowie/frame_6.png?v=0.141.7', './hero-frames/arabowie/frame_7.png?v=0.141.7', './hero-frames/aztekowie/frame_1.png?v=0.141.7', './hero-frames/aztekowie/frame_2.png?v=0.141.7', './hero-frames/aztekowie/frame_3.png?v=0.141.7', './hero-frames/aztekowie/frame_4.png?v=0.141.7', './hero-frames/aztekowie/frame_5.png?v=0.141.7', './hero-frames/aztekowie/frame_6.png?v=0.141.7', './hero-frames/aztekowie/frame_7.png?v=0.141.7', './hero-frames/celtowie/frame_1.png?v=0.141.7', './hero-frames/celtowie/frame_2.png?v=0.141.7', './hero-frames/celtowie/frame_3.png?v=0.141.7', './hero-frames/celtowie/frame_4.png?v=0.141.7', './hero-frames/celtowie/frame_5.png?v=0.141.7', './hero-frames/celtowie/frame_6.png?v=0.141.7', './hero-frames/celtowie/frame_7.png?v=0.141.7', './hero-frames/grecy/frame_1.png?v=0.141.7', './hero-frames/grecy/frame_2.png?v=0.141.7', './hero-frames/grecy/frame_3.png?v=0.141.7', './hero-frames/grecy/frame_4.png?v=0.141.7', './hero-frames/grecy/frame_5.png?v=0.141.7', './hero-frames/grecy/frame_6.png?v=0.141.7', './hero-frames/grecy/frame_7.png?v=0.141.7', './hero-frames/hindusi/frame_1.png?v=0.141.7', './hero-frames/hindusi/frame_2.png?v=0.141.7', './hero-frames/hindusi/frame_3.png?v=0.141.7', './hero-frames/hindusi/frame_4.png?v=0.141.7', './hero-frames/hindusi/frame_5.png?v=0.141.7', './hero-frames/hindusi/frame_6.png?v=0.141.7', './hero-frames/hindusi/frame_7.png?v=0.141.7', './hero-frames/japonczycy/frame_1.png?v=0.141.7', './hero-frames/japonczycy/frame_2.png?v=0.141.7', './hero-frames/japonczycy/frame_3.png?v=0.141.7', './hero-frames/japonczycy/frame_4.png?v=0.141.7', './hero-frames/japonczycy/frame_5.png?v=0.141.7', './hero-frames/japonczycy/frame_6.png?v=0.141.7', './hero-frames/japonczycy/frame_7.png?v=0.141.7', './hero-frames/slowianie/frame_1.png?v=0.141.7', './hero-frames/slowianie/frame_2.png?v=0.141.7', './hero-frames/slowianie/frame_3.png?v=0.141.7', './hero-frames/slowianie/frame_4.png?v=0.141.7', './hero-frames/slowianie/frame_5.png?v=0.141.7', './hero-frames/slowianie/frame_6.png?v=0.141.7', './hero-frames/slowianie/frame_7.png?v=0.141.7'];
+const FRAME_ASSETS = ['./hero-frames-auto-fit.js', './hero-frames-auto-fit.css'];
+
+async function injectFrameFit(response) {
+  if (!response || !response.ok || !(response.headers.get('content-type') || '').includes('text/html')) return response;
+  const html = await response.text();
+  if (html.includes('hero-frames-auto-fit.js')) {
+    return new Response(html, { status: response.status, statusText: response.statusText, headers: response.headers });
+  }
+  const tags = '<link rel="stylesheet" href="./hero-frames-auto-fit.css?v=' + BUILD_ID + '"><script defer src="./hero-frames-auto-fit.js?v=' + BUILD_ID + '"></script>';
+  const patched = html.includes('</head>') ? html.replace('</head>', tags + '</head>') : html.replace('</body>', tags + '</body>');
+  return new Response(patched, { status: response.status, statusText: response.statusText, headers: response.headers });
+}
+
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
-    await Promise.all(CORE_ASSETS.map(async url => { try { await cache.add(new Request(url, {cache:'reload'})); } catch (_) {} }));
+    await Promise.all(FRAME_ASSETS.map(async url => {
+      try { await cache.add(new Request(url, { cache: 'reload' })); } catch (_) {}
+    }));
     await self.skipWaiting();
   })());
 });
+
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
@@ -16,20 +31,35 @@ self.addEventListener('activate', event => {
     await self.clients.claim();
   })());
 });
+
 self.addEventListener('fetch', event => {
   const request = event.request;
   if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) return;
   if (request.mode === 'navigate') {
     event.respondWith((async () => {
-      try { const fresh = await fetch(request, {cache:'no-store'}); const cache = await caches.open(CACHE_NAME); cache.put('./index.html', fresh.clone()).catch(()=>{}); return fresh; }
-      catch (_) { return (await caches.match(request)) || (await caches.match('./index.html')) || Response.error(); }
+      try {
+        const fresh = await fetch(request, { cache: 'no-store' });
+        const patched = await injectFrameFit(fresh);
+        const cache = await caches.open(CACHE_NAME);
+        cache.put('./index.html', patched.clone()).catch(() => {});
+        return patched;
+      } catch (_) {
+        const cached = (await caches.match(request)) || (await caches.match('./index.html'));
+        return cached ? await injectFrameFit(cached) : Response.error();
+      }
     })());
     return;
   }
   event.respondWith((async () => {
     const cached = await caches.match(request);
     if (cached) return cached;
-    try { const response = await fetch(request); if (response.ok) { const cache = await caches.open(CACHE_NAME); cache.put(request, response.clone()).catch(()=>{}); } return response; }
-    catch (_) { return cached || Response.error(); }
+    try {
+      const response = await fetch(request);
+      if (response.ok) {
+        const cache = await caches.open(CACHE_NAME);
+        cache.put(request, response.clone()).catch(() => {});
+      }
+      return response;
+    } catch (_) { return cached || Response.error(); }
   })());
 });
