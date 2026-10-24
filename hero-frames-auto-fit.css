@@ -1,0 +1,31 @@
+/* Ramki: bez ręcznego powiększania zależnego od gwiazdek. */
+.hero-portrait-frame-wrap {
+  position: relative !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+}
+.hero-portrait-frame-wrap > .hero-portrait-frame-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  object-fit: fill !important;
+  transform: none !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
+.hero-portrait-frame-wrap > .hero-v2-portrait {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  flex: 0 0 100% !important;
+  object-fit: contain !important;
+  box-sizing: border-box !important;
+}
