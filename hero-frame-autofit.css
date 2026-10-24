@@ -1,0 +1,50 @@
+/* Wieża: automatyczne dopasowanie ramek do proporcji portretów.
+   Dołącz po istniejących stylach ramek w index.html. */
+.hero-portrait-frame-wrap.frame-autofit {
+  position: relative !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  isolation: isolate !important;
+  width: var(--portrait-frame-width, 88px) !important;
+  height: var(--portrait-frame-height, 88px) !important;
+  flex: 0 0 auto !important;
+}
+.hero-portrait-frame-wrap.frame-autofit > .hero-v2-portrait {
+  position: relative !important;
+  z-index: 1 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  object-fit: fill !important;
+  object-position: center !important;
+}
+.hero-portrait-frame-wrap.frame-autofit > .hero-portrait-frame-overlay {
+  position: absolute !important;
+  z-index: 2 !important;
+  left: var(--frame-left, 0px) !important;
+  top: var(--frame-top, 0px) !important;
+  width: var(--frame-width, 100%) !important;
+  height: var(--frame-height, 100%) !important;
+  max-width: none !important;
+  max-height: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  object-fit: fill !important;
+  transform: none !important;
+  transform-origin: center !important;
+  pointer-events: none !important;
+}
+@media (max-width: 700px) {
+  .hero-portrait-frame-wrap.frame-autofit {
+    width: var(--portrait-frame-width-mobile, var(--portrait-frame-width, 78px)) !important;
+    height: var(--portrait-frame-height-mobile, var(--portrait-frame-height, 78px)) !important;
+  }
+}
