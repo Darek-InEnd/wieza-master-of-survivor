@@ -622,7 +622,7 @@ button:not(.btn-free):not(.btn-cal):not(.btn-upgrade):not(.btn-release):not(.ex3
 <script>
 /* Prosty mechanizm aktualizacji PWA: sprawdzenie SW przy starcie + automatyczne przeładowanie po przejęciu aplikacji przez nowy SW. */
 if ('serviceWorker' in navigator) {
-  const PWA_BUILD = '0.141.8';
+  const PWA_BUILD = '0.141.9';
   let registration = null;
   let reloadDone = false;
   const hadController = !!navigator.serviceWorker.controller;
@@ -1216,7 +1216,7 @@ function getEnemyPortraitUrl(path){
 // =====================================================================
 // 2. STAŁE GRY
 // =====================================================================
-const GAME_VERSION = '0.141.8';
+const GAME_VERSION = '0.141.9';
 
 // PWA-5 — instalacja gry na ekranie głównym (Android/desktop browsers
 // obsługujących beforeinstallprompt). Nie wymuszamy trybu aplikacji.
@@ -2083,30 +2083,30 @@ const CELT_MAGE_FEMALE_TANK_PORTRAITS = {
 
 // CELTOWIE — MAGINI, SUPPORT — 1★–6★ oraz inkarnacje Aeval / Coventina / Epona.
 const CELT_MAGE_FEMALE_SUPPORT_PORTRAITS = {
-  1: 'hero-portraits/celtow/mag_kobieta_support/celt_mage_female_support_1star.png?v=0.141.8',
-  2: 'hero-portraits/celtow/mag_kobieta_support/celt_mage_female_support_2star.png?v=0.141.8',
-  3: 'hero-portraits/celtow/mag_kobieta_support/celt_mage_female_support_3star.png?v=0.141.8',
-  4: 'hero-portraits/celtow/mag_kobieta_support/celt_mage_female_support_4star.png?v=0.141.8',
-  5: 'hero-portraits/celtow/mag_kobieta_support/celt_mage_female_support_5star.png?v=0.141.8',
-  6: 'hero-portraits/celtow/mag_kobieta_support/celt_mage_female_support_6star.png?v=0.141.8',
+  1: 'hero-portraits/celtow/mag_kobieta_support/celt_mage_female_support_1star.png?v=0.141.9',
+  2: 'hero-portraits/celtow/mag_kobieta_support/celt_mage_female_support_2star.png?v=0.141.9',
+  3: 'hero-portraits/celtow/mag_kobieta_support/celt_mage_female_support_3star.png?v=0.141.9',
+  4: 'hero-portraits/celtow/mag_kobieta_support/celt_mage_female_support_4star.png?v=0.141.9',
+  5: 'hero-portraits/celtow/mag_kobieta_support/celt_mage_female_support_5star.png?v=0.141.9',
+  6: 'hero-portraits/celtow/mag_kobieta_support/celt_mage_female_support_6star.png?v=0.141.9',
   7: {
-    aeval: 'hero-portraits/celtow/mag_kobieta_support/celt_mage_female_support_7star_aeval.png?v=0.141.8',
-    coventina: 'hero-portraits/celtow/mag_kobieta_support/celt_mage_female_support_7star_coventina.png?v=0.141.8',
-    epona: 'hero-portraits/celtow/mag_kobieta_support/celt_mage_female_support_7star_epona.png?v=0.141.8'
+    aeval: 'hero-portraits/celtow/mag_kobieta_support/celt_mage_female_support_7star_aeval.png?v=0.141.9',
+    coventina: 'hero-portraits/celtow/mag_kobieta_support/celt_mage_female_support_7star_coventina.png?v=0.141.9',
+    epona: 'hero-portraits/celtow/mag_kobieta_support/celt_mage_female_support_7star_epona.png?v=0.141.9'
   }
 };
 // CELTOWIE — MAGINI, DPS — 1★–6★ oraz inkarnacje Aine / Macha / Sulis.
 const CELT_MAGE_FEMALE_DPS_PORTRAITS = {
-  1: 'hero-portraits/celtow/mag_kobieta_dps/celt_mage_female_dps_1star.png?v=0.141.8',
-  2: 'hero-portraits/celtow/mag_kobieta_dps/celt_mage_female_dps_2star.png?v=0.141.8',
-  3: 'hero-portraits/celtow/mag_kobieta_dps/celt_mage_female_dps_3star.png?v=0.141.8',
-  4: 'hero-portraits/celtow/mag_kobieta_dps/celt_mage_female_dps_4star.png?v=0.141.8',
-  5: 'hero-portraits/celtow/mag_kobieta_dps/celt_mage_female_dps_5star.png?v=0.141.8',
-  6: 'hero-portraits/celtow/mag_kobieta_dps/celt_mage_female_dps_6star.png?v=0.141.8',
+  1: 'hero-portraits/celtow/mag_kobieta_dps/celt_mage_female_dps_1star.png?v=0.141.9',
+  2: 'hero-portraits/celtow/mag_kobieta_dps/celt_mage_female_dps_2star.png?v=0.141.9',
+  3: 'hero-portraits/celtow/mag_kobieta_dps/celt_mage_female_dps_3star.png?v=0.141.9',
+  4: 'hero-portraits/celtow/mag_kobieta_dps/celt_mage_female_dps_4star.png?v=0.141.9',
+  5: 'hero-portraits/celtow/mag_kobieta_dps/celt_mage_female_dps_5star.png?v=0.141.9',
+  6: 'hero-portraits/celtow/mag_kobieta_dps/celt_mage_female_dps_6star.png?v=0.141.9',
   7: {
-    aine: 'hero-portraits/celtow/mag_kobieta_dps/celt_mage_female_dps_7star_aine.png?v=0.141.8',
-    macha: 'hero-portraits/celtow/mag_kobieta_dps/celt_mage_female_dps_7star_macha.png?v=0.141.8',
-    sulis: 'hero-portraits/celtow/mag_kobieta_dps/celt_mage_female_dps_7star_sulis.png?v=0.141.8'
+    aine: 'hero-portraits/celtow/mag_kobieta_dps/celt_mage_female_dps_7star_aine.png?v=0.141.9',
+    macha: 'hero-portraits/celtow/mag_kobieta_dps/celt_mage_female_dps_7star_macha.png?v=0.141.9',
+    sulis: 'hero-portraits/celtow/mag_kobieta_dps/celt_mage_female_dps_7star_sulis.png?v=0.141.9'
   }
 };
 function getCeltMageFemaleSupportPortrait(h) {
@@ -2117,6 +2117,84 @@ function getCeltMageFemaleSupportPortrait(h) {
 function getCeltMageFemaleDpsPortrait(h) {
   return getExternalPortraitForStars(h, CELT_MAGE_FEMALE_DPS_PORTRAITS, 'aine', {
     aine: ['Aine', 'Áine'], macha: ['Macha'], sulis: ['Sulis']
+  });
+}
+
+
+// CELTOWIE — WOJOWNIK, KOBIETA, DPS: progresja 1★–6★ oraz trzy inkarnacje 7★.
+const CELT_WARRIOR_FEMALE_DPS_PORTRAITS = {
+  1: 'hero-portraits/celtow/wojownik_kobieta_dps/celt_warrior_female_dps_1star.png?v=0.141.9',
+  2: 'hero-portraits/celtow/wojownik_kobieta_dps/celt_warrior_female_dps_2star.png?v=0.141.9',
+  3: 'hero-portraits/celtow/wojownik_kobieta_dps/celt_warrior_female_dps_3star.png?v=0.141.9',
+  4: 'hero-portraits/celtow/wojownik_kobieta_dps/celt_warrior_female_dps_4star.png?v=0.141.9',
+  5: 'hero-portraits/celtow/wojownik_kobieta_dps/celt_warrior_female_dps_5star.png?v=0.141.9',
+  6: 'hero-portraits/celtow/wojownik_kobieta_dps/celt_warrior_female_dps_6star.png?v=0.141.9',
+  7: {
+    arduinna: 'hero-portraits/celtow/wojownik_kobieta_dps/celt_warrior_female_dps_7star_arduinna.png?v=0.141.9',
+    cathbodua: 'hero-portraits/celtow/wojownik_kobieta_dps/celt_warrior_female_dps_7star_cathbodua.png?v=0.141.9',
+    rosmerta: 'hero-portraits/celtow/wojownik_kobieta_dps/celt_warrior_female_dps_7star_rosmerta.png?v=0.141.9'
+  }
+};
+// CELTOWIE — WOJOWNIK, MĘŻCZYZNA, DPS.
+const CELT_WARRIOR_MALE_DPS_PORTRAITS = {
+  1: 'hero-portraits/celtow/wojownik_mezczyzna_dps/celt_warrior_male_dps_1star.png?v=0.141.9',
+  2: 'hero-portraits/celtow/wojownik_mezczyzna_dps/celt_warrior_male_dps_2star.png?v=0.141.9',
+  3: 'hero-portraits/celtow/wojownik_mezczyzna_dps/celt_warrior_male_dps_3star.png?v=0.141.9',
+  4: 'hero-portraits/celtow/wojownik_mezczyzna_dps/celt_warrior_male_dps_4star.png?v=0.141.9',
+  5: 'hero-portraits/celtow/wojownik_mezczyzna_dps/celt_warrior_male_dps_5star.png?v=0.141.9',
+  6: 'hero-portraits/celtow/wojownik_mezczyzna_dps/celt_warrior_male_dps_6star.png?v=0.141.9',
+  7: {
+    camulos: 'hero-portraits/celtow/wojownik_mezczyzna_dps/celt_warrior_male_dps_7star_camulos.png?v=0.141.9',
+    cu_chulainn: 'hero-portraits/celtow/wojownik_mezczyzna_dps/celt_warrior_male_dps_7star_cu_chulainn.png?v=0.141.9',
+    toutatis: 'hero-portraits/celtow/wojownik_mezczyzna_dps/celt_warrior_male_dps_7star_toutatis.png?v=0.141.9'
+  }
+};
+// CELTOWIE — WOJOWNIK, MĘŻCZYZNA, SUPPORT.
+const CELT_WARRIOR_MALE_SUPPORT_PORTRAITS = {
+  1: 'hero-portraits/celtow/wojownik_mezczyzna_support/celt_warrior_male_support_1star.png?v=0.141.9',
+  2: 'hero-portraits/celtow/wojownik_mezczyzna_support/celt_warrior_male_support_2star.png?v=0.141.9',
+  3: 'hero-portraits/celtow/wojownik_mezczyzna_support/celt_warrior_male_support_3star.png?v=0.141.9',
+  4: 'hero-portraits/celtow/wojownik_mezczyzna_support/celt_warrior_male_support_4star.png?v=0.141.9',
+  5: 'hero-portraits/celtow/wojownik_mezczyzna_support/celt_warrior_male_support_5star.png?v=0.141.9',
+  6: 'hero-portraits/celtow/wojownik_mezczyzna_support/celt_warrior_male_support_6star.png?v=0.141.9',
+  7: {
+    ogmis: 'hero-portraits/celtow/wojownik_mezczyzna_support/celt_warrior_male_support_7star_ogmis.png?v=0.141.9',
+    smertrios: 'hero-portraits/celtow/wojownik_mezczyzna_support/celt_warrior_male_support_7star_smertrios.png?v=0.141.9',
+    teutates: 'hero-portraits/celtow/wojownik_mezczyzna_support/celt_warrior_male_support_7star_teutates.png?v=0.141.9'
+  }
+};
+// CELTOWIE — WOJOWNIK, MĘŻCZYZNA, TANK.
+const CELT_WARRIOR_MALE_TANK_PORTRAITS = {
+  1: 'hero-portraits/celtow/wojownik_mezczyzna_tank/celt_warrior_male_tank_1star.png?v=0.141.9',
+  2: 'hero-portraits/celtow/wojownik_mezczyzna_tank/celt_warrior_male_tank_2star.png?v=0.141.9',
+  3: 'hero-portraits/celtow/wojownik_mezczyzna_tank/celt_warrior_male_tank_3star.png?v=0.141.9',
+  4: 'hero-portraits/celtow/wojownik_mezczyzna_tank/celt_warrior_male_tank_4star.png?v=0.141.9',
+  5: 'hero-portraits/celtow/wojownik_mezczyzna_tank/celt_warrior_male_tank_5star.png?v=0.141.9',
+  6: 'hero-portraits/celtow/wojownik_mezczyzna_tank/celt_warrior_male_tank_6star.png?v=0.141.9',
+  7: {
+    bran: 'hero-portraits/celtow/wojownik_mezczyzna_tank/celt_warrior_male_tank_7star_bran.png?v=0.141.9',
+    esus: 'hero-portraits/celtow/wojownik_mezczyzna_tank/celt_warrior_male_tank_7star_esus.png?v=0.141.9',
+    sucellos: 'hero-portraits/celtow/wojownik_mezczyzna_tank/celt_warrior_male_tank_7star_sucellos.png?v=0.141.9'
+  }
+};
+function getCeltWarriorFemaleDpsPortrait(h) {
+  return getExternalPortraitForStars(h, CELT_WARRIOR_FEMALE_DPS_PORTRAITS, 'arduinna', {
+    arduinna: ['Arduinna'], cathbodua: ['Cathbodua'], rosmerta: ['Rosmerta']
+  });
+}
+function getCeltWarriorMaleDpsPortrait(h) {
+  return getExternalPortraitForStars(h, CELT_WARRIOR_MALE_DPS_PORTRAITS, 'camulos', {
+    camulos: ['Camulos'], cu_chulainn: ['Cú Chulainn', 'Cu Chulainn', 'Cuchulainn'], toutatis: ['Toutatis']
+  });
+}
+function getCeltWarriorMaleSupportPortrait(h) {
+  return getExternalPortraitForStars(h, CELT_WARRIOR_MALE_SUPPORT_PORTRAITS, 'ogmis', {
+    ogmis: ['Ogmis', 'Ogmios'], smertrios: ['Smertrios'], teutates: ['Teutates']
+  });
+}
+function getCeltWarriorMaleTankPortrait(h) {
+  return getExternalPortraitForStars(h, CELT_WARRIOR_MALE_TANK_PORTRAITS, 'bran', {
+    bran: ['Bran'], esus: ['Esus'], sucellos: ['Sucellos']
   });
 }
 
@@ -2573,6 +2651,18 @@ function getIndiaHeroPortraitHtml(h, fallback="⚔️") {
     const slavicWarriorDps=getSlavicWarriorMaleDpsPortrait(h);
     src=slavicWarriorDps.src;
     alt=`Portret słowiańskiego wojownika DPS — ${slavicWarriorDps.key}`;
+  } else if(h.gender==="Żeńska" && h.race==="Celtów" && h.heroClass==="Wojownik" && h.role==="DPS") {
+    src=getCeltWarriorFemaleDpsPortrait(h);
+    alt=`Portret celtyckiej wojowniczki DPS — ${h.incarnation?.title || h.incarnation?.aspect || `${star}★`}`;
+  } else if(h.gender==="Męska" && h.race==="Celtów" && h.heroClass==="Wojownik" && h.role==="DPS") {
+    src=getCeltWarriorMaleDpsPortrait(h);
+    alt=`Portret celtyckiego wojownika DPS — ${h.incarnation?.title || h.incarnation?.aspect || `${star}★`}`;
+  } else if(h.gender==="Męska" && h.race==="Celtów" && h.heroClass==="Wojownik" && h.role==="Support") {
+    src=getCeltWarriorMaleSupportPortrait(h);
+    alt=`Portret celtyckiego wojownika Support — ${h.incarnation?.title || h.incarnation?.aspect || `${star}★`}`;
+  } else if(h.gender==="Męska" && h.race==="Celtów" && h.heroClass==="Wojownik" && h.role==="Tank") {
+    src=getCeltWarriorMaleTankPortrait(h);
+    alt=`Portret celtyckiego wojownika Tank — ${h.incarnation?.title || h.incarnation?.aspect || `${star}★`}`;
   } else if(h.gender==="Męska" && h.race==="Celtów" && h.heroClass==="Mag" && h.role==="Tank") {
     const celtMageTank=getCeltMageTankPortrait(h, 'male');
     src=celtMageTank.src;
