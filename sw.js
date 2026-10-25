@@ -13,8 +13,8 @@ async function injectFrameFit(response) {
 
   const html = await response.text();
   const clean = html
-    .replace(/<script\\b[^>]*src=["'][^"']*hero-frames-auto-fit\\.js[^"']*["'][^>]*><\\/script>/gi, '')
-    .replace(/<link\\b[^>]*href=["'][^"']*hero-frames-auto-fit\\.css[^"']*["'][^>]*>/gi, '');
+    .replace(/<script\b[^>]*src=["'][^"']*hero-frames-auto-fit\.js[^"']*["'][^>]*><\/script>/gi, '')
+    .replace(/<link\b[^>]*href=["'][^"']*hero-frames-auto-fit\.css[^"']*["'][^>]*>/gi, '');
   const tags = '<link rel="stylesheet" href="./hero-frames-auto-fit.css?v=' + BUILD_ID +
     '"><script defer src="./hero-frames-auto-fit.js?v=' + BUILD_ID + '"></script>';
   const patched = clean.includes('</head>')
