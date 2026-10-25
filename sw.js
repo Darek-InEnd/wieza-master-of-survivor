@@ -1,32 +1,10 @@
-/* Wieża PWA Service Worker, build 0.141.10-recovery. */
-const BUILD_ID = '0.141.10-recovery';
+/* Wieża PWA Service Worker, build 0.141.11-framefit-test.
+   Diagnostyka: tymczasowo nie wstrzykujemy skryptu automatycznego dopasowania ramek. */
+const BUILD_ID = '0.141.11-framefit-test';
 const CACHE_NAME = 'wieza-v' + BUILD_ID;
 const CORE_ASSETS = [
-  './', './index.html', './manifest.webmanifest',
-  './hero-frames-auto-fit.js', './hero-frames-auto-fit.css',
-  './hero-frame-autofit.js', './hero-frame-autofit.css'
+  './', './index.html', './manifest.webmanifest'
 ];
-
-async function injectFrameFit(response) {
-  if (!response || !response.ok ||
-      !(response.headers.get('content-type') || '').includes('text/html')) return response;
-
-  const html = await response.text();
-  const clean = html
-    .replace(/<script\b[^>]*src=["'][^"']*hero-frames-auto-fit\.js[^"']*["'][^>]*><\/script>/gi, '')
-    .replace(/<link\b[^>]*href=["'][^"']*hero-frames-auto-fit\.css[^"']*["'][^>]*>/gi, '');
-  const tags = '<link rel="stylesheet" href="./hero-frames-auto-fit.css?v=' + BUILD_ID +
-    '"><script defer src="./hero-frames-auto-fit.js?v=' + BUILD_ID + '"></script>';
-  const patched = clean.includes('</head>')
-    ? clean.replace('</head>', tags + '</head>')
-    : clean.replace('</body>', tags + '</body>');
-
-  // HTML body changed, so remove body-specific headers from the original response.
-  const headers = new Headers(response.headers);
-  ['content-length', 'content-encoding', 'transfer-encoding', 'content-md5',
-   'etag', 'content-range', 'accept-ranges'].forEach(name => headers.delete(name));
-  return new Response(patched, { status: response.status, statusText: response.statusText, headers });
-}
 
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
@@ -40,7 +18,7 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
-    // Keep old caches during recovery to preserve saved offline assets.
+    // Keep old caches during diagnosis to preserve saved offline assets.
     await self.clients.claim();
   })());
 });
@@ -53,13 +31,12 @@ self.addEventListener('fetch', event => {
     event.respondWith((async () => {
       try {
         const fresh = await fetch(request, { cache: 'no-store' });
-        const patched = await injectFrameFit(fresh);
         const cache = await caches.open(CACHE_NAME);
-        cache.put('./index.html', patched.clone()).catch(() => {});
-        return patched;
+        cache.put('./index.html', fresh.clone()).catch(() => {});
+        return fresh;
       } catch (_) {
         const cached = (await caches.match(request)) || (await caches.match('./index.html'));
-        return cached ? await injectFrameFit(cached) : Response.error();
+        return cached || Response.error();
       }
     })());
     return;
