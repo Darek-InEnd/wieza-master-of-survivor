@@ -1,31 +1,19 @@
-/* Ramki: bez ręcznego powiększania zależnego od gwiazdek. */
-.hero-portrait-frame-wrap {
-  position: relative !important;
-  overflow: visible !important;
-  box-sizing: border-box !important;
+/* Awaryjne style; wymiary i pozycję wylicza JS na podstawie kanału alfa PNG. */
+.hero-portrait-frame-wrap.frame-autofit-fixed{
+  position:relative!important;display:inline-flex!important;align-items:center!important;
+  justify-content:center!important;box-sizing:border-box!important;overflow:visible!important;
+  isolation:isolate!important;vertical-align:middle!important;
 }
-.hero-portrait-frame-wrap > .hero-portrait-frame-overlay {
-  position: absolute !important;
-  inset: 0 !important;
-  display: block !important;
-  width: 100% !important;
-  height: 100% !important;
-  max-width: none !important;
-  max-height: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
-  object-fit: fill !important;
-  transform: none !important;
-  pointer-events: none !important;
-  z-index: 2 !important;
+.hero-portrait-frame-wrap.frame-autofit-fixed>.hero-v2-portrait{
+  position:relative!important;z-index:1!important;display:block!important;
+  margin:0!important;border:0!important;box-sizing:border-box!important;
+  object-fit:contain!important;object-position:center!important;
 }
-.hero-portrait-frame-wrap > .hero-v2-portrait {
-  width: 100% !important;
-  height: 100% !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
-  flex: 0 0 100% !important;
-  object-fit: contain !important;
-  box-sizing: border-box !important;
+.hero-portrait-frame-wrap.frame-autofit-fixed>.hero-portrait-frame-overlay{
+  position:absolute!important;z-index:2!important;display:block!important;
+  max-width:none!important;max-height:none!important;padding:0!important;margin:0!important;
+  border:0!important;object-fit:fill!important;transform:none!important;
+  transform-origin:center!important;pointer-events:none!important;user-select:none!important;
 }
+/* Nadpisuje dawne reguły scale(1.25) dla portretów 7★. */
+html body .hero-portrait-frame-wrap.frame-autofit-fixed:has(>.hero-v2-portrait[src*="_7star_"])>.hero-portrait-frame-overlay{transform:none!important;}
