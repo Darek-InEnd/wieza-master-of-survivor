@@ -21,7 +21,7 @@ async function injectFrameFit(response) {
     ? clean.replace('</head>', tags + '</head>')
     : clean.replace('</body>', tags + '</body>');
 
-  // Body length and encoding have changed, so never reuse the original body-specific headers.
+  // HTML body changed, so remove body-specific headers from the original response.
   const headers = new Headers(response.headers);
   ['content-length', 'content-encoding', 'transfer-encoding', 'content-md5',
    'etag', 'content-range', 'accept-ranges'].forEach(name => headers.delete(name));
@@ -40,7 +40,7 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
-    // Keep previous caches during recovery so previously saved game assets remain available offline.
+    // Keep old caches during recovery to preserve saved offline assets.
     await self.clients.claim();
   })());
 });
