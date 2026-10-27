@@ -9421,9 +9421,17 @@ function performEvolution12(mainId,sacrificeId){
   if(b.isTrainer||b.isBlacksmith){log('Nie można poświęcić Trenera ani Kowala. Wybierz zwykłego bohatera 1★ LV10.','warn');return;}
   if(a.level<10||b.level<10||!evolutionFloorReady(2)){log('Bohaterowie nie są jeszcze gotowi na ten etap.','warn');return;}
   if(!confirm(`⚠️ ${b.name} zostanie poświęcony bezpowrotnie, a ${a.name} otrzyma 2★.\n\nKontynuować?`))return;
-  state.heroes=state.heroes.filter(x=>x.id!==b.id);a.stars=2;a.level=Math.min(a.level,20);
+  // Usuwamy poświęcanego bohatera ze wszystkich drużyn PRZED usunięciem go z listy bohaterów.
+  // Dzięki temu drużyna pozostaje istnieć, a jej wolne miejsce można od razu uzupełnić.
+  const sacrificedId=Number(b.id);
+  (state.teams||[]).forEach(team=>{
+    if(Array.isArray(team.heroIds))team.heroIds=team.heroIds.filter(id=>Number(id)!==sacrificedId);
+  });
+  state.selectedHeroIds=(state.selectedHeroIds||[]).filter(id=>Number(id)!==sacrificedId);
+  state.heroes=state.heroes.filter(x=>Number(x.id)!==sacrificedId);a.stars=2;a.level=Math.min(a.level,20);
   if(a.heroClass&&!a.subclass){const pool=SUBCLASSES[a.heroClass]||[];if(pool.length)a.subclass=pool[Math.floor(Math.random()*pool.length)];}
-  log(`🌟 <b>${a.name}</b> przekroczył pierwszą granicę i osiąga 2★.`,'success');saveGame();updateUI();
+  renderTeamSelects();renderTeamsList();
+  log(`🌟 <b>${a.name}</b> przekroczył pierwszą granicę i osiąga 2★. Poświęcony bohater został automatycznie usunięty ze swojej drużyny, a drużyna zachowała wolne miejsce.`,'success');saveGame();updateUI();
 }
 function performEvolution23(id){
   const h=state.heroes.find(x=>x.id===id);if(!h||h.stars!==2)return;
