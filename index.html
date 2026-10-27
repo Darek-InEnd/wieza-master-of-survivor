@@ -6076,6 +6076,34 @@ function createTeamUI() {
   log(`✅ Drużyna <b>${name}</b> utworzona!`,'success');
 }
 
+function renameTeam(teamId) {
+  const team=(state.teams||[]).find(t=>Number(t.id)===Number(teamId));
+  if(!team)return;
+  const proposed=prompt('Podaj nową nazwę drużyny:',String(team.name||''));
+  if(proposed===null)return;
+  const name=proposed.trim();
+  if(!name){log('Nazwa drużyny nie może być pusta.','warn');return;}
+  team.name=name;
+  renderTeamsList();renderTeamSelects();saveGame();updateUI();
+  log(`Zmieniono nazwę drużyny na <b>${battleEsc(name)}</b>.`,'success');
+}
+
+function removeHeroFromTeam(heroId,teamId) {
+  const team=(state.teams||[]).find(t=>Number(t.id)===Number(teamId));
+  const hero=(state.heroes||[]).find(h=>Number(h.id)===Number(heroId));
+  if(!team||!hero||!(team.heroIds||[]).some(id=>Number(id)===Number(heroId)))return;
+  team.heroIds=team.heroIds.filter(id=>Number(id)!==Number(heroId));
+  // Jeśli ta drużyna była wybrana na wyprawę, odśwież wybór, aby nie pozostawić niespójnego składu.
+  if((state.selectedTeamIds||[]).some(id=>Number(id)===Number(teamId))) {
+    state.selectedTeamIds=state.selectedTeamIds.filter(id=>Number(id)!==Number(teamId));
+    state.selectedHeroIds=[...new Set((state.selectedTeamIds||[]).flatMap(id=>(state.teams.find(t=>Number(t.id)===Number(id))?.heroIds||[])))];
+  } else {
+    state.selectedHeroIds=(state.selectedHeroIds||[]).filter(id=>Number(id)!==Number(heroId));
+  }
+  renderTeamSelects();renderTeamsList();saveGame();updateUI();
+  log(`<b>${battleEsc(hero.name)}</b> został usunięty z drużyny <b>${battleEsc(team.name)}</b>. Bohater nadal żyje i pozostaje w Sanktuarium.`,'success');
+}
+
 function deleteTeam(teamId) {
   if(!confirm('Usunąć tę drużynę?'))return;
   const removed=state.teams.find(t=>t.id===teamId);
@@ -6187,7 +6215,7 @@ function renderTeamsList() {
     const bonuses=calculateTeamBonuses(team.id);
     const vacancies=Math.max(0,3-team.heroIds.length);
     const candidates=(state.heroes||[]).filter(h=>h&&h.isAlive&&!h.isTrainer&&!h.isBlacksmith&&!(state.teams||[]).some(t=>(t.heroIds||[]).some(id=>Number(id)===Number(h.id))));
-    const heroStr=heroes.map(h=>h?`<b>${battleEsc(h.name)}</b> (${battleEsc(h.role||'?' )})`:'-').join(', ');
+    const heroStr=heroes.map(h=>h?`<span style="display:inline-flex;align-items:center;gap:4px;margin:2px 5px 2px 0;"><b>${battleEsc(h.name)}</b> (${battleEsc(h.role||'?' )}) <button type="button" class="btn-small btn-danger" title="Usuń bohatera z drużyny" data-tower-action="removeHeroFromTeam" data-id="${Number(team.id)||0}" data-hero-id="${Number(h.id)||0}">✕</button></span>`:'-').join('');
     const unavailable=team.heroIds.length!==3||heroes.some(h=>!h||!h.isAlive||h.isTrainer||h.isBlacksmith);
     return`
       <div style="background:#0a0a0a;padding:8px;margin:4px 0;border-radius:4px;border-left:3px solid #45a29e;">
@@ -6203,7 +6231,7 @@ function renderTeamsList() {
             </small>
           </div>
           <div style="display:flex;gap:4px;">
-            ${vacancies&&candidates.length?`<label style="display:block;margin:5px 0;font-size:.85em;">Uzupełnij skład: <select class="select-style" id="join-hero-${Number(team.id)||0}"><option value="">Wybierz bohatera</option>${candidates.map(h=>`<option value="${Number(h.id)}">${battleEsc(h.name)} · ${battleEsc(h.race||'?')} · ${battleEsc(h.heroClass||'?')}</option>`).join('')}</select></label><button class="btn-small" data-tower-action="joinHeroToTeam" data-id="${Number(team.id)||0}" style="background:#45a29e;color:#000;">➕ Dołącz do drużyny</button>`:''}<button class="btn-small" data-tower-action="selectTeamForMission" data-id="${Number(team.id)||0}" ${unavailable?'disabled title="Drużyna musi mieć 3 żywych bohaterów"':''} style="background:#45a29e;color:#000;">Wybierz do wyprawy</button>
+            ${vacancies&&candidates.length?`<label style="display:block;margin:5px 0;font-size:.85em;">Uzupełnij skład: <select class="select-style" id="join-hero-${Number(team.id)||0}"><option value="">Wybierz bohatera</option>${candidates.map(h=>`<option value="${Number(h.id)}">${battleEsc(h.name)} · ${battleEsc(h.race||'?')} · ${battleEsc(h.heroClass||'?')}</option>`).join('')}</select></label><button class="btn-small" data-tower-action="joinHeroToTeam" data-id="${Number(team.id)||0}" style="background:#45a29e;color:#000;">➕ Dołącz do drużyny</button>`:''}<button class="btn-small" data-tower-action="renameTeam" data-id="${Number(team.id)||0}">✏️ Zmień nazwę</button><button class="btn-small" data-tower-action="selectTeamForMission" data-id="${Number(team.id)||0}" ${unavailable?'disabled title="Drużyna musi mieć 3 żywych bohaterów"':''} style="background:#45a29e;color:#000;">Wybierz do wyprawy</button>
             <button class="btn-small btn-danger" data-tower-action="deleteTeam" data-id="${Number(team.id)||0}">Usuń</button>
           </div>
         </div>
@@ -10189,20 +10217,21 @@ function runTalentMemorySelfTest(iterations=20000){
   return {iterations:n,talentPool:TALENTS.length,memoryPool:MEMORIES.length,uniqueTalentsSeen:names.size,rarityCounts:rarity,rarityPct:Object.fromEntries(Object.entries(rarity).map(([k,v])=>[k,+(v/n*100).toFixed(2)])),memoryAttempts:gained.length,memorySlotsTested:new Set(gained).size,ok:okPool&&okRarity&&okMem};
 }
 
-const heroRosterFilters={view:'all',search:'',stars:'all',heroClass:'all',race:'all',role:'all',sort:'default',advanced:false};
+const heroRosterFilters={view:'all',search:'',stars:'all',heroClass:'all',team:'all',race:'all',role:'all',sort:'default',advanced:false};
 function setHeroRosterFilter(key,value){
   if(!Object.prototype.hasOwnProperty.call(heroRosterFilters,key))return;
   heroRosterFilters[key]=String(value??'all');
   updateUI();
 }
 function resetHeroRosterFilters(){
-  heroRosterFilters.view='all';heroRosterFilters.search='';heroRosterFilters.stars='all';heroRosterFilters.heroClass='all';heroRosterFilters.race='all';heroRosterFilters.role='all';heroRosterFilters.sort='default';updateUI();
+  heroRosterFilters.view='all';heroRosterFilters.search='';heroRosterFilters.stars='all';heroRosterFilters.heroClass='all';heroRosterFilters.team='all';heroRosterFilters.race='all';heroRosterFilters.role='all';heroRosterFilters.sort='default';updateUI();
 }
 function toggleHeroRosterAdvanced(){heroRosterFilters.advanced=!heroRosterFilters.advanced;updateUI();}
 function setHeroRosterSearch(value){heroRosterFilters.search=String(value??'');updateUI();setTimeout(()=>{const input=document.querySelector('.hero-roster-search input');if(input){input.focus();try{input.setSelectionRange(input.value.length,input.value.length);}catch(e){}}},60);}
 function renderHeroRosterFilters(allHeroes,visibleCount){
   const starsOptions=['all',1,2,3,4,5,6,7].map(v=>v==='all'?'<option value="all">Wszystkie</option>':`<option value="${v}">${v}★</option>`).join('');
-  const classOptions=['all',...(Array.isArray(CLASSES)?CLASSES:[])].map(v=>v==='all'?'<option value="all">Wszystkie</option>':`<option value="${battleEsc(v)}">${battleEsc(v)}</option>`).join('');
+  const classOptions=['all','__none__',...(Array.isArray(CLASSES)?CLASSES:[])].map(v=>v==='all'?'<option value="all">Wszystkie</option>':v==='__none__'?'<option value="__none__">Brak klasy</option>':`<option value="${battleEsc(v)}">${battleEsc(v)}</option>`).join('');
+  const teamOptions=['all','__none__',...(state.teams||[]).map(t=>String(t.id))].map(v=>v==='all'?'<option value="all">Wszystkie</option>':v==='__none__'?'<option value="__none__">Brak drużyny</option>':(()=>{const t=(state.teams||[]).find(x=>String(x.id)===v);return `<option value="${battleEsc(v)}">${battleEsc(t?.name||'Drużyna')}</option>`})()).join('');
   const races=[...new Set(allHeroes.map(h=>h.race).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'pl'));
   const raceOptions=['all',...races].map(v=>v==='all'?'<option value="all">Wszystkie</option>':`<option value="${battleEsc(v)}">${battleEsc(v)}</option>`).join('');
   const roleOptions=['all',...(Array.isArray(ROLES)?ROLES:[])].map(v=>v==='all'?'<option value="all">Wszystkie</option>':`<option value="${battleEsc(v)}">${battleEsc(v)}</option>`).join('');
@@ -10214,12 +10243,13 @@ function renderHeroRosterFilters(allHeroes,visibleCount){
   <div class="hero-roster-advanced" style="display:${heroRosterFilters.advanced?'grid':'none'}">
     <label>⭐ Gwiazdki<select onchange="setHeroRosterFilter('stars',this.value)">${starsOptions}</select></label>
     <label>🎭 Klasa<select onchange="setHeroRosterFilter('heroClass',this.value)">${classOptions}</select></label>
+    <label>👥 Drużyna<select onchange="setHeroRosterFilter('team',this.value)">${teamOptions}</select></label>
     <label>🌍 Rasa<select onchange="setHeroRosterFilter('race',this.value)">${raceOptions}</select></label>
     <label>🧭 Rola<select onchange="setHeroRosterFilter('role',this.value)">${roleOptions}</select></label>
     <label>↕️ Sortowanie<select onchange="setHeroRosterFilter('sort',this.value)"><option value="default">Domyślne</option><option value="stars-desc">Gwiazdki ↓</option><option value="stars-asc">Gwiazdki ↑</option><option value="cp-desc">CP ↓</option><option value="cp-asc">CP ↑</option><option value="level-asc">Poziom ↑ (najmniejszy)</option><option value="level-desc">Poziom ↓ (największy)</option><option value="team-asc">Drużyna A–Z</option><option value="team-desc">Drużyna Z–A</option><option value="race-asc">Nacja A–Z</option><option value="race-desc">Nacja Z–A</option><option value="class-asc">Klasa A–Z</option><option value="class-desc">Klasa Z–A</option><option value="name-asc">Nazwa A–Z</option></select></label>
     <button type="button" class="btn-small" data-tower-action="resetHeroRosterFilters">↺ Wyczyść filtry</button>
   </div></div>`;
-  const selects=box.querySelectorAll('select');if(selects[0])selects[0].value=heroRosterFilters.stars;if(selects[1])selects[1].value=heroRosterFilters.heroClass;if(selects[2])selects[2].value=heroRosterFilters.race;if(selects[3])selects[3].value=heroRosterFilters.role;if(selects[4])selects[4].value=heroRosterFilters.sort;
+  const selects=box.querySelectorAll('select');if(selects[0])selects[0].value=heroRosterFilters.stars;if(selects[1])selects[1].value=heroRosterFilters.heroClass;if(selects[2])selects[2].value=heroRosterFilters.team;if(selects[3])selects[3].value=heroRosterFilters.race;if(selects[4])selects[4].value=heroRosterFilters.role;if(selects[5])selects[5].value=heroRosterFilters.sort;
 }
 function heroMatchesRosterFilters(h){
   if(!h)return false;
@@ -10229,7 +10259,11 @@ function heroMatchesRosterFilters(h){
   if(view==='blacksmiths'&&!h.isBlacksmith)return false;
   if(heroRosterFilters.search&&!String(h.name||'').toLocaleLowerCase('pl').includes(heroRosterFilters.search.trim().toLocaleLowerCase('pl')))return false;
   if(heroRosterFilters.stars!=='all'&&Number(h.stars)!==Number(heroRosterFilters.stars))return false;
-  if(heroRosterFilters.heroClass!=='all'&&String(h.heroClass||'')!==heroRosterFilters.heroClass)return false;
+  if(heroRosterFilters.heroClass==='__none__'&&String(h.heroClass||'').trim())return false;
+  if(heroRosterFilters.heroClass!=='all'&&heroRosterFilters.heroClass!=='__none__'&&String(h.heroClass||'')!==heroRosterFilters.heroClass)return false;
+  const assignedTeam=(state.teams||[]).find(t=>(t.heroIds||[]).some(id=>Number(id)===Number(h.id)));
+  if(heroRosterFilters.team==='__none__'&&assignedTeam)return false;
+  if(heroRosterFilters.team!=='all'&&heroRosterFilters.team!=='__none__'&&String(assignedTeam?.id||'')!==heroRosterFilters.team)return false;
   if(heroRosterFilters.race!=='all'&&String(h.race||'')!==heroRosterFilters.race)return false;
   if(heroRosterFilters.role!=='all'&&String(h.role||'')!==heroRosterFilters.role)return false;
   return true;
@@ -12977,6 +13011,8 @@ TowerEvents.bindSimpleActions = function(root){
       case 'startNewGame': return startNewGame(Number(el.dataset.slot));
       case 'selectTeamForMission': return selectTeamForMission(Number(el.dataset.id)||0);
       case 'deleteTeam': return deleteTeam(Number(el.dataset.id)||0);
+      case 'renameTeam': return renameTeam(Number(el.dataset.id)||0);
+      case 'removeHeroFromTeam': return removeHeroFromTeam(Number(el.dataset.heroId)||0,Number(el.dataset.id)||0);
       case 'joinHeroToTeam': { const selectId=el.dataset.selectId||`join-hero-${Number(el.dataset.id)||0}`; const select=document.getElementById(selectId); const heroId=Number(el.dataset.heroId||select?.value)||0; const teamId=el.dataset.heroId?Number(select?.value)||0:Number(el.dataset.id)||0; return joinHeroToTeam(heroId,teamId); }
       case 'upgradeBuilding': return upgradeBuilding(el.dataset.id);
       case 'trainBlacksmith': return trainBlacksmith(Number(el.dataset.id)||0);
