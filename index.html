@@ -6246,8 +6246,9 @@ function addExp(h,amount) {
   let req=getNextExp(h.level);
   while(h.exp>=req&&h.level<h.stars*10) {
     h.exp-=req; h.level++;
+    const maxHpBeforeLevel = Number(h.maxHp)||1;
     const cls=h.heroClass||"Wojownik";
-    h.maxHp+=6+Math.floor(h.timesHit/4); h.hp=h.maxHp;
+    h.maxHp+=6+Math.floor((Number(h.timesHit)||0)/4);
     h.str+=0.4; h.dex+=0.4; h.int+=0.4; h.spd+=0.3; h.def+=0.4; h.mdef+=0.3;
     switch(cls) {
       case "Wojownik": h.str+=2.0; h.def+=0.8; h.maxHp+=2; break;
@@ -6258,6 +6259,11 @@ function addExp(h,amount) {
       default: h.str+=0.6; h.dex+=0.6; h.int+=0.6;
     }
     h.str=Math.floor(h.str); h.dex=Math.floor(h.dex); h.int=Math.floor(h.int); h.spd=Math.floor(h.spd); h.def=Math.floor(h.def); h.mdef=Math.floor(h.mdef); h.maxHp=Math.floor(h.maxHp);
+    // Podczas walki maxHp może zawierać tymczasowe premie ekwipunku/rasy.
+    // Utrwalamy przyrost poziomu także w bazowym HP, aby finishBattle go nie cofnął.
+    const levelHpGain = Math.max(0, h.maxHp - maxHpBeforeLevel);
+    if(Number.isFinite(h._baseMaxHp)) h._baseMaxHp += levelHpGain;
+    h.hp = h.maxHp;
     if(h.stars>=2&&h.heroClass&&!h.subclass){ const pool=SUBCLASSES[h.heroClass]||[]; if(pool.length){ h.subclass=pool[Math.floor(Math.random()*pool.length)]; log(`<b>${h.name}</b> odkrywa swoją podklasę: <span class="subclass-name">${h.subclass}</span>`,'success'); } }
     ensureHeroSkillState(h);
     if(h.level===30)log(`✨ <b>${h.name}</b> przekracza kolejną granicę swojej drogi.`,'success');
@@ -6721,6 +6727,9 @@ function endDay() {
     }
   });
   const sanctuaryEvent=generateSanctuaryHistoryEvent();
+  // Leczenie jest ostatnim krokiem cyklu dnia, więc żaden efekt startu dnia
+  // nie pozostawi żywego bohatera z niepełnym HP.
+  healAllLivingHeroes();
   saveGame(); updateUI();
   log(`<b>ROZPOCZĘTO DZIEŃ ${state.day}!</b>`,'success');
   if(sanctuaryEvent.ok&&!sanctuaryEvent.reused){ saveGame(); setTimeout(()=>showSanctuaryHistoryEvent(sanctuaryEvent.event),120); }
@@ -8547,10 +8556,17 @@ function finishBattle(success,floor,type,deadCount) {
   });
   
   if (success) {
+    // Po zakończeniu wyprawy leczą się wszyscy żywi bohaterowie, nie tylko
+    // członkowie ostatniej drużyny. Najpierw usunięto już tymczasowe premie HP.
+    healAllLivingHeroes();
+    log(`🏠 Bohaterowie wrócili do Sanktuarium i wszyscy żywi odzyskali pełnię sił.`, 'success');
+  } else {
+    // Po przegranej zachowujemy obrażenia, ale nie pozwalamy, by HP przekraczało
+    // bazowe maksimum po usunięciu tymczasowych premii walki.
     state.heroes.forEach(h => {
-      if (h.isAlive && state.selectedHeroIds.includes(h.id)) h.hp = h.maxHp;
+      if (!h.isAlive) h.hp = 0;
+      else h.hp = Math.max(1, Math.min(Number(h.hp)||1, Number(h.maxHp)||1));
     });
-    log(`🏠 Bohaterowie wrócili do Sanktuarium i odzyskali siły.`, 'success');
   }
   if(success) ensureSanctuaryNameAtFloor(floor);
   
